@@ -63,7 +63,7 @@ Both websites will have:
 ### MEP Website
 - Deploy to `www.apx-mep.co.uk`
 - Vercel project: add domain **www.apx-mep.co.uk** in Vercel dashboard
-- GitHub repo: `apx-mep-website`
+- GitHub repo: `apx-mep`
 
 ### FS Website  
 - Deploy to `apx-fs.com`
