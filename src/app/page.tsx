@@ -266,13 +266,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: Element) => {
+        labels.forEach((label: HTMLElement) => {
           label.style.color = '#ffffff';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: Element) => {
+        textInputs.forEach((input: HTMLElement) => {
           input.style.backgroundColor = '#000000';
           input.style.border = '2px solid #ffffff';
           input.style.color = '#ffffff';
@@ -341,13 +341,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: Element) => {
+        labels.forEach((label: HTMLElement) => {
           label.style.color = '#000000';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: Element) => {
+        textInputs.forEach((input: HTMLElement) => {
           input.style.backgroundColor = '#ffffff';
           input.style.border = '1px solid #000000';
           input.style.color = '#000000';
