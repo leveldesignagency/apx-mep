@@ -6,9 +6,16 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react"
 import { GlobalStyles, lightTheme, darkTheme } from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 import { CountUp } from '@/components/ui/CountUp'
-import FontSection from '@/components/FontSection'
+import LandingPage from '@/components/LandingPage'
 
 export default function Home() {
+  if (process.env.NEXT_PUBLIC_SITE_MODE === "landing") {
+    return <LandingPage />
+  }
+  return <FullSiteHome />
+}
+
+function FullSiteHome() {
   const { theme } = useTheme()
   const themeMode = theme === "light" ? lightTheme : darkTheme
   
@@ -505,12 +512,12 @@ export default function Home() {
               <div>
                 <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 md:mb-3 text-left transition-opacity duration-1000 font-title ${
                   heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
-                }`} style={{ color: 'white' }}>
+                }`} style={{ color: 'black' }}>
                   Engineered Solutions for Energy Efficiency and Sustainability
                 </h1>
                 <p className={`text-lg sm:text-xl md:text-2xl font-normal mb-4 md:mb-5 text-left tracking-tight transition-opacity duration-1000 ${
                   heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
-                }`} style={{ color: 'white' }}>
+                }`} style={{ color: 'black' }}>
                   As a trusted partner, we guide industries in their transition to sustainable energy.
                 </p>
               </div>
@@ -519,17 +526,17 @@ export default function Home() {
               <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 sm:pt-5 transition-opacity duration-1000 ${
                 heroAnimation.statsVisible ? 'opacity-100' : 'opacity-0'
               }`}>
-                <div className="rounded-lg border border-white/25 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'white' }}>250+</div>
-                  <div className="text-xs font-normal" style={{ color: 'white' }}>Industrial projects delivered across three continents.</div>
+                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
+                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>250+</div>
+                  <div className="text-xs font-normal" style={{ color: 'black' }}>Industrial projects delivered across three continents.</div>
                 </div>
-                <div className="rounded-lg border border-white/25 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'white' }}>99.2%</div>
-                  <div className="text-xs font-normal" style={{ color: 'white' }}>Uptime in monitored energy systems.</div>
+                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
+                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>99.2%</div>
+                  <div className="text-xs font-normal" style={{ color: 'black' }}>Uptime in monitored energy systems.</div>
                 </div>
-                <div className="rounded-lg border border-white/25 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'white' }}>20+</div>
-                  <div className="text-xs font-normal" style={{ color: 'white' }}>Years of engineering expertise in industrial efficiency.</div>
+                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
+                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>20+</div>
+                  <div className="text-xs font-normal" style={{ color: 'black' }}>Years of engineering expertise in industrial efficiency.</div>
                 </div>
               </div>
             </div>
@@ -540,13 +547,13 @@ export default function Home() {
         <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40">
           <div className="flex flex-col items-center max-h-[200px] relative">
             {/* Progress line overlay */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-px bg-black/30 dark:bg-white/30" 
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-px bg-black/30" 
                  style={{ height: `${(sections.length - 1) * 60}px` }}>
               <div 
-                className="w-px bg-black dark:bg-white transition-all duration-500 ease-out"
+                className="w-px bg-black transition-all duration-500 ease-out"
                 style={{ 
                   height: `${(activeSection / (sections.length - 1)) * 100}%`,
-                  boxShadow: theme === 'dark' ? '0 0 10px rgba(255, 255, 255, 0.5)' : '0 0 10px rgba(0, 0, 0, 0.5)'
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
                 }}
               ></div>
       </div>
@@ -558,23 +565,15 @@ export default function Home() {
                   {/* Square indicator */}
                   <button
                     onClick={() => scrollToSection(section.id)}
-                    className={`w-3 h-3 border transition-all duration-300 hover:scale-110 ${
-                      theme === 'light'
-                        ? 'border-white hover:bg-white/20'
-                        : 'border-black dark:border-white hover:bg-black/20 dark:hover:bg-white/20'
-                    } ${
-                      isActive
-                        ? theme === 'light'
-                          ? 'bg-white'
-                          : 'bg-black dark:bg-white'
-                        : 'bg-transparent'
+                    className={`w-3 h-3 border transition-all duration-300 hover:scale-110 border-black hover:bg-black/20 ${
+                      isActive ? 'bg-black' : 'bg-transparent'
                     }`}
                     title={section.name}
                   />
                 
                   {/* Faded vertical line connecting to next square */}
                   {index < sections.length - 1 && (
-                    <div className="w-px h-12 bg-gray-400/30 dark:bg-gray-600/30"></div>
+                    <div className="w-px h-12 bg-gray-400/30"></div>
                   )}
                 </div>
               )
@@ -590,10 +589,10 @@ export default function Home() {
           <div className="section-content-gap space-y-16">
             {/* Top Section - Title and Description */}
             <div>
-              <div className="apx-mep-services-title-box inline-block border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
+              <div className="apx-mep-services-title-box inline-block border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
                 <h2 className="text-5xl font-bold text-left tracking-wide relative z-10" style={{ textTransform: 'uppercase', fontFamily: 'var(--font-menu)' }}>APX MEP Services</h2>
               </div>
-              <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
                 Comprehensive mechanical, electrical, and plumbing solutions tailored to your business needs. 
                 We provide end-to-end MEP services with certified professionals and cutting-edge technology.
               </p>
@@ -674,10 +673,10 @@ export default function Home() {
         <div className="container mx-auto px-6 lg:px-8">
           {/* Block 1: Full-width title only, keep padding */}
           <div className="section-content-gap">
-            <div className="apx-mep-services-title-box inline-block border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
+            <div className="apx-mep-services-title-box inline-block border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
               <h2 className="text-5xl font-bold text-left tracking-wide relative z-10" style={{ textTransform: 'uppercase', fontFamily: 'var(--font-menu)' }}>APX MEP Services</h2>
             </div>
-            <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+            <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
               Comprehensive mechanical, electrical, and plumbing solutions tailored to your business needs.
             </p>
           </div>
@@ -728,7 +727,7 @@ export default function Home() {
             <div className="services-benefit-card" style={{ animationDelay: '0.1s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Expert Installation</h3>
                 <p className="services-benefit-desc">Professional installation of all MEP systems with precision and care</p>
@@ -737,7 +736,7 @@ export default function Home() {
             <div className="services-benefit-card" style={{ animationDelay: '0.25s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>24/7 Maintenance</h3>
                 <p className="services-benefit-desc">Round-the-clock maintenance and emergency repair services</p>
@@ -746,7 +745,7 @@ export default function Home() {
             <div className="services-benefit-card" style={{ animationDelay: '0.4s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Quality Assurance</h3>
                 <p className="services-benefit-desc">All work backed by comprehensive warranties and quality guarantees</p>
@@ -819,9 +818,6 @@ export default function Home() {
         </svg>
       </section>
 
-      {/* Section Separator */}
-      <div className="section-divider w-full h-px bg-black dark:bg-white"></div>
-
       {/* Why MEP Services Are Critical – expandable cards */}
       <section id="why-mep" className="mep-cards-section mep-section-light-bg section-spacing">
         <div className="container mx-auto px-6 lg:px-8">
@@ -829,7 +825,7 @@ export default function Home() {
             <h2 className={`text-5xl font-bold text-left font-title section-title-gap`}>
               Why MEP Services Are Critical
             </h2>
-            <p className="text-base text-gray-300 leading-relaxed max-w-2xl section-intro-gap">
+            <p className="text-base text-gray-600 leading-relaxed max-w-2xl section-intro-gap">
               Mechanical and electrical systems are the backbone of any building. Reliable MEP ensures occupant safety,
               comfort, and compliance, reduces energy waste, and protects your asset value. Expert design, installation,
               and maintenance are essential for commercial and industrial operations to run smoothly and sustainably.
@@ -892,9 +888,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Separator */}
-      <div className="section-divider w-full h-px bg-black dark:bg-white"></div>
-
       {/* Why Choose Us Section */}
       <section id="about" className="section-spacing">
         <div className="container mx-auto px-6 lg:px-8">
@@ -902,7 +895,7 @@ export default function Home() {
             {/* Top Section - Title and Description */}
             <div>
               <h2 className={`text-5xl font-bold text-left font-title section-title-gap`}>Why Choose APX MEP?</h2>
-              <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
                 With over 20 years of experience in mechanical, electrical, and plumbing services, 
                 we&apos;ve built a reputation for excellence, reliability, and customer satisfaction across the UK.
               </p>
@@ -911,81 +904,73 @@ export default function Home() {
             {/* Benefits Cards - 3 Column Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               {/* Certified MEP Engineers */}
-              <div className="service-card text-white">
-                <span className="glow"></span>
-                
-                <div className="flex items-center space-x-3 mb-4 relative z-10">
-                  <CheckCircle className="h-7 w-7 text-white" />
-                  <h4 className={`text-2xl font-semibold text-white font-title`}>Certified MEP Engineers</h4>
-                  </div>
-                <div className="space-y-2 relative z-10">
-                  <div className="text-gray-300 text-xl">• Fully qualified professionals</div>
-                  <div className="text-gray-300 text-xl">• Certified in MEP systems</div>
-                  <div className="text-gray-300 text-xl">• Regular training programs</div>
-                  <div className="text-gray-300 text-xl">• Industry expertise</div>
+              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
+                <div className="flex items-center space-x-3 mb-4">
+                  <CheckCircle className="h-7 w-7" />
+                  <h4 className="text-2xl font-semibold font-title">Certified MEP Engineers</h4>
+                </div>
+                <div className="space-y-2 dark-card-muted">
+                  <div className="text-xl">• Fully qualified professionals</div>
+                  <div className="text-xl">• Certified in MEP systems</div>
+                  <div className="text-xl">• Regular training programs</div>
+                  <div className="text-xl">• Industry expertise</div>
                 </div>
               </div>
               
               {/* 24/7 Emergency Service */}
-              <div className="service-card text-white">
-                <span className="glow"></span>
-                
-                <div className="flex items-center space-x-3 mb-4 relative z-10">
-                  <Clock className="h-7 w-7 text-white" />
-                  <h4 className={`text-2xl font-semibold text-white font-title`}>24/7 Emergency Service</h4>
-                  </div>
-                <div className="space-y-2 relative z-10">
-                  <div className="text-gray-300 text-xl">• Round-the-clock MEP support</div>
-                  <div className="text-gray-300 text-xl">• Rapid response times</div>
-                  <div className="text-gray-300 text-xl">• Emergency repairs</div>
-                  <div className="text-gray-300 text-xl">• When you need it most</div>
+              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Clock className="h-7 w-7" />
+                  <h4 className="text-2xl font-semibold font-title">24/7 Emergency Service</h4>
+                </div>
+                <div className="space-y-2 dark-card-muted">
+                  <div className="text-xl">• Round-the-clock MEP support</div>
+                  <div className="text-xl">• Rapid response times</div>
+                  <div className="text-xl">• Emergency repairs</div>
+                  <div className="text-xl">• When you need it most</div>
                 </div>
               </div>
               
               {/* Quality Guarantee */}
-              <div className="service-card text-white">
-                <span className="glow"></span>
-                
-                <div className="flex items-center space-x-3 mb-4 relative z-10">
-                  <Shield className="h-7 w-7 text-white" />
-                  <h4 className={`text-2xl font-semibold text-white font-title`}>Quality Guarantee</h4>
-                  </div>
-                <div className="space-y-2 relative z-10">
-                  <div className="text-gray-300 text-xl">• Comprehensive warranties</div>
-                  <div className="text-gray-300 text-xl">• All MEP work covered</div>
-                  <div className="text-gray-300 text-xl">• Quality assurance</div>
-                  <div className="text-gray-300 text-xl">• Reliable service</div>
+              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Shield className="h-7 w-7" />
+                  <h4 className="text-2xl font-semibold font-title">Quality Guarantee</h4>
+                </div>
+                <div className="space-y-2 dark-card-muted">
+                  <div className="text-xl">• Comprehensive warranties</div>
+                  <div className="text-xl">• All MEP work covered</div>
+                  <div className="text-xl">• Quality assurance</div>
+                  <div className="text-xl">• Reliable service</div>
                 </div>
               </div>
             </div>
             
             {/* Stats Section - no border, animated count-up */}
             <div className="mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <div className="stats-card rounded-xl bg-white/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '0ms' }}>
-                <div className="text-4xl font-bold text-white leading-none">
+              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '0ms' }}>
+                <div className="text-4xl font-bold text-black leading-none">
                   <CountUp target={500} suffix="+" duration={2000} />
                 </div>
-                <div className="text-gray-300 text-sm mt-2">Projects Completed</div>
+                <div className="text-gray-600 text-sm mt-2">Projects Completed</div>
               </div>
-              <div className="stats-card rounded-xl bg-white/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '150ms' }}>
-                <div className="text-4xl font-bold text-white leading-none">
+              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '150ms' }}>
+                <div className="text-4xl font-bold text-black leading-none">
                   <CountUp target={99} suffix="%" duration={2000} />
                 </div>
-                <div className="text-gray-300 text-sm mt-2">Customer Satisfaction</div>
+                <div className="text-gray-600 text-sm mt-2">Customer Satisfaction</div>
               </div>
-              <div className="stats-card rounded-xl bg-white/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '300ms' }}>
-                <div className="text-4xl font-bold text-white leading-none">
+              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '300ms' }}>
+                <div className="text-4xl font-bold text-black leading-none">
                   <CountUp target={20} suffix="+" duration={2000} />
                 </div>
-                <div className="text-gray-300 text-sm mt-2">Years Experience</div>
+                <div className="text-gray-600 text-sm mt-2">Years Experience</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Separator */}
-      <div className="section-divider w-full h-px bg-black dark:bg-white"></div>
 
       {/* Testimonials Section */}
       <section id="testimonials" className="section-spacing">
@@ -994,29 +979,29 @@ export default function Home() {
             {/* Top Section - Title and Description */}
             <div className="text-left">
               <h2 className={`text-5xl font-bold font-title section-title-gap`}>What Our Clients Say</h2>
-              <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
                 Don&apos;t just take our word for it - hear from our satisfied clients about their experience with APX MEP.
               </p>
             </div>
             
             {/* Testimonial Carousel - Single View */}
             <div className="max-w-4xl mx-auto">
-              <div className="service-card text-white relative overflow-hidden">
+              <div className="service-card text-black relative overflow-hidden">
                 <span className="glow"></span>
                 
                 <div className="flex items-center space-x-2 mb-4 relative z-10">
                 {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-white fill-current" />
+                    <Star key={i} className="h-5 w-5 text-black fill-current" />
                 ))}
               </div>
                 
                 <div className="space-y-3 relative z-10">
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-gray-600 text-lg leading-relaxed">
                     &ldquo;{testimonials[currentTestimonial].text}&rdquo;
                   </p>
                   <div className="pt-2">
-                    <div className="font-semibold text-white text-lg">{testimonials[currentTestimonial].name}</div>
-                    <div className="text-gray-400">{testimonials[currentTestimonial].role}</div>
+                    <div className="font-semibold text-black text-lg">{testimonials[currentTestimonial].name}</div>
+                    <div className="text-gray-500">{testimonials[currentTestimonial].role}</div>
                   </div>
             </div>
             
@@ -1027,7 +1012,7 @@ export default function Home() {
                       key={index}
                       onClick={() => setCurrentTestimonial(index)}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === currentTestimonial ? 'bg-white' : 'bg-gray-600'
+                        index === currentTestimonial ? 'bg-black' : 'bg-gray-300'
                       }`}
                     />
                   ))}
@@ -1038,8 +1023,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Separator */}
-      <div className="section-divider w-full h-px bg-black dark:bg-white"></div>
 
       {/* Ready to Get Started Section */}
       <section id="contact" className="section-spacing relative">
@@ -1052,12 +1035,12 @@ export default function Home() {
               </h2>
               
               <div className="space-y-6 max-w-lg">
-                <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                <p className="text-base leading-relaxed text-gray-600">
                   At APX Mechanical & Electrical, we understand that time is of the essence when it comes to your project needs. 
                   That's why we're committed to responding to all quote requests within 24 hours, often much sooner.
                 </p>
                 
-                <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                <p className="text-base leading-relaxed text-gray-600">
                   Our experienced team of qualified engineers and technicians is standing by to provide you with detailed, 
                   competitive quotes tailored specifically to your requirements. We'll also provide information about our 
                   certifications, insurance coverage, and warranty terms to give you complete peace of mind.
@@ -1065,43 +1048,43 @@ export default function Home() {
             </div>
             
               <button
-                className="bg-white text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-3"
+                className="apx-mep-services-title-box relative overflow-hidden inline-flex items-center gap-3 border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] bg-black text-white px-8 py-4 font-semibold text-lg transition-colors duration-300 hover:bg-gray-900"
                 onClick={() => document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                <ArrowRight className="h-6 w-6" />
-                GET A QUOTE
+                <ArrowRight className="h-6 w-6 relative z-10" />
+                <span className="relative z-10">GET A QUOTE</span>
               </button>
                 </div>
             
             {/* Right side - Contact Form */}
             <div 
               id="quote-form" 
-              className="p-8 rounded-xl shadow-2xl"
+              className="p-8 rounded-tl-[1.75rem] rounded-br-[1.75rem] border border-black/20 bg-gray-50 shadow-lg"
             >
               <h3 className={`text-2xl font-bold mb-6 font-title`}>Get Your Free Quote</h3>
               
               <form className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2 text-gray-700">
                       First Name *
                     </label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg"
+                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                       placeholder="Enter your first name"
                     />
                 </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2 text-gray-700">
                       Last Name *
                     </label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg"
+                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                       placeholder="Enter your last name"
                     />
                   </div>
@@ -1109,25 +1092,25 @@ export default function Home() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2 text-gray-700">
                       Email Address *
                     </label>
                     <input
                       type="email"
                       required
-                      className="w-full px-4 py-3 rounded-lg"
+                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                       placeholder="Enter your email"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2 text-gray-700">
                       Phone Number *
                     </label>
                     <input
                       type="tel"
                       required
-                      className="w-full px-4 py-3 rounded-lg"
+                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -1242,31 +1225,31 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
                     Project Description *
                   </label>
                   <textarea
                     required
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg"
+                    className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors resize-none"
                     placeholder="Please describe your project requirements..."
                   ></textarea>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
                     Preferred Contact Method
                   </label>
                   <div className="flex space-x-6">
-                    <label className="flex items-center">
+                    <label className="flex items-center text-gray-700">
                       <input type="radio" name="contact-method" value="phone" className="mr-2" />
                       Phone Call
                     </label>
-                    <label className="flex items-center">
+                    <label className="flex items-center text-gray-700">
                       <input type="radio" name="contact-method" value="email" className="mr-2" />
                       Email
                     </label>
-                    <label className="flex items-center">
+                    <label className="flex items-center text-gray-700">
                       <input type="radio" name="contact-method" value="text" className="mr-2" />
                       Text Message
                     </label>
@@ -1275,7 +1258,7 @@ export default function Home() {
                 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-lg font-semibold text-lg"
+                  className="w-full py-4 rounded-tl-[1.25rem] rounded-br-[1.25rem] bg-black text-white font-semibold text-lg hover:bg-gray-900 transition-colors duration-300"
                 >
                   Submit Quote Request
                 </button>
@@ -1285,7 +1268,6 @@ export default function Home() {
         </div>
       </section>
 
-      <FontSection />
 
     </div>
     </>

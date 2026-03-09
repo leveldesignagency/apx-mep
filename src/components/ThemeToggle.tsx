@@ -49,14 +49,14 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     color: ${({ theme }) => theme.text} !important;
   }
 
-  /* Hero section - white text over video */
+  /* Hero section - use theme text */
   #hero h1,
   #hero h2,
   #hero h3,
   #hero p,
   #hero div,
   #hero span {
-    color: #ffffff !important;
+    color: ${({ theme }) => theme.text} !important;
   }
 
   /* Service card text */
@@ -178,19 +178,19 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
 `
 
 const lightTheme = {
-  bg: "#000000",
-  text: "#FFFFFF",
-  border: "#FFFFFF",
-  cardBg: "#000000",
-  divider: "#FFFFFF",
+  bg: "#FFFFFF",
+  text: "#000000",
+  border: "#000000",
+  cardBg: "#FFFFFF",
+  divider: "#000000",
   headerBg: "transparent",
   headerText: "#FFFFFF",
   headerTextHover: "#CCCCCC",
   headerTextActive: "#FFFFFF",
-  sidebarBg: "#000000",
-  buttonBg: "#FFFFFF",
-  buttonText: "#000000",
-  buttonHover: "#F0F0F0"
+  sidebarBg: "#FFFFFF",
+  buttonBg: "#000000",
+  buttonText: "#FFFFFF",
+  buttonHover: "#333333"
 }
 
 const darkTheme = {

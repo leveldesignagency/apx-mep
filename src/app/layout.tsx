@@ -21,6 +21,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.apx-mep.co.uk"),
   title: "APX - Professional Fire & Security | Mechanical & Electrical Services",
   description: "Professional fire safety, security systems, and mechanical & electrical services across the UK. Trusted by businesses for over 20 years.",
   keywords: "fire safety, security systems, mechanical services, electrical services, UK, professional",
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
     title: "APX - Professional Fire & Security Services",
     description: "Professional fire safety, security systems, and mechanical & electrical services across the UK.",
     type: "website",
+    url: "https://www.apx-mep.co.uk",
   },
 };
 
@@ -44,6 +46,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isLanding = process.env.NEXT_PUBLIC_SITE_MODE === "landing";
+
+  if (isLanding) {
+    return (
+      <html lang="en">
+        <body className="antialiased">{children}</body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="font-sans antialiased">

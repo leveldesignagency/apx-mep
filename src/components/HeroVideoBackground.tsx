@@ -46,18 +46,9 @@ export default function HeroVideoBackground() {
         (docEl?.scrollTop ?? 0) + h
       )
       const totalScroll = Math.max(0, scrollHeight - h)
-      /* Fade over first ~55% of viewport so video is gone sooner with scroll */
-      const firstSectionEnd = 0.55 * h
-      const plateauEnd = 2 * h
-      let value: number
-      if (y <= firstSectionEnd) {
-        value = 1 - (y / firstSectionEnd) * 0.95
-      } else if (y <= plateauEnd) {
-        value = 0.05
-      } else {
-        const fadeRange = Math.max(1, totalScroll - plateauEnd)
-        value = Math.max(0, 0.05 - ((y - plateauEnd) / fadeRange) * 0.05)
-      }
+      /* Fade to 0 by the end of the first viewport height */
+      const fadeEnd = h
+      const value = Math.max(0, 1 - (y / fadeEnd))
       setOpacity(value)
       if (layerRef.current) layerRef.current.style.opacity = String(value)
     }
@@ -109,17 +100,16 @@ export default function HeroVideoBackground() {
       >
         <source src="/606807_Cities_City_3840x2160.mp4" type="video/mp4" />
       </video>
-      {/* Black feathering: left and bottom so video fades to black, white text reads clearly */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.15) 50%, transparent 72%)",
+          background: "linear-gradient(to right, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.15) 50%, transparent 72%)",
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to bottom, transparent 0%, transparent 55%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0.95) 100%)",
+          background: "linear-gradient(to bottom, transparent 0%, transparent 55%, rgba(255,255,255,0.4) 80%, rgba(255,255,255,0.95) 100%)",
         }}
       />
     </div>

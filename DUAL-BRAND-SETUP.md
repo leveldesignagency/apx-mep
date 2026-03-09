@@ -5,7 +5,7 @@ This website is designed to support two separate brands under the APX umbrella:
 ## 🏢 **Brands**
 
 ### 1. **APX MEP** (Current)
-- **Domain**: `apx-mep.com`
+- **Domain**: `www.apx-mep.co.uk`
 - **Focus**: Mechanical, Electrical, and Plumbing services
 - **Services**: HVAC, electrical systems, plumbing solutions
 
@@ -61,8 +61,8 @@ Both websites will have:
 ## 🚀 **Deployment Strategy**
 
 ### MEP Website
-- Deploy to `apx-mep.com`
-- Vercel project: `apx-mep`
+- Deploy to `www.apx-mep.co.uk`
+- Vercel project: add domain **www.apx-mep.co.uk** in Vercel dashboard
 - GitHub repo: `apx-mep-website`
 
 ### FS Website  

@@ -22,6 +22,7 @@ export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [isHover, setIsHover] = useState(false);
+  const [overFooter, setOverFooter] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.add("curzr-big-circle-active");
@@ -38,6 +39,8 @@ export default function CustomCursor() {
       const y = e.clientY;
       const hover = isHoverTarget(e.target);
       setIsHover(hover);
+      const inFooter = !!(e.target instanceof Element && e.target.closest("footer"));
+      setOverFooter(inFooter);
       // Circle and dot are offset in CSS so their center is at (0,0); translate to pointer
       circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
@@ -72,7 +75,7 @@ export default function CustomCursor() {
 
   return (
     <div
-      className={`apx-cursor-big-circle${isHover ? " apx-cursor-big-circle--hover" : ""}`}
+      className={`apx-cursor-big-circle${isHover ? " apx-cursor-big-circle--hover" : ""}${overFooter ? " apx-cursor-big-circle--over-footer" : ""}`}
       aria-hidden
       hidden={!visible}
       style={{ opacity: visible ? 1 : 0 }}
