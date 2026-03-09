@@ -16,11 +16,6 @@ export const metadata: Metadata = {
   title: "APX MEP | Mechanical, Electrical & Plumbing",
   description: "Website coming soon. Trusted MEP solutions across the UK.",
   metadataBase: new URL("https://www.apx-mep.co.uk"),
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({

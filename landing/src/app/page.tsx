@@ -115,8 +115,8 @@ export default function LandingPage() {
           )}
         </div>
 
-        {/* Contact Information - Icons only on desktop */}
-        <div className="hidden md:flex flex-col sm:flex-row gap-12 mb-12 text-center">
+        {/* Contact Information - Icons (phone, email, location) on all screens */}
+        <div className="flex flex-row justify-center gap-12 mb-12 text-center">
           <a 
             href="tel:+441234567890"
             className="group hover:scale-105 transition-transform duration-300 cursor-pointer"
@@ -177,20 +177,8 @@ export default function LandingPage() {
         </a>
       </div>
 
-      {/* Bottom: contact on mobile, single copyright line */}
+      {/* Bottom: single copyright line */}
       <div className="flex-shrink-0 pt-4 pb-4">
-        <div className="md:hidden px-6 pb-3 space-y-2 text-center text-sm text-gray-300">
-          <a href="tel:+441234567890" className="block text-white hover:text-gray-200">+44 (0) 1234 567890</a>
-          <a href="mailto:info@apx-mep.co.uk" className="block text-white hover:text-gray-200">info@apx-mep.co.uk</a>
-          <a 
-            href="https://maps.google.com/?q=365-369+Bexley+Road+Northumberland+Heath+Erith,+Kent,+DA8+3EZ" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="block text-white hover:text-gray-200"
-          >
-            365-369 Bexley Road, Northumberland Heath, Erith, Kent DA8 3EZ
-          </a>
-        </div>
         <p className="text-center text-gray-500 text-xs">© 2025 APX MEP</p>
       </div>
     </div>
