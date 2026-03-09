@@ -42,26 +42,28 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="h-screen text-white flex flex-col overflow-hidden relative z-10">
-      {/* Logo at top with lines - unchanged on all screen sizes */}
-      <div className="pt-8 pb-8">
-        <div className="flex items-center justify-center">
-          <div className="flex-1 h-px bg-white mr-8" />
-          <div className="relative z-10">
-            <Image
-              src="/apx-logo.svg"
-              alt="APX MEP Logo"
-              width={280}
-              height={280}
-              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64"
-            />
+    <div className="min-h-screen text-white flex flex-col relative z-10 bg-black md:h-screen md:overflow-hidden overflow-y-auto">
+      {/* Mobile: single scrollable column (no header split). Desktop: logo section + centered main */}
+      <div className="flex flex-col md:flex-1 md:flex-col md:overflow-hidden min-h-0">
+        {/* Logo: on mobile part of flow (no lines); on desktop top section with lines */}
+        <div className="md:pt-8 md:pb-8 pt-6 pb-4 flex-shrink-0">
+          <div className="flex items-center justify-center">
+            <div className="hidden md:block flex-1 h-px bg-white mr-8" />
+            <div className="relative z-10">
+              <Image
+                src="/apx-logo.svg"
+                alt="APX MEP Logo"
+                width={280}
+                height={280}
+                className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64"
+              />
+            </div>
+            <div className="hidden md:block flex-1 h-px bg-white ml-8" />
           </div>
-          <div className="flex-1 h-px bg-white ml-8" />
         </div>
-      </div>
 
-      {/* Main Content - Centered */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 overflow-y-auto">
+        {/* Main content: on mobile one flow (natural height, scrolls with page); on desktop flex-1 centered */}
+        <div className="flex flex-col items-center md:flex-1 md:justify-center px-4 sm:px-6 md:px-8 py-4 md:py-0 min-h-0 md:overflow-y-auto">
 
         {/* Main Text Content */}
         <div className="text-center mb-8 md:mb-12 max-w-xl">
@@ -179,7 +181,7 @@ export default function LandingPage() {
 
       {/* Bottom: single copyright line */}
       <div className="flex-shrink-0 pt-4 pb-4">
-        <p className="text-center text-gray-500 text-xs">© 2025 APX MEP</p>
+        <p className="text-center text-gray-500 text-xs">© 2026 APX MEP</p>
       </div>
     </div>
   )

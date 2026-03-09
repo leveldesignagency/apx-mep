@@ -84,7 +84,7 @@ export default function Footer() {
 
         <div className="border-t border-t-[0.75px] mt-16 pt-8 text-center text-gray-500" style={{ borderTopColor: theme === 'dark' ? 'white' : 'black' }}>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm">&copy; 2025 APX. All rights reserved. | Privacy Policy | Terms of Service</p>
+            <p className="text-sm">&copy; 2026 APX. All rights reserved. | Privacy Policy | Terms of Service</p>
             <div className="flex-shrink-0">
               <Image 
                 src="/APX Accreditations_MECHANICAL AND ELECTRICAL ACCREDITATIONS.png" 

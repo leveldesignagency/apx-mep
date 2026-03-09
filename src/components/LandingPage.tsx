@@ -131,7 +131,7 @@ export default function LandingPage() {
       <footer className="py-4 border-t border-white flex-shrink-0">
         <div className="container mx-auto px-6 text-center">
           <p className="text-gray-400 text-xs">
-            © 2025 APX MEP. All rights reserved. | Professional MEP Services UK
+            © 2026 APX MEP. All rights reserved. | Professional MEP Services UK
           </p>
         </div>
       </footer>
