@@ -33,7 +33,7 @@ export default function LandingPage() {
     } catch (err) {
       const subject = encodeURIComponent('APX MEP - Website Coming Soon Subscription')
       const body = encodeURIComponent(`Hello APX MEP Team,\n\nPlease add the following email to your mailing list for updates about your website launch:\n\nEmail: ${email}\n\nThank you!\n\nBest regards,\n${email}`)
-      window.location.href = `mailto:charles@leveldesignagency.com?subject=${subject}&body=${body}`
+      window.location.href = `mailto:info@apx-mep.co.uk?subject=${subject}&body=${body}`
       setTimeout(() => {
         setIsSubscribed(true)
         setIsAnimating(false)
