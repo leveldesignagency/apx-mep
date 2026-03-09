@@ -44,51 +44,53 @@ export default function LandingPage() {
   return (
     <div className="h-screen text-white flex flex-col overflow-hidden relative z-10">
       {/* Logo at top with lines */}
-      <div className="pt-8 pb-8">
-        <div className="flex items-center justify-center">
-          {/* Left Line */}
-          <div className="flex-1 h-px bg-white mr-8"></div>
-          
-          {/* Logo */}
-          <div className="relative z-10">
+      <div className="pt-6 pb-6 md:pt-8 md:pb-8 px-4">
+        <div className="flex items-center justify-center gap-4 md:gap-0 md:mr-8 md:ml-8">
+          <div className="flex-1 h-px bg-white hidden md:block" />
+          <div className="relative z-10 shrink-0">
             <Image
               src="/apx-logo.svg"
               alt="APX MEP Logo"
               width={280}
               height={280}
-              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64"
+              className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64"
             />
           </div>
-          
-          {/* Right Line */}
-          <div className="flex-1 h-px bg-white ml-8"></div>
+          <div className="flex-1 h-px bg-white hidden md:block" />
         </div>
       </div>
 
       {/* Main Content - Centered */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 overflow-y-auto">
 
         {/* Main Text Content */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-black mb-4 tracking-tighter" style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.02em' }}>
+        <div className="text-center mb-8 md:mb-12 max-w-xl">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-3 md:mb-4 tracking-tighter px-1" style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.02em' }}>
             WEBSITE COMING SOON
           </h1>
-          <h2 className="text-3xl font-semibold mb-6 tracking-wider opacity-70">
-            MECHANICAL • ELECTRICAL • PLUMBING
+          {/* Mobile: stack without bullets; desktop: single line with bullets */}
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 md:mb-6 tracking-wider opacity-70 md:block">
+            <span className="block md:inline">MECHANICAL</span>
+            <span className="hidden md:inline"> • </span>
+            <span className="block md:inline">ELECTRICAL</span>
+            <span className="hidden md:inline"> • </span>
+            <span className="block md:inline">PLUMBING</span>
           </h2>
-          <p className="text-base text-gray-300 leading-relaxed mb-0 opacity-60">
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed opacity-60">
             As a trusted partner, we guide industries in their transition to sustainable energy with:
           </p>
-          <p className="text-base text-gray-300 leading-relaxed mb-0 opacity-60">
-            Trusted Mechanical & Electrical Solutions for Every Project.
-          </p>
-          <p className="text-base text-gray-300 leading-relaxed opacity-60">
-            Expert installation, maintenance, and emergency support.
-          </p>
+          <div className="mt-6 md:mt-2">
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-1 opacity-60">
+              Trusted Mechanical & Electrical Solutions for Every Project.
+            </p>
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed opacity-60">
+              Expert installation, maintenance, and emergency support.
+            </p>
+          </div>
         </div>
 
         {/* Email Subscription Form */}
-        <div className="mb-20 w-full max-w-md">
+        <div className="mb-10 md:mb-20 w-full max-w-md">
           {!isSubscribed ? (
             <form onSubmit={handleEmailSubmit} className="flex gap-2">
               <input
@@ -113,9 +115,8 @@ export default function LandingPage() {
           )}
         </div>
 
-        {/* Contact Information */}
-        <div className="flex flex-col sm:flex-row gap-12 mb-12 text-center">
-          {/* Phone */}
+        {/* Contact Information - Icons only on desktop */}
+        <div className="hidden md:flex flex-col sm:flex-row gap-12 mb-12 text-center">
           <a 
             href="tel:+441234567890"
             className="group hover:scale-105 transition-transform duration-300 cursor-pointer"
@@ -123,17 +124,13 @@ export default function LandingPage() {
           >
             <Phone className="h-8 w-8 text-white group-hover:text-gray-300 transition-colors" />
           </a>
-
-          {/* Email */}
           <a 
             href="mailto:info@apx-mep.co.uk"
             className="group hover:scale-105 transition-transform duration-300 cursor-pointer"
-            title="info@apxmep.co.uk"
+            title="info@apx-mep.co.uk"
           >
             <Mail className="h-8 w-8 text-white group-hover:text-gray-300 transition-colors" />
           </a>
-
-          {/* Address */}
           <a 
             href="https://maps.google.com/?q=365-369+Bexley+Road+Northumberland+Heath+Erith,+Kent,+DA8+3EZ"
             target="_blank"
@@ -146,8 +143,8 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Social Icons - Right Center */}
-      <div className="absolute right-8 top-1/2 transform -translate-y-1/2 flex flex-col gap-6">
+      {/* Social Icons - Right Center, hidden on mobile */}
+      <div className="hidden md:flex absolute right-8 top-1/2 transform -translate-y-1/2 flex-col gap-6">
         <a 
           href="https://facebook.com" 
           target="_blank" 
@@ -180,8 +177,21 @@ export default function LandingPage() {
         </a>
       </div>
 
-      {/* Footer */}
+      {/* Footer + Mobile contact at bottom */}
       <footer className="py-4 border-t border-white flex-shrink-0">
+        {/* Mobile: contact details at bottom */}
+        <div className="md:hidden px-6 pb-4 space-y-2 text-center text-sm text-gray-300">
+          <a href="tel:+441234567890" className="block text-white hover:text-gray-200">+44 (0) 1234 567890</a>
+          <a href="mailto:info@apx-mep.co.uk" className="block text-white hover:text-gray-200">info@apx-mep.co.uk</a>
+          <a 
+            href="https://maps.google.com/?q=365-369+Bexley+Road+Northumberland+Heath+Erith,+Kent,+DA8+3EZ" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="block text-white hover:text-gray-200"
+          >
+            365-369 Bexley Road, Northumberland Heath, Erith, Kent DA8 3EZ
+          </a>
+        </div>
         <div className="container mx-auto px-6 text-center">
           <p className="text-gray-400 text-xs">
             © 2025 APX MEP. All rights reserved. | Professional MEP Services UK
