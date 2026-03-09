@@ -143,6 +143,7 @@ export default function LandingPage() {
             <MapPin className="h-8 w-8 text-white group-hover:text-gray-300 transition-colors" />
           </a>
         </div>
+        </div>
       </div>
 
       {/* Social Icons - Right Center, hidden on mobile */}
