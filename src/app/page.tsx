@@ -266,13 +266,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: any) => {
+        labels.forEach((label: Element) => {
           label.style.color = '#ffffff';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: any) => {
+        textInputs.forEach((input: Element) => {
           input.style.backgroundColor = '#000000';
           input.style.border = '2px solid #ffffff';
           input.style.color = '#ffffff';
@@ -299,7 +299,7 @@ function FullSiteHome() {
         
         // Radio buttons - custom styling
         const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: any) => {
+        radios.forEach((radio: HTMLInputElement) => {
           radio.style.appearance = 'none';
           radio.style.width = '20px';
           radio.style.height = '20px';
@@ -312,7 +312,7 @@ function FullSiteHome() {
           
           // Checked state
           radio.addEventListener('change', () => {
-            radios.forEach((r: any) => {
+            radios.forEach((r: HTMLInputElement) => {
               r.style.backgroundColor = '#000000';
             });
             if (radio.checked) {
@@ -341,13 +341,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: any) => {
+        labels.forEach((label: Element) => {
           label.style.color = '#000000';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: any) => {
+        textInputs.forEach((input: Element) => {
           input.style.backgroundColor = '#ffffff';
           input.style.border = '1px solid #000000';
           input.style.color = '#000000';
@@ -373,7 +373,7 @@ function FullSiteHome() {
         
         // Radio buttons - reset to default browser styling
         const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: any) => {
+        radios.forEach((radio: HTMLInputElement) => {
           radio.style.appearance = 'auto'; // Reset to browser default
           radio.style.width = 'initial';
           radio.style.height = 'initial';
@@ -445,7 +445,7 @@ function FullSiteHome() {
       list.style.setProperty('--article-width', String(w))
     }
     requestAnimationFrame(() => requestAnimationFrame(resync))
-  }, [activeMepIndex, mepCards.length])
+  }, [activeMepIndex, mepCards])
 
   useEffect(() => {
     const list = mepListRef.current
@@ -1037,12 +1037,12 @@ function FullSiteHome() {
               <div className="space-y-6 max-w-lg">
                 <p className="text-base leading-relaxed text-gray-600">
                   At APX Mechanical & Electrical, we understand that time is of the essence when it comes to your project needs. 
-                  That's why we're committed to responding to all quote requests within 24 hours, often much sooner.
+                  That&apos;s why we&apos;re committed to responding to all quote requests within 24 hours, often much sooner.
                 </p>
                 
                 <p className="text-base leading-relaxed text-gray-600">
                   Our experienced team of qualified engineers and technicians is standing by to provide you with detailed, 
-                  competitive quotes tailored specifically to your requirements. We'll also provide information about our 
+                  competitive quotes tailored specifically to your requirements. We&apos;ll also provide information about our 
                   certifications, insurance coverage, and warranty terms to give you complete peace of mind.
               </p>
             </div>

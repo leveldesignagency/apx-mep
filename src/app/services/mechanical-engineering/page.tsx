@@ -2,7 +2,6 @@
 
 import { useTheme } from "@/contexts/ThemeContext";
 import { Wrench, Cog, Settings, CheckCircle, ArrowRight } from "lucide-react";
-import Image from "next/image";
 export default function MechanicalEngineeringPage() {
   const { theme } = useTheme();
 

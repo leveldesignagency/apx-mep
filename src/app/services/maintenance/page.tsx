@@ -323,7 +323,7 @@ export default function MaintenancePage() {
           <p className={`text-xl mb-8 ${
             theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
           }`}>
-            Don't wait for a breakdown. Proactive maintenance saves time, money, and prevents 
+            Don&apos;t wait for a breakdown. Proactive maintenance saves time, money, and prevents 
             costly emergency repairs. Contact us today to discuss your maintenance needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       status: response.ok ? 200 : response.status,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

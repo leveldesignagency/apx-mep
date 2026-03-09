@@ -2,14 +2,13 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/Button"
-import { Phone, Mail, Menu, X, ArrowRight, Check, Facebook, Instagram, Linkedin } from "lucide-react"
+import { Phone, Mail, Menu, X, ArrowRight, Facebook, Instagram, Linkedin } from "lucide-react"
 import { useState, useRef } from "react"
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function Header() {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  // theme reserved for future use
+  useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'phone' | 'email' } | null>(null)

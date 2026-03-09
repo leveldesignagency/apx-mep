@@ -11,8 +11,8 @@ import {
 } from '@/utils/cookieUtils'
 
 const CookieConsent = () => {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  // theme reserved for future use
+  useTheme()
   const cookieDark = true
   const [mounted, setMounted] = useState(false)
   const [showBanner, setShowBanner] = useState(false)
@@ -451,7 +451,7 @@ const CookieConsent = () => {
                     lineHeight: '1.5'
                   }}>
                     These cookies help us understand how visitors interact with our website by collecting and reporting 
-                    information anonymously. This helps us improve our website's performance and user experience.
+                    information anonymously. This helps us improve our website&apos;s performance and user experience.
                   </p>
                 </div>
                 <button

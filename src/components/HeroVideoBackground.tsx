@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { useTheme } from "@/contexts/ThemeContext"
 
 /** Get current scroll Y from every possible scroll root (Mac trackpad, etc.). */
 function getScrollY(): number {
@@ -23,7 +22,6 @@ function getScrollY(): number {
  * Rendered via portal into body so nothing in the tree can affect fixed/scroll.
  */
 export default function HeroVideoBackground() {
-  const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [opacity, setOpacity] = useState(1)
   const layerRef = useRef<HTMLDivElement>(null)
@@ -38,14 +36,6 @@ export default function HeroVideoBackground() {
     const update = () => {
       const h = window.innerHeight
       const y = getScrollY()
-      const docEl = document.documentElement
-      const body = document.body
-      const scrollHeight = Math.max(
-        docEl?.scrollHeight ?? 0,
-        body?.scrollHeight ?? 0,
-        (docEl?.scrollTop ?? 0) + h
-      )
-      const totalScroll = Math.max(0, scrollHeight - h)
       /* Fade to 0 by the end of the first viewport height */
       const fadeEnd = h
       const value = Math.max(0, 1 - (y / fadeEnd))
