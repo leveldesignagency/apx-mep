@@ -43,20 +43,20 @@ export default function LandingPage() {
 
   return (
     <div className="h-screen text-white flex flex-col overflow-hidden relative z-10">
-      {/* Logo at top with lines */}
-      <div className="pt-6 pb-6 md:pt-8 md:pb-8 px-4">
-        <div className="flex items-center justify-center gap-4 md:gap-0 md:mr-8 md:ml-8">
-          <div className="flex-1 h-px bg-white hidden md:block" />
-          <div className="relative z-10 shrink-0">
+      {/* Logo at top with lines - unchanged on all screen sizes */}
+      <div className="pt-8 pb-8">
+        <div className="flex items-center justify-center">
+          <div className="flex-1 h-px bg-white mr-8" />
+          <div className="relative z-10">
             <Image
               src="/apx-logo.svg"
               alt="APX MEP Logo"
               width={280}
               height={280}
-              className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64"
+              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64"
             />
           </div>
-          <div className="flex-1 h-px bg-white hidden md:block" />
+          <div className="flex-1 h-px bg-white ml-8" />
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function LandingPage() {
 
         {/* Main Text Content */}
         <div className="text-center mb-8 md:mb-12 max-w-xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-3 md:mb-4 tracking-tighter px-1" style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.02em' }}>
+          <h1 className="text-6xl font-black mb-4 tracking-tighter" style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '-0.02em' }}>
             WEBSITE COMING SOON
           </h1>
           {/* Mobile: stack without bullets; desktop: single line with bullets */}
@@ -177,10 +177,9 @@ export default function LandingPage() {
         </a>
       </div>
 
-      {/* Footer + Mobile contact at bottom */}
-      <footer className="py-4 border-t border-white flex-shrink-0">
-        {/* Mobile: contact details at bottom */}
-        <div className="md:hidden px-6 pb-4 space-y-2 text-center text-sm text-gray-300">
+      {/* Bottom: contact on mobile, single copyright line */}
+      <div className="flex-shrink-0 pt-4 pb-4">
+        <div className="md:hidden px-6 pb-3 space-y-2 text-center text-sm text-gray-300">
           <a href="tel:+441234567890" className="block text-white hover:text-gray-200">+44 (0) 1234 567890</a>
           <a href="mailto:info@apx-mep.co.uk" className="block text-white hover:text-gray-200">info@apx-mep.co.uk</a>
           <a 
@@ -192,12 +191,8 @@ export default function LandingPage() {
             365-369 Bexley Road, Northumberland Heath, Erith, Kent DA8 3EZ
           </a>
         </div>
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-gray-400 text-xs">
-            © 2025 APX MEP. All rights reserved. | Professional MEP Services UK
-          </p>
-        </div>
-      </footer>
+        <p className="text-center text-gray-500 text-xs">© 2025 APX MEP</p>
+      </div>
     </div>
   )
 }
