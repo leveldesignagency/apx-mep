@@ -2,7 +2,7 @@
 export const brandConfig = {
   current: 'MEP' as 'MEP' | 'FS',
   domains: {
-    MEP: 'www.apx-mep.co.uk',
+    MEP: 'apx-mep.com',
     FS: 'apx-fs.com'
   },
   content: {

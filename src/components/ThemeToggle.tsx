@@ -49,14 +49,41 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     color: ${({ theme }) => theme.text} !important;
   }
 
-  /* Hero section - use theme text */
+  /* Hero section - FS: white text on hero image */
   #hero h1,
   #hero h2,
   #hero h3,
   #hero p,
   #hero div,
   #hero span {
-    color: ${({ theme }) => theme.text} !important;
+    color: #ffffff !important;
+  }
+
+  /* ABOUT intro – white bg, dark text */
+  #about-intro, #about-intro h2, #about-intro p {
+    color: #000000 !important;
+  }
+  #about-intro p {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
+  #about-intro a[href="/about"] {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  /* Footer – always light text on black background so it stays visible */
+  footer,
+  footer *,
+  footer h1, footer h2, footer h3, footer h4, footer h5, footer h6,
+  footer p, footer span, footer div, footer a, footer li {
+    color: #ffffff !important;
+  }
+  footer .text-gray-400,
+  footer a:not(:hover) {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+  footer a:hover {
+    color: #ffffff !important;
   }
 
   /* Service card text */
@@ -97,6 +124,19 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
 
   button:hover {
     background: ${({ theme }) => theme.buttonHover} !important;
+  }
+
+  /* Projects section nav arrows: white border, no fill, white icon; hover = white fill, black icon (override global button) */
+  #projects .projects-nav-btn {
+    background: transparent !important;
+    color: white !important;
+    border-color: white !important;
+  }
+  #projects .projects-nav-btn:hover,
+  #projects .projects-nav-btn:focus {
+    background: white !important;
+    color: black !important;
+    border-color: white !important;
   }
 
   /* Form inputs: theme background and text */
@@ -141,7 +181,7 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     color: ${({ theme }) => theme.text} !important;
   }
 
-  /* All white background classes should use theme background */
+  /* .bg-white is overridden to theme background (so dark theme = black). For literal white, use inline style or a section-specific rule in globals.css (e.g. #accreditations). */
   .bg-white {
     background: ${({ theme }) => theme.bg} !important;
   }
@@ -163,8 +203,8 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     border-color: ${({ theme }) => theme.border} !important;
   }
 
-  /* Scroll indicator squares: use theme border */
-  .fixed.right-6 .w-3.h-3 {
+  /* Scroll indicator squares: black border (see .scroll-indicator-square in globals) – do not override */
+  .fixed.right-6 .w-3.h-3:not(.scroll-indicator-square) {
     border-color: ${({ theme }) => theme.border} !important;
   }
 
@@ -178,19 +218,19 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
 `
 
 const lightTheme = {
-  bg: "#FFFFFF",
-  text: "#000000",
-  border: "#000000",
-  cardBg: "#FFFFFF",
-  divider: "#000000",
+  bg: "#000000",
+  text: "#FFFFFF",
+  border: "#FFFFFF",
+  cardBg: "#000000",
+  divider: "#FFFFFF",
   headerBg: "transparent",
   headerText: "#FFFFFF",
   headerTextHover: "#CCCCCC",
   headerTextActive: "#FFFFFF",
-  sidebarBg: "#FFFFFF",
-  buttonBg: "#000000",
-  buttonText: "#FFFFFF",
-  buttonHover: "#333333"
+  sidebarBg: "#000000",
+  buttonBg: "#FFFFFF",
+  buttonText: "#000000",
+  buttonHover: "#F0F0F0"
 }
 
 const darkTheme = {

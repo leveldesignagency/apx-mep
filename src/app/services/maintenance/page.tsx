@@ -1,351 +1,169 @@
 "use client"
 
+import Image from "next/image";
+import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Wrench, Clock, Shield, CheckCircle, ArrowRight, Phone, Calendar } from "lucide-react";
-export default function MaintenancePage() {
+import { CustomPillButton } from "@/components/ui/CustomPillButton";
+import { OurCustomers, RequestFreeSurvey } from "@/components/ServicePageSharedSections";
+import { Eye, Bell, Shield, Link2, Smartphone } from "lucide-react";
+
+export default function PlumbingBuildingServicesPage() {
   const { theme } = useTheme();
+  const heroImageSrc = "/client%20logos/service%20pages%20image/home-video-door-entry-system-installer-800x533.jpg";
+  const textClass = theme === "dark" ? "text-white" : "text-black";
+  const mutedClass = theme === "dark" ? "text-gray-300" : "text-gray-600";
+  const borderClass = theme === "dark" ? "border-gray-700" : "border-gray-200";
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-      {/* Section Separator - Top */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Hero Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className={`text-5xl lg:text-7xl font-bold mb-6 ${font-title} ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                Maintenance
-                <br />
-                <span className="text-4xl lg:text-6xl opacity-70">& Support</span>
-              </h1>
-              <p className={`text-xl mb-8 leading-relaxed ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Keep your systems running at peak performance with our comprehensive maintenance and support services. 
-                From preventive maintenance to emergency repairs, we ensure maximum uptime, reliability, and efficiency 
-                for all your mechanical and electrical systems.
+    <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+      <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+      {/* Hero */}
+      <section className="relative h-screen overflow-visible flex flex-col bg-transparent">
+        <div className="fixed inset-0 z-0" aria-hidden>
+          <Image src={heroImageSrc} alt="" fill className="object-cover object-center" priority sizes="100vw" />
+          <div className="absolute inset-0 bg-black/50" aria-hidden />
+        </div>
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
+          <div className="space-y-4 max-w-3xl">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-left font-title text-white">
+              Plumbing & Building Services
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg font-normal text-left tracking-tight max-w-2xl text-white">
+              APX MEP delivers plumbing, drainage and building services for domestic and commercial premises across London and the Home Counties.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg font-normal text-left tracking-tight max-w-2xl text-white">
+              We design, install and maintain plumbing systems, from repairs and upgrades through to full commercial installations. Our qualified engineers work with developers, landlords and facility managers to deliver reliable building services and compliance.
+            </p>
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
+              <CustomPillButton href="/contact" size="md">
+                Get a free quote
+              </CustomPillButton>
+              <Link href="/contact" className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors">
+                Question? get in touch
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="relative z-10 -mt-64 sm:-mt-72">
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Plumbing & Building Services */}
+        <section className={`py-12 lg:py-16 ${textClass}`} style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+          <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className="text-4xl font-bold mb-6 font-title">Plumbing & Building Services</h2>
+            <div className="space-y-6 text-lg leading-relaxed">
+              <p className={mutedClass}>
+                APX MEP has extensive experience in designing and installing plumbing and building services for domestic, commercial and industrial premises. We offer repairs, upgrades and full installations, including drainage and compliance.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'bg-white text-black hover:bg-gray-200' 
-                    : 'bg-black text-white hover:bg-gray-800'
-                }`}>
-                  Request Service
-                </button>
-                <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'border-white text-white hover:bg-white hover:text-black' 
-                    : 'border-black text-black hover:bg-black hover:text-white'
-                }`}>
-                  Emergency Call
-                </button>
-              </div>
-            </div>
-            <div className="relative">
-              <div className={`w-full h-96 rounded-2xl ${
-                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'
-              } flex items-center justify-center`}>
-                <div className="text-center">
-                  <Wrench className="w-24 h-24 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg opacity-70">Maintenance & Support Image Placeholder</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Services Overview */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Maintenance & Support Services
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Calendar className="w-8 h-8" />,
-                title: "Preventive Maintenance",
-                description: "Scheduled maintenance programs to prevent breakdowns and extend equipment lifespan through regular inspections and servicing."
-              },
-              {
-                icon: <Wrench className="w-8 h-8" />,
-                title: "Emergency Repairs",
-                description: "24/7 emergency response team for urgent repairs and system failures to minimize downtime and operational disruption."
-              },
-              {
-                icon: <Shield className="w-8 h-8" />,
-                title: "System Inspections",
-                description: "Comprehensive safety and compliance inspections to ensure all systems meet regulatory standards and safety requirements."
-              },
-              {
-                icon: <Clock className="w-8 h-8" />,
-                title: "Predictive Maintenance",
-                description: "Advanced monitoring and analytics to predict potential failures before they occur, reducing unexpected downtime."
-              },
-              {
-                icon: <CheckCircle className="w-8 h-8" />,
-                title: "Performance Optimization",
-                description: "Continuous system optimization to improve efficiency, reduce energy consumption, and enhance overall performance."
-              },
-              {
-                icon: <ArrowRight className="w-8 h-8" />,
-                title: "Remote Monitoring",
-                description: "24/7 remote monitoring services with real-time alerts and proactive maintenance recommendations."
-              }
-            ].map((service, index) => (
-              <div key={index} className={`p-8 rounded-xl transition-all duration-300 hover:scale-105 ${
-                theme === 'dark' 
-                  ? 'bg-black border border-gray-700 hover:border-white' 
-                  : 'bg-white border border-gray-200 hover:border-black'
-              }`}>
-                <div className={`mb-4 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.icon}
-                </div>
-                <h3 className={`text-xl font-semibold mb-3 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.title}
-                </h3>
-                <p className={`${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Service Levels */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Service Level Options
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Basic Maintenance",
-                price: "From £299/month",
-                features: [
-                  "Monthly system inspections",
-                  "Basic cleaning and servicing",
-                  "Emergency call-out (4-hour response)",
-                  "Annual safety compliance check",
-                  "Basic reporting and documentation"
-                ],
-                popular: false
-              },
-              {
-                title: "Comprehensive Care",
-                price: "From £599/month",
-                features: [
-                  "Bi-weekly system inspections",
-                  "Full cleaning and servicing",
-                  "Emergency call-out (2-hour response)",
-                  "Quarterly safety compliance checks",
-                  "Detailed reporting and analytics",
-                  "Remote monitoring included"
-                ],
-                popular: true
-              },
-              {
-                title: "Premium Support",
-                price: "From £999/month",
-                features: [
-                  "Weekly system inspections",
-                  "Comprehensive cleaning and servicing",
-                  "Emergency call-out (1-hour response)",
-                  "Monthly safety compliance checks",
-                  "Advanced reporting and analytics",
-                  "24/7 remote monitoring",
-                  "Dedicated account manager"
-                ],
-                popular: false
-              }
-            ].map((plan, index) => (
-              <div key={index} className={`relative p-8 rounded-xl ${
-                plan.popular 
-                  ? (theme === 'dark' 
-                      ? 'bg-white text-black border-2 border-white' 
-                      : 'bg-black text-white border-2 border-black')
-                  : (theme === 'dark' 
-                      ? 'bg-gray-800 border border-gray-700' 
-                      : 'bg-white border border-gray-200')
-              }`}>
-                {plan.popular && (
-                  <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full text-sm font-semibold ${
-                    theme === 'dark' 
-                      ? 'bg-black text-white' 
-                      : 'bg-white text-black'
-                  }`}>
-                    Most Popular
-                  </div>
-                )}
-                <h3 className={`text-2xl font-bold mb-4 ${
-                  plan.popular 
-                    ? (theme === 'dark' ? 'text-black' : 'text-white')
-                    : (theme === 'dark' ? 'text-white' : 'text-black')
-                }`}>
-                  {plan.title}
-                </h3>
-                <div className={`text-3xl font-bold mb-6 ${
-                  plan.popular 
-                    ? (theme === 'dark' ? 'text-black' : 'text-white')
-                    : (theme === 'dark' ? 'text-white' : 'text-black')
-                }`}>
-                  {plan.price}
-                </div>
-                <ul className="space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className={`flex items-center ${
-                      plan.popular 
-                        ? (theme === 'dark' ? 'text-gray-800' : 'text-gray-200')
-                        : (theme === 'dark' ? 'text-gray-300' : 'text-gray-600')
-                    }`}>
-                      <CheckCircle className="w-5 h-5 mr-3 text-green-500" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Emergency Response */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className={`text-4xl font-bold mb-6 ${font-title} ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                24/7 Emergency Response
-              </h2>
-              <p className={`text-xl mb-8 ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                When systems fail, every minute counts. Our emergency response team is available 
-                24/7 to provide rapid diagnosis and repair services, minimizing downtime and 
-                protecting your operations.
+              <p className={mutedClass}>
+                We work throughout London and the Home Counties with developers, landlords and facility managers. Our qualified engineers deliver planned and reactive maintenance to keep your systems running safely and efficiently.
               </p>
-              <div className="space-y-4">
-                {[
-                  "Average response time: 1-2 hours",
-                  "Fully equipped mobile service units",
-                  "Certified emergency technicians",
-                  "Real-time status updates",
-                  "Follow-up maintenance scheduling"
-                ].map((item, index) => (
-                  <div key={index} className={`flex items-center ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                    <CheckCircle className="w-5 h-5 mr-3 text-green-500" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={`p-8 rounded-xl ${
-              theme === 'dark' 
-                ? 'bg-black border border-gray-700' 
-                : 'bg-white border border-gray-200'
-            }`}>
-              <div className="text-center">
-                <Phone className="w-16 h-16 mx-auto mb-6 text-red-500" />
-                <h3 className={`text-2xl font-bold mb-4 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  Emergency Hotline
-                </h3>
-                <p className={`text-xl mb-6 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  020 4568 5986
-                </p>
-                <p className={`text-sm ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                  Available 24/7 for urgent repairs and system failures
-                </p>
-              </div>
+              <p className={mutedClass}>
+                From single property repairs through to multi-site contracts, we provide plumbing and building services you can rely on. Contact us for a free quote or survey.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* CTA Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-          <h2 className={`text-4xl font-bold mb-6 ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Keep Your Systems Running Smoothly
-          </h2>
-          <p className={`text-xl mb-8 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Don&apos;t wait for a breakdown. Proactive maintenance saves time, money, and prevents 
-            costly emergency repairs. Contact us today to discuss your maintenance needs.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'bg-white text-black hover:bg-gray-200' 
-                : 'bg-black text-white hover:bg-gray-800'
-            }`}>
-              Schedule Maintenance
-            </button>
-            <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'border-white text-white hover:bg-white hover:text-black' 
-                : 'border-black text-black hover:bg-black hover:text-white'
-            }`}>
-              Call 020 4568 5986
-            </button>
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* The Latest Technology – brands */}
+        <section className={`py-12 lg:py-16 ${textClass}`} style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+          <div className="container mx-auto px-6">
+            <h2 className="text-4xl font-bold mb-6 text-center font-title">Products & Partners</h2>
+            <p className={`text-center max-w-2xl mx-auto mb-10 ${mutedClass}`}>
+              We work with leading manufacturers and suppliers for plumbing and building services
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+              {["Wavin", "Polypipe", "Worcester", "Vaillant", "Ideal"].map((brand, i) => (
+                <div key={i} className={`px-6 py-4 rounded-lg border ${borderClass} min-w-[140px] text-center font-semibold`}>
+                  {brand}
+                </div>
+              ))}
+            </div>
           </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Full-Service Plumbing & Building */}
+        <section className={`py-12 lg:py-16 ${textClass}`} style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+          <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className="text-4xl font-bold mb-6 font-title">Full-Service Plumbing & Building</h2>
+            <div className="space-y-6 text-lg leading-relaxed">
+              <p className={mutedClass}>
+                We work closely with developers, facility managers and building owners to deliver plumbing and building services that meet their requirements and compliance needs.
+              </p>
+              <p className={mutedClass}>
+                Our engineers carry out design, installation, maintenance and repairs for domestic and commercial plumbing, drainage and building services. We provide condition reports and support compliance for landlords and commercial premises.
+              </p>
+              <p className={mutedClass}>
+                From emergency call-outs to planned maintenance and full installations, we offer a range of plumbing and building services. Contact us for a free quote or to arrange a survey.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Plumbing & Building – benefits */}
+        <section className={`py-12 lg:py-16 ${textClass}`} style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+          <div className="container mx-auto px-6">
+            <h2 className="text-4xl font-bold mb-10 text-center font-title">Why Choose APX MEP for Plumbing & Building</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              {[
+                { icon: Eye, title: "Qualified Engineers", text: "All our plumbing and building services are carried out by qualified, experienced engineers." },
+                { icon: Bell, title: "Reactive & Planned", text: "We offer both emergency call-outs and planned maintenance contracts." },
+                { icon: Shield, title: "Compliance", text: "We support landlords and commercial premises with compliance and condition reporting." },
+                { icon: Link2, title: "Full Scope", text: "From repairs and upgrades to full design and installation projects." },
+                { icon: Smartphone, title: "Responsive", text: "Clear communication and responsive service when you need us." },
+              ].map(({ icon: Icon, title, text }, i) => (
+                <div key={i} className={`p-6 rounded-xl border ${borderClass}`}>
+                  <Icon className={`w-10 h-10 mb-4 ${theme === "dark" ? "text-white" : "text-black"}`} />
+                  <h3 className="text-xl font-semibold mb-2">{title}</h3>
+                  <p className={mutedClass}>{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Our Video Entry Installations */}
+        <section className={`py-12 lg:py-16 ${textClass}`} style={{ backgroundColor: theme === "dark" ? "#000000" : "#ffffff" }}>
+          <div className="container mx-auto px-6">
+            <h2 className="text-4xl font-bold mb-10 text-center font-title">Our Plumbing & Building Projects</h2>
+            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
+              Examples of plumbing and building services we have delivered for our customers:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                { title: "Aspire Herschel Street", subtitle: "Apartment Block" },
+                { title: "Fizzy Living, Lewisham", subtitle: "Apartment Blocks" },
+                { title: "Richmond Buildings Workspace", subtitle: "Firmdale Hotels" },
+                { title: "United Living Welbourne", subtitle: "Apartment Block" },
+              ].map((project, i) => (
+                <div key={i} className={`rounded-xl border ${borderClass} overflow-hidden`}>
+                  <div className={`aspect-video flex items-center justify-center ${theme === "dark" ? "bg-white/5" : "bg-gray-100"}`}>
+                    <span className={`text-sm ${mutedClass}`}>Image placeholder</span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
+                    <p className={mutedClass}>{project.subtitle}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <OurCustomers />
+        <RequestFreeSurvey />
+      </div>
     </div>
   );
 }
-

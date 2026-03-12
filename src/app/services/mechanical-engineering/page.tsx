@@ -1,238 +1,276 @@
 "use client"
 
+import Image from "next/image";
+import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Wrench, Cog, Settings, CheckCircle, ArrowRight } from "lucide-react";
-export default function MechanicalEngineeringPage() {
+import { CustomPillButton } from "@/components/ui/CustomPillButton";
+import { RequestFreeSurvey } from "@/components/ServicePageSharedSections";
+
+const MEP_SURVEY_TITLE = "Request Your Free Mechanical Systems Survey";
+const MEP_SURVEY_DESCRIPTION = "Not sure what kind of HVAC or mechanical system you need? We offer a free, no obligation survey to assess your building and recommend the right heating, ventilation and air conditioning solution. Contact us for a chat about your requirements.";
+
+const SYSTEM_TYPES = [
+  "HVAC Design & Installation",
+  "Heating Systems",
+  "Ventilation & Air Conditioning",
+  "Building Management Systems (BMS)",
+];
+
+const MEP_CUSTOMERS = [
+  { name: "The Mayfair Townhouse", tagline: "Luxury Lifestyle Hotel" },
+  { name: "Hilton DoubleTree", tagline: "Hotel Group" },
+  { name: "Firmdale Hotels", tagline: "Hotel Group" },
+  { name: "United Living", tagline: "Housing & Infrastructure" },
+  { name: "Camden Council", tagline: "Local Authority, London" },
+  { name: "University of West London", tagline: "Higher Education" },
+  { name: "Scape Bloomsbury", tagline: "Student Accommodation" },
+];
+
+const MEP_INSTALLATIONS = [
+  { title: "HVAC Installation Dimco Exhibition Building Westfield", org: "Dimco Exhibition Building, Westfield, Stratford" },
+  { title: "Mechanical Systems University of West London", org: "University of West London, Higher Education" },
+  { title: "HVAC Sancroft Building", org: "Sancroft Building, Office Space, London" },
+  { title: "Heating & Ventilation Oaklands House London", org: "Oaklands House, London, Apartment Blocks" },
+  { title: "Mechanical Systems Hilton DoubleTree Kingston", org: "Hilton DoubleTree Kingston, Central London Hotel" },
+  { title: "HVAC John Keats Primary School", org: "John Keats Primary School, Rotherhithe, London" },
+  { title: "Mechanical Systems Mayfair Townhouse London", org: "Mayfair Townhouse, Luxury Lifestyle Hotel" },
+  { title: "HVAC Scape Bloomsbury", org: "Scape Bloomsbury, Student Accommodation" },
+  { title: "Mechanical Systems Wembley French School", org: "Wembley French School, International School" },
+];
+
+const MEP_BRANDS = ["Daikin", "Mitsubishi", "Vaillant", "Worcester", "Viessmann", "Ideal"];
+
+const REGULATION_QUESTIONS = [
+  "Are your premises small, single-storey or open-plan?",
+  "Do you have any high-risk substances on-site such as chemicals?",
+  "Are there any high-risk activities on-site, such as cooking?",
+  "Are there vulnerable people in the building (e.g. children, elderly, disabled)?",
+  "If a fire broke out on-site it would be easily spotted straight away?",
+  "Would shouting 'fire' be easily heard by all occupants of the building?",
+];
+
+export default function MechanicalSystemsPage() {
   const { theme } = useTheme();
+  const heroImageSrc = "/client%20logos/service%20pages%20image/home-fire-alarm-system-installer-800x533.jpg";
+  const isDark = theme === "dark";
+  const textClass = isDark ? "text-white" : "text-black";
+  const mutedClass = isDark ? "text-gray-300" : "text-gray-600";
+  const bgStyle = { backgroundColor: isDark ? "#000000" : "#ffffff" };
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-      {/* Section Separator - Top */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Hero Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className={`text-5xl lg:text-7xl font-bold mb-6 font-title ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                Mechanical
-                <br />
-                <span className="text-4xl lg:text-6xl opacity-70">Engineering</span>
+    <div className="min-h-screen overflow-x-hidden" style={bgStyle}>
+      <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+      {/* Hero */}
+      <section className="relative h-screen overflow-visible flex flex-col bg-transparent">
+        <div className="fixed inset-0 z-0" aria-hidden>
+          <Image
+            src={heroImageSrc}
+            alt=""
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/50" aria-hidden />
+        </div>
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
+          <div className="space-y-4">
+            <div className="max-w-3xl">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-left font-title text-white">
+                Mechanical Systems
               </h1>
-              <p className={`text-xl mb-8 leading-relaxed ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Comprehensive mechanical engineering solutions for industrial, commercial, and residential projects. 
-                From HVAC systems to complex machinery installations, we deliver precision-engineered solutions 
-                that optimize performance and efficiency.
+              <p className="text-sm sm:text-base md:text-lg font-normal mb-3 text-left tracking-tight max-w-2xl text-white">
+                APX MEP designs, installs and maintains HVAC and mechanical systems for commercial, education, healthcare and industrial premises across London and the Home Counties.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'bg-white text-black hover:bg-gray-200' 
-                    : 'bg-black text-white hover:bg-gray-800'
-                }`}>
-                  Get Quote
-                </button>
-                <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'border-white text-white hover:bg-white hover:text-black' 
-                    : 'border-black text-black hover:bg-black hover:text-white'
-                }`}>
-                  View Portfolio
-                </button>
-              </div>
-            </div>
-            <div className="relative">
-              <div className={`w-full h-96 rounded-2xl ${
-                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'
-              } flex items-center justify-center`}>
-                <div className="text-center">
-                  <Wrench className="w-24 h-24 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg opacity-70">Mechanical Engineering Image Placeholder</p>
-                </div>
+              <p className="text-sm sm:text-base md:text-lg font-normal mb-4 md:mb-5 text-left tracking-tight max-w-2xl text-white">
+                We offer heating, ventilation and air conditioning solutions tailored to your building and use. From single systems through to fully integrated BMS, our experienced engineers deliver design, installation and maintenance to the highest standards.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
+                <CustomPillButton href="/contact" size="md">
+                  Get a free quote
+                </CustomPillButton>
+                <Link
+                  href="/contact"
+                  className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
+                >
+                  Question? get in touch
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Services Overview */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center font-title ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Our Mechanical Engineering Services
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Cog className="w-8 h-8" />,
-                title: "HVAC Systems",
-                description: "Complete heating, ventilation, and air conditioning solutions for optimal indoor air quality and energy efficiency."
-              },
-              {
-                icon: <Settings className="w-8 h-8" />,
-                title: "Industrial Machinery",
-                description: "Design, installation, and maintenance of complex industrial machinery and production equipment."
-              },
-              {
-                icon: <Wrench className="w-8 h-8" />,
-                title: "Piping Systems",
-                description: "Comprehensive piping design and installation for water, gas, and steam distribution systems."
-              },
-              {
-                icon: <CheckCircle className="w-8 h-8" />,
-                title: "System Integration",
-                description: "Seamless integration of mechanical systems with electrical and control systems for optimal performance."
-              },
-              {
-                icon: <ArrowRight className="w-8 h-8" />,
-                title: "Energy Optimization",
-                description: "Advanced energy modeling and optimization to reduce operational costs and environmental impact."
-              },
-              {
-                icon: <Cog className="w-8 h-8" />,
-                title: "Maintenance Planning",
-                description: "Comprehensive maintenance strategies to ensure long-term reliability and performance of mechanical systems."
-              }
-            ].map((service, index) => (
-              <div key={index} className={`p-8 rounded-xl transition-all duration-300 hover:scale-105 ${
-                theme === 'dark' 
-                  ? 'bg-black border border-gray-700 hover:border-white' 
-                  : 'bg-white border border-gray-200 hover:border-black'
-              }`}>
-                <div className={`mb-4 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.icon}
-                </div>
-                <h3 className={`text-xl font-semibold mb-3 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.title}
-                </h3>
-                <p className={`${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="relative z-10 -mt-64 sm:-mt-72">
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
 
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Process Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center font-title ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Our Engineering Process
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Analysis & Planning",
-                description: "Comprehensive site analysis and project planning to understand requirements and constraints."
-              },
-              {
-                step: "02", 
-                title: "Design & Engineering",
-                description: "Detailed mechanical design using advanced CAD software and engineering calculations."
-              },
-              {
-                step: "03",
-                title: "Installation & Testing",
-                description: "Professional installation with rigorous testing and quality assurance protocols."
-              },
-              {
-                step: "04",
-                title: "Commissioning & Support",
-                description: "System commissioning and ongoing support to ensure optimal performance."
-              }
-            ].map((step, index) => (
-              <div key={index} className="text-center">
-                <div className={`w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center text-2xl font-bold ${
-                  theme === 'dark' 
-                    ? 'bg-white text-black' 
-                    : 'bg-black text-white'
-                }`}>
-                  {step.step}
-                </div>
-                <h3 className={`text-xl font-semibold mb-3 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {step.title}
-                </h3>
-                <p className={`${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {step.description}
-                </p>
-              </div>
-            ))}
+        {/* Mechanical Systems – London & Home Counties */}
+        {/* Mechanical Systems Installer London / Bespoke */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className={`text-3xl font-bold mb-4 font-title ${textClass}`}>
+              Mechanical Systems Installer London
+            </h2>
+            <h3 className={`text-2xl font-semibold mb-6 font-title ${textClass}`}>
+              Bespoke Mechanical & HVAC Systems
+            </h3>
+            <div className={`space-y-4 ${mutedClass}`}>
+              <p>
+                Established in 1986 we work throughout London and the Home Counties to design and install HVAC and mechanical systems that combine high-quality equipment with strong customer care. We deliver heating, ventilation and air conditioning for commercial, education, healthcare and industrial premises.
+              </p>
+              <p>
+                Our systems are expertly designed in accordance with NSI Gold standards, covering both the domestic and commercial market. We specialise in the following systems:
+              </p>
+            </div>
+            <ul className={`list-disc list-inside space-y-2 mb-6 ${mutedClass}`}>
+              {SYSTEM_TYPES.map((name, i) => (
+                <li key={i}>{name}</li>
+              ))}
+            </ul>
+            <p className={`${mutedClass}`}>
+              By designing and installing the right HVAC and mechanical systems for your building, we help you achieve comfort, efficiency and compliance. Our free survey will help identify the right solution for your needs.
+            </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section Separator */}
-      <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* CTA Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-          <h2 className={`text-4xl font-bold mb-6 font-title ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Ready To Start Your Mechanical Engineering Project?
-          </h2>
-          <p className={`text-xl mb-8 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Contact our expert mechanical engineers today for a comprehensive consultation and detailed project quote.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'bg-white text-black hover:bg-gray-200' 
-                : 'bg-black text-white hover:bg-gray-800'
-            }`}>
-              Get Free Consultation
-            </button>
-            <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'border-white text-white hover:bg-white hover:text-black' 
-                : 'border-black text-black hover:bg-black hover:text-white'
-            }`}>
-              Call 020 4568 5986
-            </button>
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* We are BAFE Accredited */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className={`text-3xl font-bold mb-8 font-title ${textClass}`}>
+              We are BAFE Accredited
+            </h2>
+            <div className={`space-y-4 ${mutedClass}`}>
+              <p>
+                BAFE (British Approvals for Fire Equipment) is an independent British organisation that publishes and maintains a national register of competent fire safety service providers. We are proud to be BAFE accredited.
+              </p>
+              <p>
+                BAFE registration is very important for those in the UK fire safety and protection industry. Many organisations now require BAFE registration from those who install or maintain their fire safety systems, products and services. For many working in the fire and protection industry, BAFE registration is a commercial imperative.
+              </p>
+              <p>
+                The BAFE register also brings customers together with companies they can trust, with a directory of independently audited and approved providers. If you would like to know more you can view our BAFE registration online.
+              </p>
+            </div>
+            <p className={`mt-6 font-semibold ${textClass}`}>
+              BAFE Fire Safety Register Registered Organisation 301168
+            </p>
           </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Our Fire Alarm System Customers */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6">
+            <h2 className={`text-3xl font-bold mb-4 font-title text-center ${textClass}`}>
+              Our Mechanical Systems Customers
+            </h2>
+            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
+              A small selection of our mechanical and HVAC customers:
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+              {MEP_CUSTOMERS.map((c, i) => (
+                <div
+                  key={i}
+                  className={`text-center p-6 rounded-xl min-w-[180px] ${isDark ? "bg-white/5 border border-gray-700" : "bg-gray-50 border border-gray-200"}`}
+                >
+                  <p className={`font-semibold ${textClass}`}>{c.name}</p>
+                  <p className={`text-sm mt-1 ${mutedClass}`}>{c.tagline}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Our Fire Alarm System Installations */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6">
+            <h2 className={`text-3xl font-bold mb-4 font-title text-center ${textClass}`}>
+              Our Mechanical Systems Installations
+            </h2>
+            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
+              Examples of mechanical and HVAC systems we have installed for our customers:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {MEP_INSTALLATIONS.map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-8 rounded-xl border ${isDark ? "border-gray-700 hover:border-white" : "border-gray-200 hover:border-black"}`}
+                >
+                  <h3 className={`text-lg font-semibold mb-2 ${textClass}`}>
+                    {item.title}
+                  </h3>
+                  <p className={mutedClass}>{item.org}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Fire Alarm & Detection Systems Equipment */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6">
+            <h2 className={`text-3xl font-bold mb-2 font-title text-center ${textClass}`}>
+              HVAC & Mechanical Equipment
+            </h2>
+            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
+              We are proud to install HVAC and mechanical equipment from leading brands
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+              {MEP_BRANDS.map((name, i) => (
+                <div
+                  key={i}
+                  className={`px-6 py-3 rounded-lg font-semibold ${isDark ? "bg-white/10 text-white" : "bg-gray-100 text-black"}`}
+                >
+                  {name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        {/* Do all businesses need a fire alarm system? */}
+        <section className="py-12 lg:py-16" style={bgStyle}>
+          <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className={`text-3xl font-bold mb-6 font-title ${textClass}`}>
+              Do all businesses need a fire alarm system?
+            </h2>
+            <div className={`space-y-4 ${mutedClass}`}>
+              <p>
+                Current UK fire alarm regulations state that all business premises must have "an appropriate fire detection system". This basically means that if a fire breaks out, could it easily be detected and could the people within the building easily be told about it?
+              </p>
+              <p>
+                This doesn't mean that all business premises need a fire alarm system. Try asking yourself the following questions to demonstrate potential situations:
+              </p>
+            </div>
+            <ul className={`list-disc list-inside space-y-2 my-6 ${mutedClass}`}>
+              {REGULATION_QUESTIONS.map((q, i) => (
+                <li key={i}>{q}</li>
+              ))}
+            </ul>
+            <p className={`${mutedClass}`}>
+              If your answer to one or more of these questions is "no" then it's likely that you do need a fire alarm system. Our free survey will help to decide the level of protection you need.
+            </p>
+            <div className="mt-8">
+              <CustomPillButton href="/contact" size="md">
+                Get a free survey
+              </CustomPillButton>
+            </div>
+          </div>
+        </section>
+
+        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+
+        <RequestFreeSurvey title={MEP_SURVEY_TITLE} description={MEP_SURVEY_DESCRIPTION} />
+      </div>
     </div>
   );
 }
-

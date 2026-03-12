@@ -1,21 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, CheckCircle, Star, ArrowRight, Clock, Cog, Zap, Wind, Leaf, Wrench } from "lucide-react"
+import { Shield, CheckCircle, Star, ArrowRight, Clock, Cog, Zap, Wind, Leaf, Wrench, ChevronLeft, ChevronRight } from "lucide-react"
 import { useEffect, useState, useMemo, useCallback, useRef } from "react"
 import { GlobalStyles, lightTheme, darkTheme } from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 import { CountUp } from '@/components/ui/CountUp'
-import LandingPage from '@/components/LandingPage'
+import { CustomPillButton } from '@/components/ui/CustomPillButton'
+import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
 
 export default function Home() {
-  if (process.env.NEXT_PUBLIC_SITE_MODE === "landing") {
-    return <LandingPage />
-  }
-  return <FullSiteHome />
-}
-
-function FullSiteHome() {
   const { theme } = useTheme()
   const themeMode = theme === "light" ? lightTheme : darkTheme
   
@@ -25,16 +19,20 @@ function FullSiteHome() {
   
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
   const [activeMepIndex, setActiveMepIndex] = useState(0)
-  const [hoveredDrawerService, setHoveredDrawerService] = useState<number | null>(0)
+  const [activeNewsIndex, setActiveNewsIndex] = useState(0)
+  const [newsProgress, setNewsProgress] = useState(0)
+  const newsProgressRef = useRef(0)
+  const newsIndexRef = useRef(0)
   const mepListRef = useRef<HTMLUListElement>(null)
+  const projectsScrollRef = useRef<HTMLDivElement>(null)
+  const projectsSectionRef = useRef<HTMLElement>(null)
+  const projectsLabelRef = useRef<HTMLSpanElement>(null)
+  const aboutIntroRef = useRef<HTMLElement>(null)
+  /* Scroll-driven: about intro fade; services cards: path animation when section in view */
+  const [aboutScrollProgress, setAboutScrollProgress] = useState(0)
+  const [aboutContentFade, setAboutContentFade] = useState(0)
+  const [servicesInView, setServicesInView] = useState(false)
 
-  /* Drawer section: same content as unified service cards, for list + drawer layout */
-  const drawerServices = useMemo(() => [
-    { title: 'Mechanical Services', image: '/service%20images/PLUMBING.jpg', bullets: ['HVAC System Installation & Maintenance', 'Boiler & Heating Systems', 'Air Conditioning & Ventilation', 'Mechanical Equipment Repair', 'Energy Efficiency Solutions'] },
-    { title: 'Electrical Services', image: '/service%20images/ELECTRICAL.jpg', bullets: ['Electrical Installation & Wiring', 'Power Distribution Systems', 'Emergency Lighting & Fire Alarms', 'Electrical Testing & Inspection', 'Smart Building Solutions'] },
-    { title: 'Plumbing Services', image: '/service%20images/HVAC.jpg', bullets: ['Water Supply & Distribution', 'Drainage & Waste Systems', 'Water Treatment & Filtration', 'Emergency Plumbing Repairs', 'Water Conservation Systems'] },
-    { title: 'Maintenance & Support', image: '/service%20images/MAINTAINENCE%20AND%20SUPPORT.jpg', bullets: ['Preventive Maintenance Programs', '24/7 Emergency Response', 'System Upgrades & Modernization', 'Compliance & Certification', 'Remote Monitoring Services'] },
-  ], [])
   const [heroAnimation, setHeroAnimation] = useState({
     videoVisible: false,
     titleVisible: false,
@@ -42,39 +40,125 @@ function FullSiteHome() {
     statsVisible: false,
     clientsVisible: false
   })
+  const clientLogoPaths = useMemo(() => {
+    const base = ['_-01', '_-02', '_-03', '_-04', '_-05', '_-06', '_-07', '_-08', '_-09', '_-10', '_-11']
+    const paths = base.map((name) => `/Clients/${name}.png`)
+    const minPerRow = 16
+    const repeated: string[] = []
+    while (repeated.length < minPerRow) repeated.push(...paths)
+    return repeated.slice(0, minPerRow)
+  }, [])
+
   const sections = useMemo(() => [
     { id: 'hero', name: 'Home' },
+    { id: 'about-intro', name: 'Our story' },
     { id: 'services', name: 'Services' },
-    { id: 'about', name: 'About' },
+    { id: 'logo-marquee', name: 'Clients' },
+    { id: 'projects', name: 'Projects' },
+    { id: 'why-mep', name: 'News & Articles' },
+    { id: 'about', name: 'Why Choose Us' },
+    { id: 'accreditations', name: 'Accreditations' },
     { id: 'testimonials', name: 'Testimonials' },
     { id: 'contact', name: 'Contact' }
   ], [])
 
   const mepCards = useMemo(() => [
-    { id: 'mechanical', title: 'Mechanical', description: 'HVAC, heating, ventilation, and mechanical systems that keep buildings safe, comfortable, and compliant.', href: '/services/mechanical-engineering', icon: Cog, image: '/service%20images/PLUMBING.jpg' },
-    { id: 'electrical', title: 'Electrical', description: 'Power distribution, lighting, and electrical systems designed for reliability, safety, and efficiency.', href: '/services/electrical-systems', icon: Zap, image: '/service%20images/ELECTRICAL.jpg' },
-    { id: 'hvac', title: 'HVAC & Ventilation', description: 'Climate control and air quality solutions for commercial and industrial environments.', href: '/services/mechanical-engineering', icon: Wind, image: '/service%20images/HVAC.jpg' },
-    { id: 'energy', title: 'Energy Efficiency', description: 'Reduce waste and costs with sustainable design, monitoring, and optimisation of your systems.', href: '/services/energy-efficiency', icon: Leaf, image: '/service%20images/HVAC.jpg' },
-    { id: 'maintenance', title: 'Maintenance & Compliance', description: '24/7 support, preventive programmes, and certification so your assets perform and comply.', href: '/services/maintenance', icon: Wrench, image: '/service%20images/MAINTAINENCE%20AND%20SUPPORT.jpg' },
+    { id: 'retail', title: 'Retail & High Street', description: 'Electrical installations, HVAC and building services for single and multi-site retail. Lighting, power distribution and environmental systems.', href: '/services', icon: Cog, image: '/cctv%20systems.jpg' },
+    { id: 'corporate', title: 'Corporate & Offices', description: 'Full MEP design and installation for commercial buildings. HVAC, electrical distribution, data cabling and compliance.', href: '/services', icon: Zap, image: '/access%20control%20systems.jpg' },
+    { id: 'education', title: 'Education & Schools', description: 'Mechanical, electrical and plumbing for schools and universities. Heating, ventilation, fire systems and DfE compliance.', href: '/services', icon: Wind, image: '/home-fire-alarm-system-installer-800x533.jpg' },
+    { id: 'healthcare', title: 'Healthcare & Care Homes', description: 'MEP systems for hospitals and care homes. Medical gases, nurse call, HVAC and electrical to healthcare standards.', href: '/services', icon: Leaf, image: '/intruder%20alarm%20systems.jpg' },
+    { id: 'industrial', title: 'Industrial & Warehousing', description: 'Electrical, mechanical and plumbing for logistics and manufacturing. Power, lighting, heating and process systems.', href: '/services', icon: Wrench, image: '/cctv%20systems.jpg' },
   ], [])
+
+  const newsArticles = useMemo(() => [
+    { id: 'a1', title: 'Random Article 1', description: 'Placeholder description for article 1.', href: '#', icon: ArrowRight, image: '/cctv%20systems.jpg' },
+    { id: 'a2', title: 'Random Article 2', description: 'Placeholder description for article 2.', href: '#', icon: ArrowRight, image: '/access%20control%20systems.jpg' },
+    { id: 'a3', title: 'Random Article 3', description: 'Placeholder description for article 3.', href: '#', icon: ArrowRight, image: '/home-fire-alarm-system-installer-800x533.jpg' },
+    { id: 'a4', title: 'Random Article 4', description: 'Placeholder description for article 4.', href: '#', icon: ArrowRight, image: '/intruder%20alarm%20systems.jpg' },
+    { id: 'a5', title: 'Random Article 5', description: 'Placeholder description for article 5.', href: '#', icon: ArrowRight, image: '/video%20door%20entry%20systems.jpg' },
+    { id: 'a6', title: 'Random Article 6', description: 'Placeholder description for article 6.', href: '#', icon: ArrowRight, image: '/cctv%20systems.jpg' },
+  ], [])
+
+  const projects = useMemo(() => [
+    { image: '/cctv%20systems.jpg', stat: '250+', description: 'Electrical and HVAC installation for commercial premises', quote: 'APX MEP delivered our electrical and mechanical systems on time and to a high standard.', href: '/projects', title: 'PROJECT 1' },
+    { image: '/home-fire-alarm-system-installer-800x533.jpg', stat: '99%', description: 'Mechanical systems design and commissioning', quote: 'From design to commissioning, the team was professional and the systems have been fault-free.', href: '/projects', title: 'PROJECT 2' },
+    { image: '/intruder%20alarm%20systems.jpg', stat: '24/7', description: 'Plumbing and building services upgrade', quote: 'We rely on APX MEP for ongoing maintenance and emergency call-outs. Always responsive.', href: '/projects', title: 'PROJECT 3' },
+    { image: '/access%20control%20systems.jpg', stat: 'Multi-site', description: 'Multi-site electrical and mechanical integration', quote: 'Having a single MEP partner gave us confidence. The installation exceeded expectations.', href: '/projects', title: 'PROJECT 4' },
+    { image: '/home-fire-alarm-system-installer-800x533.jpg', stat: '500+', description: 'Compliance and condition reporting', quote: 'Thorough and clear reporting. We use APX MEP for all our building services compliance.', href: '/projects', title: 'PROJECT 5' },
+    { image: '/video%20door%20entry%20systems.jpg', stat: '15', description: 'HVAC and electrical system upgrade', quote: 'Their continued investment in quality and training shows in every project.', href: '/projects', title: 'PROJECT 6' },
+    { image: '/cctv%20systems.jpg', stat: '98%', description: 'Full MEP commissioning and handover', quote: 'Commissioning was smooth and documentation was spot-on. No call-backs.', href: '/projects', title: 'PROJECT 7' },
+  ], [])
+
+  const scrollProjects = useCallback((dir: 'left' | 'right') => {
+    const el = projectsScrollRef.current
+    if (!el || !el.firstElementChild) return
+    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth
+    const gap = 24
+    const step = cardWidth + gap
+    el.scrollBy({ left: dir === 'left' ? -step : step, behavior: 'smooth' })
+  }, [])
+
+  // Projects scroll lock: when section is in view, vertical wheel moves horizontal strip (deltaY → scrollLeft). No internal state; boundary checks each time. Responsive and stable.
+  useEffect(() => {
+    const section = projectsSectionRef.current
+    const strip = projectsScrollRef.current
+    if (!section || !strip) return
+
+    // Zone: lock when "Projects" label is near viewport top (~80px). Fallback to section top if label ref missing.
+    const inZone = () => {
+      const label = projectsLabelRef.current
+      if (label) {
+        const r = label.getBoundingClientRect()
+        return r.top <= 80 && r.bottom > 0
+      }
+      const rect = section.getBoundingClientRect()
+      return rect.top <= 80 && rect.bottom > 200
+    }
+
+    const onWheel = (e: WheelEvent) => {
+      if (!inZone()) return
+
+      const maxScroll = strip.scrollWidth - strip.clientWidth
+      const atStart = strip.scrollLeft <= 5
+      const atEnd = maxScroll <= 0 || strip.scrollLeft >= maxScroll - 5
+
+      // Convert vertical scroll to horizontal: use deltaY, scale up so it feels responsive, cap per event to avoid one-flick overshoot
+      const scale = 2.2
+      let amount = e.deltaY * scale
+      amount = Math.sign(amount) * Math.min(400, Math.abs(amount))
+
+      if (e.deltaY > 0) {
+        if (atEnd) return // let page scroll down
+        e.preventDefault()
+        strip.scrollLeft = Math.min(strip.scrollLeft + amount, maxScroll)
+      } else {
+        if (atStart) return // let page scroll up
+        e.preventDefault()
+        strip.scrollLeft = Math.max(strip.scrollLeft + amount, 0)
+      }
+    }
+
+    window.addEventListener("wheel", onWheel, { passive: false })
+    return () => window.removeEventListener("wheel", onWheel)
+  }, [])
 
   const testimonials = [
     {
       name: "Sarah Johnson",
-      role: "Office Manager, TechCorp",
-      text: "APX MEP provided exceptional mechanical services for our office building. Professional, reliable, and competitively priced.",
+      role: "Facilities Manager, TechCorp",
+      text: "APX MEP delivered our office fit-out electrical and HVAC to a high standard. Professional, on time and great ongoing support.",
       rating: 5
     },
     {
-      name: "Michael Chen", 
-      role: "Facilities Director, Manufacturing Ltd",
-      text: "Outstanding electrical work for our new facility. The team was efficient, clean, and completed everything on time.",
+      name: "Michael Chen",
+      role: "Estates Director, Manufacturing Ltd",
+      text: "Outstanding mechanical and electrical installation for our new facility. The team was efficient and everything was commissioned to the highest standards.",
       rating: 5
     },
     {
       name: "Emma Williams",
-      role: "Property Manager, Retail Group", 
-      text: "The plumbing system installation was flawless. Great communication throughout the project and excellent after-sales support.",
+      role: "Property Manager, Retail Group",
+      text: "Our MEP systems were designed and installed flawlessly. Clear communication throughout and excellent after-sales and maintenance support.",
       rating: 5
     }
   ]
@@ -109,6 +193,26 @@ function FullSiteHome() {
       clearTimeout(timer5)
     }
   }, [])
+
+  // News: buffer fills over 5s, then advances to next article
+  useEffect(() => {
+    const total = Math.min(newsArticles.length, 3)
+    if (total === 0) return
+    newsIndexRef.current = 0
+    newsProgressRef.current = 0
+    setActiveNewsIndex(0)
+    setNewsProgress(0)
+    const id = setInterval(() => {
+      newsProgressRef.current += 0.01
+      if (newsProgressRef.current >= 1) {
+        newsProgressRef.current = 0
+        newsIndexRef.current = (newsIndexRef.current + 1) % total
+        setActiveNewsIndex(newsIndexRef.current)
+      }
+      setNewsProgress(newsProgressRef.current)
+    }, 50)
+    return () => clearInterval(id)
+  }, [newsArticles.length])
 
   const updateActiveSection = useCallback((sectionId: string) => {
     const sectionIndex = sections.findIndex(section => section.id === sectionId)
@@ -243,6 +347,45 @@ function FullSiteHome() {
     return () => clearInterval(interval)
   }, [testimonials.length])
 
+  // Scroll-driven: about section fade-in; services: trigger path animation when section in view
+  useEffect(() => {
+    const thresholds = Array.from({ length: 101 }, (_, i) => i / 100)
+    let observer: IntersectionObserver | null = null
+
+    const setup = (): boolean => {
+      const aboutEl = document.getElementById('about-intro')
+      const servicesEl = document.getElementById('services')
+      if (!aboutEl) return false
+      observer?.disconnect()
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const ratio = Math.max(0, Math.min(1, entry.intersectionRatio))
+            if (entry.target.id === 'about-intro') {
+              setAboutScrollProgress(ratio)
+              setAboutContentFade(Math.max(0, (ratio - 0.05) / 0.95))
+            } else if (entry.target.id === 'services' && ratio > 0.15) {
+              setServicesInView(true)
+            }
+          }
+        },
+        { root: null, rootMargin: '0px', threshold: thresholds }
+      )
+      observer.observe(aboutEl)
+      if (servicesEl) observer.observe(servicesEl)
+      return true
+    }
+
+    if (!setup()) {
+      const t = setTimeout(() => setup(), 200)
+      return () => {
+        clearTimeout(t)
+        observer?.disconnect()
+      }
+    }
+    return () => observer?.disconnect()
+  }, [])
+
   // Force dark mode styling for form
   useEffect(() => {
     const applyDarkModeStyles = () => {
@@ -266,13 +409,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: HTMLElement) => {
+        labels.forEach((label: any) => {
           label.style.color = '#ffffff';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: HTMLElement) => {
+        textInputs.forEach((input: any) => {
           input.style.backgroundColor = '#000000';
           input.style.border = '2px solid #ffffff';
           input.style.color = '#ffffff';
@@ -299,7 +442,7 @@ function FullSiteHome() {
         
         // Radio buttons - custom styling
         const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: HTMLInputElement) => {
+        radios.forEach((radio: any) => {
           radio.style.appearance = 'none';
           radio.style.width = '20px';
           radio.style.height = '20px';
@@ -312,7 +455,7 @@ function FullSiteHome() {
           
           // Checked state
           radio.addEventListener('change', () => {
-            radios.forEach((r: HTMLInputElement) => {
+            radios.forEach((r: any) => {
               r.style.backgroundColor = '#000000';
             });
             if (radio.checked) {
@@ -341,13 +484,13 @@ function FullSiteHome() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: HTMLElement) => {
+        labels.forEach((label: any) => {
           label.style.color = '#000000';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: HTMLElement) => {
+        textInputs.forEach((input: any) => {
           input.style.backgroundColor = '#ffffff';
           input.style.border = '1px solid #000000';
           input.style.color = '#000000';
@@ -373,7 +516,7 @@ function FullSiteHome() {
         
         // Radio buttons - reset to default browser styling
         const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: HTMLInputElement) => {
+        radios.forEach((radio: any) => {
           radio.style.appearance = 'auto'; // Reset to browser default
           radio.style.width = 'initial';
           radio.style.height = 'initial';
@@ -445,7 +588,7 @@ function FullSiteHome() {
       list.style.setProperty('--article-width', String(w))
     }
     requestAnimationFrame(() => requestAnimationFrame(resync))
-  }, [activeMepIndex, mepCards])
+  }, [activeMepIndex, mepCards.length])
 
   useEffect(() => {
     const list = mepListRef.current
@@ -477,249 +620,225 @@ function FullSiteHome() {
     // Update the active section immediately
     updateActiveSection(sectionId)
     
-    // Find the section element
     const element = document.getElementById(sectionId)
-    
-    if (element) {
-      // For hero section, scroll to top
-      if (sectionId === 'hero') {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        })
-        return
-      }
-      
-      // For other sections, use scrollIntoView
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      })
+    if (!element) return
+
+    // Hero: scroll to top of page so hero is in view
+    if (sectionId === 'hero') {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
     }
+
+    // Other sections: center in view
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   return (
     <>
       <GlobalStyles theme={themeMode} />
-      <div className="min-h-screen overflow-x-hidden relative">
+      <div className="min-h-screen overflow-x-hidden relative z-10">
       
-      {/* Hero Section – video is in layout HeroVideoBackground (fades with scroll) */}
-      <section id="hero" className="relative h-screen overflow-visible">
+      {/* Hero Section – transparent so video layer shows; video fades to white on scroll */}
+      <section id="hero" className="relative h-screen overflow-visible bg-transparent flex flex-col" style={{ background: 'transparent' }}>
         {/* Content */}
-        <div className="container mx-auto px-6 h-full flex flex-col justify-start pt-68 relative z-20">
-          <div className="max-w-3xl">
-            <div className="space-y-4">
-              <div>
-                <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 md:mb-3 text-left transition-opacity duration-1000 font-title ${
-                  heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
-                }`} style={{ color: 'black' }}>
-                  Engineered Solutions for Energy Efficiency and Sustainability
-                </h1>
-                <p className={`text-lg sm:text-xl md:text-2xl font-normal mb-4 md:mb-5 text-left tracking-tight transition-opacity duration-1000 ${
-                  heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
-                }`} style={{ color: 'black' }}>
-                  As a trusted partner, we guide industries in their transition to sustainable energy.
-                </p>
-              </div>
-              
-              {/* Stats Section - Containerized */}
-              <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 sm:pt-5 transition-opacity duration-1000 ${
-                heroAnimation.statsVisible ? 'opacity-100' : 'opacity-0'
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
+          <div className="space-y-4">
+            {/* Title + paragraph: white text on hero image */}
+            <div className="max-w-2xl">
+              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left transition-opacity duration-1000 font-title text-white ${
+                heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
               }`}>
-                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>250+</div>
-                  <div className="text-xs font-normal" style={{ color: 'black' }}>Industrial projects delivered across three continents.</div>
-                </div>
-                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>99.2%</div>
-                  <div className="text-xs font-normal" style={{ color: 'black' }}>Uptime in monitored energy systems.</div>
-                </div>
-                <div className="rounded-lg border border-black/25 bg-white/20 px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-sm">
-                  <div className="text-base sm:text-lg font-normal mb-0.5" style={{ color: 'black' }}>20+</div>
-                  <div className="text-xs font-normal" style={{ color: 'black' }}>Years of engineering expertise in industrial efficiency.</div>
-                </div>
+                APX MEP delivers mechanical, electrical and building services.
+              </h1>
+              <p className={`text-base sm:text-lg md:text-xl font-normal mb-4 md:mb-5 text-left tracking-tight transition-opacity duration-1000 max-w-lg text-white ${
+                heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
+              }`}>
+                We specialise in the design, installation and maintenance of HVAC, electrical systems and plumbing across London and the Home Counties.
+              </p>
+
+              {/* Hero CTAs – side by side */}
+              <div className={`flex flex-wrap items-center gap-4 sm:gap-6 pt-2 transition-opacity duration-1000 ${
+                heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
+              }`}>
+                <CustomPillButton href="/contact" size="md">
+                  Get a free quote
+                </CustomPillButton>
+                <Link
+                  href="/contact"
+                  className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
+                >
+                  Question? get in touch
+                </Link>
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Custom Scroll Indicator */}
-        <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40">
-          <div className="flex flex-col items-center max-h-[200px] relative">
-            {/* Progress line overlay */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-px bg-black/30" 
-                 style={{ height: `${(sections.length - 1) * 60}px` }}>
-              <div 
-                className="w-px bg-black transition-all duration-500 ease-out"
-                style={{ 
-                  height: `${(activeSection / (sections.length - 1)) * 100}%`,
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
-                }}
-              ></div>
-      </div>
 
-            {sections.map((section, index) => {
-              const isActive = activeSection === index
-              return (
-                <div key={section.id} className="flex flex-col items-center relative z-10">
-                  {/* Square indicator */}
-                  <button
-                    onClick={() => scrollToSection(section.id)}
-                    className={`w-3 h-3 border transition-all duration-300 hover:scale-110 border-black hover:bg-black/20 ${
-                      isActive ? 'bg-black' : 'bg-transparent'
-                    }`}
-                    title={section.name}
-                  />
-                
-                  {/* Faded vertical line connecting to next square */}
-                  {index < sections.length - 1 && (
-                    <div className="w-px h-12 bg-gray-400/30"></div>
-                  )}
-                </div>
-              )
-            })}
+        {/* Hero accreditations – NSI, BAFE, Constructionline, FIA (public/accreditations mono/White) */}
+        <div className="container mx-auto px-6 pb-8 mb-24 sm:mb-32 relative z-10 -mt-16 sm:-mt-20">
+          <div className="w-1/2 mx-auto h-px bg-white/25 mb-6" aria-hidden />
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 max-w-6xl mx-auto">
+            {[
+              { src: '/accreditations%20mono/White/NSI-02.svg', alt: 'NSI Gold' },
+              { src: '/accreditations%20mono/White/BAFE-02.svg', alt: 'BAFE' },
+              { src: '/accreditations%20mono/White/ConstructionOnline-02.svg', alt: 'Constructionline' },
+              { src: '/accreditations%20mono/White/FIA-02.svg', alt: 'FIA' }
+            ].map((acc) => (
+              <div key={acc.alt} className="flex items-center justify-center h-14 sm:h-16 w-auto max-w-[150px] sm:max-w-[180px]" aria-hidden>
+                <img src={acc.src} alt={acc.alt} className="h-full w-auto object-contain opacity-90" />
+              </div>
+            ))}
           </div>
         </div>
         
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="section-spacing relative overflow-visible">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="section-content-gap space-y-16">
-            {/* Top Section - Title and Description */}
-            <div>
-              <div className="apx-mep-services-title-box inline-block border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
-                <h2 className="text-5xl font-bold text-left tracking-wide relative z-10" style={{ textTransform: 'uppercase', fontFamily: 'var(--font-menu)' }}>APX MEP Services</h2>
+      {/* Wrapper so CCTV overlay can sit above both about and services */}
+      <div className="relative">
+        {/* ABOUT – floorplan.jpg as full background; scroll-driven character reveal + content fade */}
+        <section ref={aboutIntroRef} id="about-intro" className="relative pt-56 pb-56 lg:pt-72 lg:pb-72 overflow-hidden">
+          {/* Background image – no fade */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/floorplan.jpg')" }}
+            aria-hidden
+          />
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <div className="lg:col-span-5 order-2 lg:order-1" aria-hidden />
+            <div className="lg:col-span-7 order-1 lg:order-2 max-w-2xl">
+              <span className="section-label section-label--black" style={{ opacity: aboutScrollProgress, color: '#000000' }}>OUR STORY</span>
+              <h2
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black tracking-tight leading-tight mb-6 font-title transition-opacity duration-500"
+                style={{ fontFamily: 'var(--font-title, inherit)', opacity: aboutScrollProgress }}
+              >
+                Where it began.
+              </h2>
+              <p
+                className="text-lg sm:text-xl text-black/90 leading-relaxed mb-8 transition-opacity duration-700"
+                style={{ opacity: aboutContentFade }}
+              >
+                Since 1986 APX MEP has delivered mechanical, electrical and building services across London and the Home Counties. Our engineers are qualified in HVAC, electrical installations and plumbing. We work with commercial, education, healthcare and industrial clients to deliver design, installation and maintenance to the highest standards.
+              </p>
+              <div className="transition-opacity duration-700" style={{ opacity: aboutContentFade }}>
+                <CustomPillButton href="/about" size="md">
+                  Our story
+                </CustomPillButton>
               </div>
-              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
-                Comprehensive mechanical, electrical, and plumbing solutions tailored to your business needs. 
-                We provide end-to-end MEP services with certified professionals and cutting-edge technology.
+            </div>
+          </div>
+        </div>
+        </section>
+
+        {/* Services Section – black bg, white text; 3×3 grid; tall cards; feathered image; white border */}
+        <section id="services" className="section-spacing relative overflow-visible bg-black" style={{ backgroundColor: '#000000' }}>
+        <div className="container mx-auto px-6 lg:px-8">
+            <div className="section-content-gap space-y-16 text-white">
+            <div className="flex flex-col min-h-[180px]">
+              <span className="section-label text-white/80">APX MEP SERVICES</span>
+              <h2 className="text-5xl font-bold text-left tracking-wide section-title-gap services-section-title leading-tight font-title text-white">What we offer</h2>
+              <p className="text-base leading-relaxed max-w-xl section-intro-gap hero-services-intro text-white/90 mt-auto">
+                APX MEP delivers mechanical, electrical and building services. We specialise in design, installation and maintenance across London and the Home Counties.
               </p>
             </div>
             
-            {/* Service Cards - two per row on lg, empty space on right */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_2fr] gap-4 sm:gap-6">
-              {/* Mechanical Services */}
-              <div className="service-card-unified">
-                <div className="service-card-unified-bg" aria-hidden style={{ backgroundImage: "url('/service%20images/PLUMBING.jpg')" }} />
+            <div className={`services-cards-animate grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 ${servicesInView ? 'services-cards-visible' : ''}`}>
+              {/* 1. Electrical */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
                 <div className="service-card-unified-body">
-                  <h4 className="service-card-unified-title font-title">Mechanical Services</h4>
-                  <ul className="service-card-unified-list">
-                    <li>HVAC System Installation & Maintenance</li>
-                    <li>Boiler & Heating Systems</li>
-                    <li>Air Conditioning & Ventilation</li>
-                    <li>Mechanical Equipment Repair</li>
-                    <li>Energy Efficiency Solutions</li>
-                  </ul>
-                </div>
-                <span className="service-card-unified-arrow" aria-hidden />
-              </div>
-
-              {/* Electrical Services */}
-              <div className="service-card-unified">
-                <div className="service-card-unified-bg" aria-hidden style={{ backgroundImage: "url('/service%20images/ELECTRICAL.jpg')" }} />
-                <div className="service-card-unified-body">
-                  <h4 className="service-card-unified-title font-title">Electrical Services</h4>
-                  <ul className="service-card-unified-list">
-                    <li>Electrical Installation & Wiring</li>
-                    <li>Power Distribution Systems</li>
-                    <li>Emergency Lighting & Fire Alarms</li>
-                    <li>Electrical Testing & Inspection</li>
-                    <li>Smart Building Solutions</li>
-                  </ul>
-                </div>
-                <span className="service-card-unified-arrow" aria-hidden />
-              </div>
-
-              {/* Plumbing Services - second row left on lg */}
-              <div className="service-card-unified lg:col-start-1 lg:row-start-2">
-                <div className="service-card-unified-bg" aria-hidden style={{ backgroundImage: "url('/service%20images/HVAC.jpg')" }} />
-                <div className="service-card-unified-body">
-                  <h4 className="service-card-unified-title font-title">Plumbing Services</h4>
-                  <ul className="service-card-unified-list">
-                    <li>Water Supply & Distribution</li>
-                    <li>Drainage & Waste Systems</li>
-                    <li>Water Treatment & Filtration</li>
-                    <li>Emergency Plumbing Repairs</li>
-                    <li>Water Conservation Systems</li>
-                  </ul>
-                </div>
-                <span className="service-card-unified-arrow" aria-hidden />
-              </div>
-
-              {/* Maintenance Services - second row right on lg */}
-              <div className="service-card-unified lg:col-start-2 lg:row-start-2">
-                <div className="service-card-unified-bg" aria-hidden style={{ backgroundImage: "url('/service%20images/MAINTAINENCE%20AND%20SUPPORT.jpg')" }} />
-                <div className="service-card-unified-body">
-                  <h4 className="service-card-unified-title font-title">Maintenance & Support</h4>
-                  <ul className="service-card-unified-list">
-                    <li>Preventive Maintenance Programs</li>
-                    <li>24/7 Emergency Response</li>
-                    <li>System Upgrades & Modernization</li>
-                    <li>Compliance & Certification</li>
-                    <li>Remote Monitoring Services</li>
-                  </ul>
-                </div>
-                <span className="service-card-unified-arrow" aria-hidden />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services drawer section: Block 1 = full-width title; Block 2 = split left (list + white dividers) | right (image bleeds off) */}
-      <section id="services-drawer" className="section-spacing relative overflow-visible">
-        <div className="container mx-auto px-6 lg:px-8">
-          {/* Block 1: Full-width title only, keep padding */}
-          <div className="section-content-gap">
-            <div className="apx-mep-services-title-box inline-block border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] px-6 py-3 section-title-gap relative overflow-hidden">
-              <h2 className="text-5xl font-bold text-left tracking-wide relative z-10" style={{ textTransform: 'uppercase', fontFamily: 'var(--font-menu)' }}>APX MEP Services</h2>
-            </div>
-            <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
-              Comprehensive mechanical, electrical, and plumbing solutions tailored to your business needs.
-            </p>
-          </div>
-
-          {/* Block 2: Split — left = list (white line dividers), right = image same height */}
-          <div className={`services-drawer-split grid grid-cols-1 lg:grid-cols-2 min-h-[380px] section-block-gap ${hoveredDrawerService !== null ? 'has-hovered' : ''}`}>
-          <div className="services-drawer-left relative z-10 flex flex-col min-h-0">
-            <div className="services-drawer-list">
-                {drawerServices.map((s, i) => (
-                  <button
-                    key={s.title}
-                    type="button"
-                    className="services-drawer-list-item text-left"
-                    style={{ fontFamily: 'var(--font-menu)' }}
-                    data-active={hoveredDrawerService === i}
-                    onMouseEnter={() => setHoveredDrawerService(i)}
-                  >
-                    {s.title}
-                  </button>
-                ))}
-            </div>
-          </div>
-
-          <div className="services-drawer-right relative overflow-visible">
-            <div className={`services-drawer-panel ${hoveredDrawerService !== null ? 'services-drawer-panel--open' : ''}`}>
-              {hoveredDrawerService !== null && drawerServices[hoveredDrawerService] && (
-                <div className="service-card-unified services-drawer-card h-full min-h-[380px] w-full">
-                  <div className="service-card-unified-bg services-drawer-card-bg" aria-hidden style={{ backgroundImage: `url('${drawerServices[hoveredDrawerService].image}')` }} />
-                  <div className="service-card-unified-body">
-                    <ul className="service-card-unified-list services-drawer-bullets">
-                      {drawerServices[hoveredDrawerService].bullets.map((b) => (
-                        <li key={b}>{b}</li>
-                      ))}
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Electrical Systems</h4>
+                    <ul className="service-card-unified-list">
+                      <li>Full electrical design, installation and maintenance. From distribution and lighting to power, data and compliance. We deliver for commercial, education, healthcare and industrial projects across London and the Home Counties.</li>
                     </ul>
                   </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
-              )}
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
+
+              {/* 2. Mechanical (HVAC) */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
+                <div className="service-card-unified-body">
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Mechanical Systems</h4>
+                    <ul className="service-card-unified-list">
+                      <li>HVAC design, installation and maintenance. Heating, ventilation and air conditioning for offices, schools, healthcare and industrial premises. We ensure comfort, efficiency and compliance.</li>
+                    </ul>
+                  </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                </div>
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
+
+              {/* 3. Plumbing & Building */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
+                <div className="service-card-unified-body">
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Plumbing & Building Services</h4>
+                    <ul className="service-card-unified-list">
+                      <li>Plumbing, drainage and building services. From domestic and commercial installations to maintenance and compliance. We work across all sectors with qualified engineers.</li>
+                    </ul>
+                  </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                </div>
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
+
+              {/* 4. Maintenance & Compliance */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
+                <div className="service-card-unified-body">
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Maintenance & Compliance</h4>
+                    <ul className="service-card-unified-list">
+                      <li>Planned and reactive maintenance for electrical, mechanical and plumbing systems. Condition reports, testing and compliance to keep your buildings safe and efficient.</li>
+                    </ul>
+                  </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                </div>
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
+
+              {/* 5. Design & Project Management */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
+                <div className="service-card-unified-body">
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Design & Project Management</h4>
+                    <ul className="service-card-unified-list">
+                      <li>Full design and project management for MEP works. From feasibility and specification through to installation, commissioning and handover. We coordinate with clients and other trades to deliver on time and on budget.</li>
+                    </ul>
+                  </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                </div>
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
+
+              {/* 6. Condition Reports & Testing */}
+              <div className="service-card-unified service-card-in from-left">
+                <div className="service-card-unified-bg" aria-hidden />
+                <div className="service-card-unified-body">
+                  <div className="service-card-unified-body-inner">
+                    <h4 className="service-card-unified-title font-title">Condition Reports & Testing</h4>
+                    <ul className="service-card-unified-list">
+                      <li>EICRs, periodic testing, condition surveys and compliance reporting for electrical and mechanical systems. We help landlords and facility managers meet their statutory duties.</li>
+                    </ul>
+                  </div>
+                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                </div>
+                <span className="service-card-unified-arrow" aria-hidden />
+              </div>
             </div>
           </div>
-          </div>
         </div>
-      </section>
+        </section>
+      </div>
 
+      {/* Benefits strip: “What is” */}
       {/* Benefits strip: Expert Installation, 24/7 Maintenance, Quality Assurance */}
       <section id="services-benefits" className="section-spacing relative overflow-hidden">
         <div className="container mx-auto px-6 lg:px-8">
@@ -727,7 +846,7 @@ function FullSiteHome() {
             <div className="services-benefit-card" style={{ animationDelay: '0.1s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Expert Installation</h3>
                 <p className="services-benefit-desc">Professional installation of all MEP systems with precision and care</p>
@@ -736,7 +855,7 @@ function FullSiteHome() {
             <div className="services-benefit-card" style={{ animationDelay: '0.25s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>24/7 Maintenance</h3>
                 <p className="services-benefit-desc">Round-the-clock maintenance and emergency repair services</p>
@@ -745,7 +864,7 @@ function FullSiteHome() {
             <div className="services-benefit-card" style={{ animationDelay: '0.4s' }}>
               <div className="services-benefit-card-inner">
                 <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-black" strokeWidth={2} />
+                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
                 </div>
                 <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Quality Assurance</h3>
                 <p className="services-benefit-desc">All work backed by comprehensive warranties and quality guarantees</p>
@@ -755,267 +874,317 @@ function FullSiteHome() {
         </div>
       </section>
 
-      {/* Logo marquee – under services */}
+      {/* Logo marquee – client PNGs from public/Clients, repeated for seamless scroll */}
       <section id="logo-marquee" className="logo-marquee-section py-12 overflow-hidden" aria-label="Trusted by leading brands">
         <div className="logo-marquee-wrapper">
           <div className="logo-marquee">
             <div className="logo-marquee__group">
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-mcdonalds" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-jordan" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-aws" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-spotify" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-burger-king" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-honda" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-notion" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-hulu" /></svg>
+              {clientLogoPaths.map((src, i) => (
+                <img key={`a-${i}`} src={src} alt="" className="logo-marquee__img" aria-hidden />
+              ))}
             </div>
             <div className="logo-marquee__group" aria-hidden="true">
-              <svg><use href="#logo-marquee-mcdonalds" /></svg>
-              <svg><use href="#logo-marquee-jordan" /></svg>
-              <svg><use href="#logo-marquee-aws" /></svg>
-              <svg><use href="#logo-marquee-spotify" /></svg>
-              <svg><use href="#logo-marquee-burger-king" /></svg>
-              <svg><use href="#logo-marquee-honda" /></svg>
-              <svg><use href="#logo-marquee-notion" /></svg>
-              <svg><use href="#logo-marquee-hulu" /></svg>
+              {clientLogoPaths.map((src, i) => (
+                <img key={`b-${i}`} src={src} alt="" className="logo-marquee__img" />
+              ))}
             </div>
           </div>
           <div className="logo-marquee logo-marquee--reverse">
             <div className="logo-marquee__group">
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-hulu" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-notion" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-honda" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-burger-king" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-spotify" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-aws" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-jordan" /></svg>
-              <svg aria-hidden focusable="false"><use href="#logo-marquee-mcdonalds" /></svg>
+              {[...clientLogoPaths].reverse().map((src, i) => (
+                <img key={`c-${i}`} src={src} alt="" className="logo-marquee__img" aria-hidden />
+              ))}
             </div>
             <div className="logo-marquee__group" aria-hidden="true">
-              <svg><use href="#logo-marquee-hulu" /></svg>
-              <svg><use href="#logo-marquee-notion" /></svg>
-              <svg><use href="#logo-marquee-honda" /></svg>
-              <svg><use href="#logo-marquee-burger-king" /></svg>
-              <svg><use href="#logo-marquee-spotify" /></svg>
-              <svg><use href="#logo-marquee-aws" /></svg>
-              <svg><use href="#logo-marquee-jordan" /></svg>
-              <svg><use href="#logo-marquee-mcdonalds" /></svg>
+              {[...clientLogoPaths].reverse().map((src, i) => (
+                <img key={`d-${i}`} src={src} alt="" className="logo-marquee__img" />
+              ))}
             </div>
           </div>
         </div>
-        {/* Hidden SVG symbols for marquee logos */}
-        <svg className="sr-only" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <symbol id="logo-marquee-mcdonalds" viewBox="0 0 24 24"><path d="M17.243 3.006c2.066 0 3.742 8.714 3.742 19.478H24c0-11.588-3.042-20.968-6.766-20.968-2.127 0-4.007 2.81-5.248 7.227-1.241-4.416-3.121-7.227-5.231-7.227C3.031 1.516 0 10.888 0 22.476h3.014c0-10.763 1.658-19.47 3.724-19.47 2.066 0 3.741 8.05 3.741 17.98h2.997c0-9.93 1.684-17.98 3.75-17.98Z" /></symbol>
-            <symbol id="logo-marquee-jordan" viewBox="0 0 24 24"><path d="M13.55 2.194v-.075c0-.35.113-.663.338-.938.225-.275.512-.412.862-.412s.663.112.938.337.425.525.45.9c.025.375-.088.688-.338.938s-.55.375-.9.375l-.225.075.075.112-.075.413-.15 1.2c.05.05.075.1.075.15l-.15.75c-.05.1-.1.175-.15.225l-.075.3a22.59 22.59 0 01-.45 1.575v.15c-.05.25-.087.45-.112.6-.025.15-.113.4-.263.75-.1.2-.1.525 0 .975l.075.075c0 .15.063.325.188.525s.187.375.187.525c.05 1-.025 1.85-.225 2.55l.15.45c.6.3.775.625.525.975l.375.15c.6.3 1.025.562 1.275.787.25.225.5.463.75.713.2.05.35.125.45.225l.225.075c1.05.7 2.1 1.55 3.15 2.55l.3.225v.075l-.075.15.225.15h.075c.15.1.25.15.3.15h.075c.05 0 .1-.025.15-.075l.15-.075c.1-.1.2-.175.3-.225h.3c.05 0 .05.025 0 .075l-.3.15-.375.45h.525l.525.075c.15-.05.275-.1.375-.15l.375-.225c.15-.05.3 0 .45.15h.075c.05.05.025.125-.075.225l-.9.825c-.25.2-.475.325-.675.375l-.975.675c-.05.05-.1.05-.15 0l-.225-.3-.15-.3-.188-.263-.225-.3-.187-.225-.15-.187-.3-.225c-.1 0-.2-.025-.3-.075l-.975-.75c-.15 0-.325-.075-.525-.225-.75-.65-1.25-1.05-1.5-1.2l-.45-.3-.9-.15c-.3-.05-.7-.2-1.2-.45l-.6-.3c-.4-.2-.675-.3-.825-.3l-.3-.15c-.2-.05-.35-.1-.45-.15l-.15-.15c-.1 0-.2.025-.3.075l-1.5.75-1.875.825c-.5.4-.975.725-1.425.975l-.825.375-1.275.9c-.1.1-.2.1-.3 0l-.15.15c-.15.05-.25.075-.3.075l-.3.15v.15H3.2l-.15.225c-.1.2-.2.312-.3.337-.1.025-.162.063-.187.113a.434.434 0 01-.075.112l-.15.15-.225.15-.338-.037-.45.075-.3.075c-.25.05-.45.012-.6-.113-.15-.125-.275-.312-.375-.562-.1-.15-.05-.275.15-.375l.075-.075c.05-.05.125-.075.225-.075h.45l.6-.225.3-.075c0-.1.025-.175.075-.225.05-.05.125-.075.225-.075v-.075a.666.666 0 01-.075-.3c-.05-.1-.063-.175-.037-.225.025-.05.05-.075.075-.075h.037l.075.225c.05.25.125.325.225.225l.075-.15c.05-.1.125-.15.225-.15l.15.15.15-.15-.075-.075c0-.05.025-.075.075-.075l.3-.3c.25-.3.55-.575.9-.825.7-.55 1.45-.975 2.25-1.275.25-.25.525-.375.825-.375.2-.35.5-.725.9-1.125.35-.25.6-.425.75-.525.1-.2.225-.3.375-.3h.075l.15-.15c.1-.05.175-.1.225-.15v-.375c0-.25.025-.45.075-.6.05-.15.175-.225.375-.225l.3-.3c-.1-.2-.15-.425-.15-.675h-.075c-.1-.15-.15-.3-.15-.45-.15-.25-.25-.45-.3-.6H9.65c-.05.15-.175.25-.375.3l-.075.15c-.2.35-.375.612-.525.787-.15.175-.425.388-.825.638-.25.25-.425.525-.525.825-.05.15-.05.3 0 .45l-.075.15h.075c0 .1.025.15.075.15h.075c.1.05.15.112.15.187s-.075.1-.225.075a.606.606 0 01-.337-.15c-.075-.075-.138-.112-.188-.112l-.225.225c-.1.15-.2.212-.3.187-.1-.025-.125-.062-.075-.112l.075-.075c.05-.1.05-.15 0-.15l-.6.15c-.05.05-.112.05-.187 0s-.063-.1.037-.15l.375-.15c0-.05-.025-.075-.075-.075-.2.1-.4.125-.6.075l-.375-.075-.075-.075c0-.05.025-.075.075-.075.2.05.45.025.75-.075l.525-.225.6-.675.075-.15c.2-.4.413-.763.638-1.088a3.68 3.68 0 01.712-.787l.075-.3c.1-.2.2-.375.3-.525.1-.15.225-.35.375-.6l.225-.3c.2-.3.425-.45.675-.45l.225-.225c.05-.05.075-.125.075-.225l.15-.15-.075-.075c-.3-.25-.45-.475-.45-.675-.05-.35.063-.65.338-.9s.55-.363.825-.338c.275.025.487.113.637.263l.15.15c.05 0 .075.025.075.075l.3.15v.225c.1.1.15.175.15.225.1-.15.25-.325.45-.525l.375-1.2c0-.2.05-.4.15-.6l.15-.225v-.15l.225-.9h.15l.225-.9a.933.933 0 000-.525l-.3-.75-.15-.6z" /></symbol>
-            <symbol id="logo-marquee-aws" viewBox="0 0 24 24"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.295.072-.583.16-.862.272a2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 0 1-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.416-.287-.807-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167zM21.698 16.207c-2.626 1.94-6.442 2.969-9.722 2.969-4.598 0-8.74-1.7-11.87-4.526-.247-.223-.024-.527.272-.351 3.384 1.963 7.559 3.153 11.877 3.153 2.914 0 6.114-.607 9.06-1.852.439-.2.814.287.383.607zM22.792 14.961c-.336-.43-2.22-.207-3.074-.103-.255.032-.295-.192-.063-.36 1.5-1.053 3.967-.75 4.254-.399.287.36-.08 2.826-1.485 4.007-.215.184-.423.088-.327-.151.32-.79 1.03-2.57.695-2.994z" /></symbol>
-            <symbol id="logo-marquee-spotify" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></symbol>
-            <symbol id="logo-marquee-burger-king" viewBox="0 0 24 24"><path d="M15.39 12.614c-.72 0-1.11.538-1.11 1.215v1.508c0 .125-.043.182-.12.182-.056 0-.098-.035-.147-.133l-.971-1.885c-.37-.72-.755-.887-1.196-.887-.734 0-1.14.552-1.14 1.243v4.314c0 .678.392 1.215 1.112 1.215.72 0 1.112-.537 1.112-1.215v-1.507c0-.126.042-.182.119-.182.055 0 .097.035.146.133l.972 1.885c.37.719.769.886 1.195.886.735 0 1.14-.551 1.14-1.242v-4.315c0-.677-.391-1.215-1.111-1.215zm-4.02-.405c.364 0 .68-.286.68-.642 0-.238-.099-.412-.224-.572-.203-.266-.385-.496-.476-.74-.02-.056-.007-.105.056-.154.217-.167.469-.537.469-1.124 0-.886-.734-1.389-1.622-1.389h-.79c-.553 0-.819.321-.819.754v3.114c0 .419.245.754.692.754.448 0 .693-.335.693-.754v-.74c0-.09.042-.133.111-.133.084 0 .112.049.126.133.063.356.23.837.42 1.082.237.314.46.411.685.411zm-1.146-2.666h-.098c-.119 0-.175-.07-.175-.161v-.474c0-.09.056-.16.175-.16h.098c.294 0 .385.208.385.39 0 .174-.091.405-.385.405zm-3.761 2.666c1.132 0 1.734-.677 1.734-1.528V8.328c0-.419-.245-.754-.692-.754-.448 0-.693.335-.693.754v2.276c0 .167-.097.363-.35.363-.251 0-.335-.196-.335-.363V8.328c0-.419-.252-.754-.7-.754-.447 0-.691.335-.691.754v2.353c0 .852.594 1.528 1.727 1.528zm12.011-.034c.392 0 .7-.23.7-.65 0-.412-.308-.642-.7-.642h-.63c-.118 0-.174-.07-.174-.16v-.133c0-.091.056-.161.175-.161h.482c.336 0 .602-.202.602-.559 0-.355-.266-.558-.602-.558h-.482c-.12 0-.175-.07-.175-.16V9.04c0-.091.056-.161.175-.161h.629c.392 0 .7-.23.7-.65 0-.411-.308-.642-.7-.642h-1.321c-.553 0-.818.321-.818.754v3.079c0 .432.265.754.818.754h1.321zm2.642 3.127h-.342c-.615 0-1.09.286-1.09.914 0 .573.517.845.901.845.189 0 .322.056.322.202 0 .182-.224.3-.462.3-.79 0-1.328-.537-1.328-1.535 0-1.11.734-1.515 1.3-1.515.692 0 .804.349 1.287.349a.927.927 0 0 0 .936-.915.95.95 0 0 0-.398-.788c-.427-.315-1.07-.545-1.979-.545-1.629 0-3.216 1.026-3.216 3.414 0 2.282 1.587 3.35 3.153 3.35 1.643 0 2.685-1.012 2.685-2.492 0-.935-.587-1.584-1.769-1.584zm-12.43-2.688c-.783 0-1.21.587-1.21 1.32v4.132c0 .734.427 1.32 1.21 1.32.783 0 1.21-.586 1.21-1.32v-4.132c0-.733-.427-1.32-1.21-1.32zm11.494-.405c.447 0 .692-.335.692-.754v-.74c0-.09.042-.132.112-.132.084 0 .111.049.125.133.063.355.231.837.42 1.082.238.314.461.412.685.412.363 0 .678-.286.678-.643 0-.237-.098-.412-.224-.572-.237-.3-.384-.496-.475-.74-.02-.056-.007-.105.056-.153.217-.168.469-.538.469-1.124 0-.887-.735-1.39-1.623-1.39h-.79c-.552 0-.817.321-.817.754v3.114c0 .419.244.753.692.753zm.615-3.301c0-.09.056-.161.175-.161h.098c.293 0 .384.21.384.391 0 .175-.09.405-.384.405h-.098c-.12 0-.175-.07-.175-.16zm-18.87 3.267h.986c.93 0 1.496-.622 1.496-1.397 0-.621-.37-.907-.454-.977-.035-.028-.07-.056-.07-.084 0-.035.021-.048.056-.09.133-.154.266-.398.266-.754 0-.838-.567-1.285-1.448-1.285h-.832c-.552 0-.817.321-.817.754v3.079c0 .433.265.754.817.754zm.413-3.386c0-.09.056-.16.175-.16h.09c.301 0 .392.209.392.39 0 .168-.09.405-.391.405h-.091c-.12 0-.175-.07-.175-.16zm0 1.634c0-.091.056-.161.175-.161h.126c.335 0 .433.223.433.426 0 .181-.098.44-.433.44h-.126c-.12 0-.175-.07-.175-.161zm11.878 1.794c1.098 0 1.79-.699 1.79-1.718 0-.649-.391-1.096-1.174-1.096h-.224c-.413 0-.734.196-.734.636 0 .39.342.58.601.58.133 0 .217.041.217.139 0 .125-.147.21-.315.21-.524 0-.88-.37-.88-1.062 0-.768.489-1.047.866-1.047.462 0 .539.238.86.238.37 0 .623-.308.623-.629a.669.669 0 0 0-.266-.544c-.294-.217-.706-.377-1.321-.377-1.084 0-2.14.712-2.14 2.36 0 1.576 1.056 2.31 2.097 2.31zm-8.718 3.762a.354.354 0 0 1-.07-.188c0-.077.042-.133.126-.21.196-.181.678-.635.944-1.047.202-.314.286-.6.286-.837 0-.607-.552-1.082-1.153-1.082-.385 0-.748.216-.993.614-.329.53-.72 1.145-.972 1.39-.063.062-.098.076-.146.076-.084 0-.12-.056-.12-.146v-.699c0-.684-.405-1.235-1.139-1.235-.74 0-1.14.551-1.14 1.235v4.3c0 .685.399 1.237 1.14 1.237.734 0 1.14-.552 1.14-1.236v-.991c0-.084.035-.147.119-.147.111 0 .14.112.167.168.161.384.63 1.2 1.063 1.682.294.32.657.524 1.042.524.65 0 1.196-.566 1.196-1.173 0-.377-.161-.657-.469-.991-.392-.427-.853-.986-1.021-1.244zm15.751 6.702C19.432 23.707 16.313 24 12 24c-4.313 0-7.432-.293-9.25-1.32-1.09-.614-1.642-1.451-1.642-2.052 0-.342.181-.537.587-.537h20.61c.406 0 .587.195.587.537 0 .6-.552 1.438-1.643 2.053zm1.056-15.917H1.695c-.406 0-.587-.209-.587-.586C1.108 3.944 4.47 0 12 0c7.46 0 10.892 3.944 10.892 6.178 0 .377-.181.586-.587.586Z" /></symbol>
-            <symbol id="logo-marquee-honda" viewBox="0 0 24 24"><path d="M23.902 6.87c-.33-3.218-2.47-3.895-4.354-4.204-.946-.16-2.63-.3-3.716-.34-.946-.06-3.168-.09-3.835-.09-.657 0-2.89.03-3.835.09-1.076.04-2.77.18-3.716.34C2.563 2.985.42 3.66.092 6.87c-.08.877-.1 2.023-.09 3.248.03 2.031.2 3.406.3 4.363.07.657.338 2.62.687 3.636.478 1.395.916 1.803 1.424 2.222.937.757 2.471.996 2.79 1.056 1.733.31 5.24.368 6.784.368 1.544 0 5.05-.05 6.784-.368.329-.06 1.863-.29 2.79-1.056.508-.419.946-.827 1.424-2.222.35-1.016.628-2.979.698-3.636.1-.957.279-2.332.299-4.363.04-1.225.01-2.371-.08-3.248m-1.176 5.4c-.19 2.57-.418 4.104-.747 5.22-.29.976-.637 1.623-1.165 2.092-.867.787-2.063.956-2.76 1.056-1.514.23-4.055.3-6.057.3-2.002 0-4.543-.08-6.057-.3-.697-.1-1.893-.269-2.76-1.056-.518-.469-.876-1.126-1.155-2.093-.329-1.105-.558-2.65-.747-5.22-.11-1.543-.09-4.054.08-5.4.258-2.011 1.255-3.018 3.387-3.396.996-.18 2.34-.31 3.606-.37 1.016-.07 2.7-.1 3.636-.09.936-.01 2.62.03 3.636.09 1.275.06 2.61.19 3.606.37 2.142.378 3.139 1.395 3.388 3.397.199 1.345.229 3.856.11 5.4m-5.202-8.39c-.548 2.462-.767 3.588-1.216 5.37-.428 1.715-.767 3.298-1.335 4.065-.587.777-1.365.947-1.893 1.006-.279.03-.478.04-1.066.05-.596 0-.796-.02-1.075-.05-.528-.06-1.315-.229-1.892-1.006-.578-.767-.907-2.35-1.335-4.064-.47-1.773-.678-2.91-1.236-5.37 0 0-.548.02-.797.04-.329.02-.588.05-.867.09.343 5.372.692 11.079 1.126 16.13a21.983 21.983 0 002.39.169c.33-1.266.748-3.02 1.207-3.767.378-.608.966-.677 1.295-.717.518-.07.956-.08 1.165-.08.2-.01.637 0 1.165.08.33.05.917.11 1.295.717.47.747.877 2.5 1.206 3.766 0 0 .358-.01 1.165-.05.41-.018.82-.058 1.226-.12.458-5.39.785-10.728 1.126-16.128-.28-.04-.538-.07-.867-.09-.23-.02-.787-.04-.787-.04z" /></symbol>
-            <symbol id="logo-marquee-notion" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z" /></symbol>
-            <symbol id="logo-marquee-hulu" viewBox="0 0 24 24"><path d="M14.707 15.957h1.912V8.043h-1.912zm-3.357-2.256a.517.517 0 01-.512.511H9.727a.517.517 0 01-.512-.511v-3.19H7.303v3.345c0 1.368.879 2.09 2.168 2.09h1.868c1.189 0 1.912-.856 1.912-2.09V10.51h-1.912c.01 0 .01 3.09.01 3.19zm10.75-3.19v3.19a.517.517 0 01-.512.511h-1.112a.517.517 0 01-.511-.511v-3.19h-1.912v3.345c0 1.368.878 2.09 2.167 2.09h1.868c1.19 0 1.912-.856 1.912-2.09V10.51zm-18.32 0H2.557c-.434 0-.645.11-.645.11V8.044H0v7.903h1.9v-3.179c0-.278.234-.511.512-.511h1.112c.278 0 .511.233.511.511v3.19h1.912v-3.446c0-1.445-.967-2-2.167-2Z" /></symbol>
-          </defs>
-        </svg>
       </section>
 
-      {/* Why MEP Services Are Critical – expandable cards */}
-      <section id="why-mep" className="mep-cards-section mep-section-light-bg section-spacing">
+      {/* Projects – scroll view with glass blur cards; strip bleeds full viewport, offset start; scroll lock: vertical scroll drives horizontal until end */}
+      <section ref={projectsSectionRef} id="projects" className="bg-black py-20 lg:py-28 overflow-x-hidden">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="section-content-gap">
-            <h2 className={`text-5xl font-bold text-left font-title section-title-gap`}>
-              Why MEP Services Are Critical
-            </h2>
-            <p className="text-base text-gray-600 leading-relaxed max-w-2xl section-intro-gap">
-              Mechanical and electrical systems are the backbone of any building. Reliable MEP ensures occupant safety,
-              comfort, and compliance, reduces energy waste, and protects your asset value. Expert design, installation,
-              and maintenance are essential for commercial and industrial operations to run smoothly and sustainably.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-14 lg:mb-20">
+            <div>
+              <span ref={projectsLabelRef} className="section-label text-white/80">Projects</span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-white font-title leading-tight">
+                Built to last — delivered with care.
+              </h2>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => scrollProjects('left')}
+                className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                aria-label="Previous projects"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollProjects('right')}
+                className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                aria-label="Next projects"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
-        <div className="container mx-auto px-6">
-          <ul
-          ref={mepListRef}
-          className="mep-cards-grid"
-          role="list"
-          onPointerMove={(e) => {
-            const li = (e.target as HTMLElement).closest('li')
-            if (li && mepListRef.current) {
-              const index = [...mepListRef.current.querySelectorAll('li')].indexOf(li)
-              if (index !== -1) setActiveMepIndex(index)
-            }
-          }}
-          onClick={(e) => {
-            const li = (e.target as HTMLElement).closest('li')
-            if (li && mepListRef.current) {
-              const index = [...mepListRef.current.querySelectorAll('li')].indexOf(li)
-              if (index !== -1) setActiveMepIndex(index)
-            }
-          }}
-          onFocus={(e) => {
-            const li = (e.target as HTMLElement).closest('li')
-            if (li && mepListRef.current) {
-              const index = [...mepListRef.current.querySelectorAll('li')].indexOf(li)
-              if (index !== -1) setActiveMepIndex(index)
-            }
-          }}
-        >
-          {mepCards.map((card, i) => {
-            const Icon = card.icon
-            return (
-              <li
-                key={card.id}
-                data-active={activeMepIndex === i}
-                tabIndex={0}
-              >
-                <span className="mep-card-glow" aria-hidden />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={card.image} alt="" className="mep-card-bg-img" />
-                <article>
-                  <h3 className="mep-title-vertical" style={{ fontFamily: 'var(--font-menu)' }} aria-hidden={activeMepIndex === i}>{card.title}</h3>
-                  <span className="mep-card-title-wrap" aria-hidden={activeMepIndex !== i}>
-                    <h3 className="mep-title-horizontal" style={{ fontFamily: 'var(--font-menu)' }}>{card.title}</h3>
+        {/* Full viewport width scroll strip – bleeds off both sides; content offset from left via padding */}
+        <div className="w-screen relative left-1/2 -translate-x-1/2">
+          <div
+            ref={projectsScrollRef}
+            className="flex gap-6 overflow-x-auto overflow-y-hidden pb-4 pl-6 lg:pl-8 pr-6 lg:pr-8 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+          {projects.map((p, i) => (
+            <Link
+              key={i}
+              href="/projects"
+              className="projects-card group flex-shrink-0 flex flex-col rounded-xl overflow-hidden bg-black"
+            >
+              <div className="relative aspect-[3/4] min-h-[480px] projects-card__inner">
+                {/* Project number – top centre, text only */}
+                {/* Project number – top right, same font as titles */}
+                {/* Project number – top right, same font as titles */}
+                <span className="projects-card-number absolute top-6 right-6 z-10 text-5xl sm:text-6xl font-bold text-white tabular-nums drop-shadow-md" style={{ fontFamily: 'var(--font-title, "Outfit", sans-serif)' }} aria-hidden>{(i + 1).toString().padStart(2, '0')}</span>
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${p.image})` }}
+                />
+                <div className="projects-card-glass absolute inset-x-0 bottom-0 top-1/2 overflow-hidden p-6 pt-20 pb-5 pr-16 flex flex-col justify-end">
+                  {/* Blurred image layer (same as card) – guarantees glass displacement without relying on backdrop-filter */}
+                  <div
+                    className="projects-card-glass-blur absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${p.image})` }}
+                    aria-hidden
+                  />
+                  <div className="projects-card-glass-overlay absolute inset-0" aria-hidden />
+                  <p className="text-4xl font-bold text-white mb-1 relative z-10">{p.title}</p>
+                  <p className="text-white/90 text-sm mb-3 relative z-10">{p.description}</p>
+                  <p className="text-white/80 text-sm italic mb-4 line-clamp-2 relative z-10">&ldquo;{p.quote}&rdquo;</p>
+                  <span className="projects-card-arrow absolute bottom-5 right-6 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white transition-transform duration-200 group-hover:rotate-12" aria-hidden>
+                    <ChevronRight className="w-5 h-5" />
                   </span>
-                  <p>{card.description}</p>
-                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                  <Link href={card.href}>
-                    <span>Learn more</span>
-                  </Link>
-                </article>
-              </li>
-            )
-          })}
-        </ul>
+                </div>
+              </div>
+            </Link>
+          ))}
+          </div>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section id="about" className="section-spacing">
+      {/* News and Articles */}
+      <section id="why-mep" className="news-section">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="news-section__grid">
+            <div className="news-section__left">
+              <header className="news-section__header">
+                <span className="news-section__label">News and Articles</span>
+                <h2 className="news-section__title">Insights and updates</h2>
+              </header>
+              <nav aria-label="Articles">
+                <ul className="news-section__list">
+                  {newsArticles.slice(0, 3).map((article, i) => (
+                    <li key={article.id} className={`news-section__item ${activeNewsIndex === i ? 'news-section__item--active' : ''}`}>
+                      <span className={`news-section__link ${activeNewsIndex === i ? 'news-section__link--active' : ''}`}>
+                        {article.title}
+                      </span>
+                      {activeNewsIndex === i && (
+                        <span className="news-section__bar" style={{ width: `${newsProgress * 100}%` }} aria-hidden />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+
+            <div className="news-section__right">
+              <div
+                className="news-section__image"
+                style={{ backgroundImage: `url('${newsArticles[activeNewsIndex]?.image || newsArticles[0].image}')` }}
+                aria-hidden
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us – canted top and bottom */}
+      <section id="about" className="section-spacing section-canted-top section-canted-bottom">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="section-content-gap space-y-16">
             {/* Top Section - Title and Description */}
             <div>
-              <h2 className={`text-5xl font-bold text-left font-title section-title-gap`}>Why Choose APX MEP?</h2>
-              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
-                With over 20 years of experience in mechanical, electrical, and plumbing services, 
-                we&apos;ve built a reputation for excellence, reliability, and customer satisfaction across the UK.
+              <span className="section-label section-label--black">Why Choose Us</span>
+              <h2 className="text-5xl font-bold text-left font-title section-title-gap leading-tight">Trust, quality, peace of mind.</h2>
+              <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+                We have been providing bespoke integrated security systems to London and the Home Counties since 1986. Our extensive knowledge and decades of real world experience allow us to deliver high quality security systems to the domestic and commercial sector.
               </p>
             </div>
             
-            {/* Benefits Cards - 3 Column Grid */}
+            {/* Benefits Cards - 3 Column Grid: black bg, white border, top-left + bottom-right rounded, white text */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-              {/* Certified MEP Engineers */}
-              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
-                <div className="flex items-center space-x-3 mb-4">
-                  <CheckCircle className="h-7 w-7" />
-                  <h4 className="text-2xl font-semibold font-title">Certified MEP Engineers</h4>
+              {/* NSI Gold Accredited */}
+              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-5">
+                  <CheckCircle className="h-7 w-7 flex-shrink-0 text-white" />
+                  <h4 className="text-2xl font-semibold text-white font-title">NSI Gold Accredited</h4>
                 </div>
-                <div className="space-y-2 dark-card-muted">
-                  <div className="text-xl">• Fully qualified professionals</div>
-                  <div className="text-xl">• Certified in MEP systems</div>
-                  <div className="text-xl">• Regular training programs</div>
-                  <div className="text-xl">• Industry expertise</div>
-                </div>
+                <ul className="why-choose-list">
+                  <li>BS EN ISO 9001:2015</li>
+                  <li>BAFE Fire Safety Registered</li>
+                  <li>UKAS Quality Management</li>
+                  <li>FIA Member</li>
+                </ul>
               </div>
-              
+
               {/* 24/7 Emergency Service */}
-              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Clock className="h-7 w-7" />
-                  <h4 className="text-2xl font-semibold font-title">24/7 Emergency Service</h4>
+              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-5">
+                  <Clock className="h-7 w-7 flex-shrink-0 text-white" />
+                  <h4 className="text-2xl font-semibold text-white font-title">24/7 Emergency Service</h4>
                 </div>
-                <div className="space-y-2 dark-card-muted">
-                  <div className="text-xl">• Round-the-clock MEP support</div>
-                  <div className="text-xl">• Rapid response times</div>
-                  <div className="text-xl">• Emergency repairs</div>
-                  <div className="text-xl">• When you need it most</div>
-                </div>
+                <ul className="why-choose-list">
+                  <li>Round-the-clock security support</li>
+                  <li>Rapid response times</li>
+                  <li>Monitored alarm response</li>
+                  <li>When you need it most</li>
+                </ul>
               </div>
-              
+
               {/* Quality Guarantee */}
-              <div className="dark-card bg-black rounded-tl-[1.75rem] rounded-tr-none rounded-br-[1.75rem] rounded-bl-none p-8 relative z-10">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Shield className="h-7 w-7" />
-                  <h4 className="text-2xl font-semibold font-title">Quality Guarantee</h4>
+              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-5">
+                  <Shield className="h-7 w-7 flex-shrink-0 text-white" />
+                  <h4 className="text-2xl font-semibold text-white font-title">Quality Guarantee</h4>
                 </div>
-                <div className="space-y-2 dark-card-muted">
-                  <div className="text-xl">• Comprehensive warranties</div>
-                  <div className="text-xl">• All MEP work covered</div>
-                  <div className="text-xl">• Quality assurance</div>
-                  <div className="text-xl">• Reliable service</div>
-                </div>
+                <ul className="why-choose-list">
+                  <li>Constructionline Gold Member</li>
+                  <li>All work to NSI Gold standards</li>
+                  <li>Quality assurance</li>
+                  <li>Reliable service</li>
+                </ul>
               </div>
             </div>
             
-            {/* Stats Section - no border, animated count-up */}
-            <div className="mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '0ms' }}>
-                <div className="text-4xl font-bold text-black leading-none">
+            {/* Stats Section – black text forced via data attribute + inline style */}
+            <div className="mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-center gap-4 stats-section" data-stats-section>
+              <div className="stats-card rounded-xl px-8 py-6 text-center animate-stats-in" style={{ animationDelay: '0ms' }}>
+                <div className="stats-card-number text-4xl font-bold leading-none" data-stats-text style={{ color: '#000000' }}>
                   <CountUp target={500} suffix="+" duration={2000} />
                 </div>
-                <div className="text-gray-600 text-sm mt-2">Projects Completed</div>
+                <div className="stats-card-label text-sm mt-2" data-stats-text style={{ color: '#000000' }}>Projects Completed</div>
               </div>
-              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '150ms' }}>
-                <div className="text-4xl font-bold text-black leading-none">
+              <div className="stats-card rounded-xl px-8 py-6 text-center animate-stats-in" style={{ animationDelay: '150ms' }}>
+                <div className="stats-card-number text-4xl font-bold leading-none" data-stats-text style={{ color: '#000000' }}>
                   <CountUp target={99} suffix="%" duration={2000} />
                 </div>
-                <div className="text-gray-600 text-sm mt-2">Customer Satisfaction</div>
+                <div className="stats-card-label text-sm mt-2" data-stats-text style={{ color: '#000000' }}>Customer Satisfaction</div>
               </div>
-              <div className="stats-card rounded-xl bg-black/5 px-8 py-6 text-center backdrop-blur-sm animate-stats-in" style={{ animationDelay: '300ms' }}>
-                <div className="text-4xl font-bold text-black leading-none">
+              <div className="stats-card rounded-xl px-8 py-6 text-center animate-stats-in" style={{ animationDelay: '300ms' }}>
+                <div className="stats-card-number text-4xl font-bold leading-none" data-stats-text style={{ color: '#000000' }}>
                   <CountUp target={20} suffix="+" duration={2000} />
                 </div>
-                <div className="text-gray-600 text-sm mt-2">Years Experience</div>
+                <div className="stats-card-label text-sm mt-2" data-stats-text style={{ color: '#000000' }}>Years Experience</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="section-spacing">
+      {/* Accreditations Section – black bg, white text, two columns */}
+      <section id="accreditations" className="section-spacing section-canted-top accreditations-section bg-black">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="section-content-gap space-y-16">
-            {/* Top Section - Title and Description */}
-            <div className="text-left">
-              <h2 className={`text-5xl font-bold font-title section-title-gap`}>What Our Clients Say</h2>
-              <p className="text-base text-gray-600 leading-relaxed max-w-xl section-intro-gap">
-                Don&apos;t just take our word for it - hear from our satisfied clients about their experience with APX MEP.
-              </p>
-            </div>
-            
-            {/* Testimonial Carousel - Single View */}
-            <div className="max-w-4xl mx-auto">
-              <div className="service-card text-black relative overflow-hidden">
-                <span className="glow"></span>
-                
-                <div className="flex items-center space-x-2 mb-4 relative z-10">
-                {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-black fill-current" />
-                ))}
-              </div>
-                
-                <div className="space-y-3 relative z-10">
-                  <p className="text-gray-600 text-lg leading-relaxed">
-                    &ldquo;{testimonials[currentTestimonial].text}&rdquo;
-                  </p>
-                  <div className="pt-2">
-                    <div className="font-semibold text-black text-lg">{testimonials[currentTestimonial].name}</div>
-                    <div className="text-gray-500">{testimonials[currentTestimonial].role}</div>
-                  </div>
-            </div>
-            
-                {/* Navigation dots */}
-                <div className="flex justify-center space-x-2 mt-6 relative z-10">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentTestimonial(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === currentTestimonial ? 'bg-black' : 'bg-gray-300'
-                      }`}
-                    />
+          <div className="accreditations-card service-card overflow-hidden py-10 lg:py-14 px-8 lg:px-12">
+            <span className="glow"></span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 relative z-10">
+              {/* Left – qualifications list */}
+              <div>
+                <span className="section-label text-white/80 mb-4 block">Accreditations</span>
+                <h2 className="accreditations-heading text-2xl lg:text-3xl font-bold font-title mb-8 text-white">
+                  Qualifications that speak for themselves
+                </h2>
+                <ul className="space-y-4">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <li key={i} className="flex items-center gap-3 accreditations-text text-white">
+                      <CheckCircle className="h-5 w-5 shrink-0 text-white" aria-hidden />
+                      <span>Accreditation placeholder {i}</span>
+                    </li>
                   ))}
+                </ul>
+              </div>
+              {/* Right – copy and CTA (white text on black) */}
+              <div>
+                <h3 className="accreditations-heading text-2xl lg:text-3xl font-bold font-title mb-4 text-white">
+                  Trusted & Fully Qualified
+                </h3>
+                <p className="accreditations-text text-white/90 mb-4">
+                  Paragraph placeholder. Replace with short intro about quality and safety affiliations.
+                </p>
+                <p className="accreditations-text text-white/90 mb-6">
+                  Second paragraph placeholder. Replace with detail on certifications and standards.
+                </p>
+                <CustomPillButton href="#" size="md">
+                  View all our accreditations
+                </CustomPillButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section – white bg; black box bleeds into sections above/below */}
+      <section id="testimonials" className="section-spacing bg-white overflow-visible">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="testimonials-lifted relative z-10 -mt-16 -mb-16 bg-black border-2 border-white rounded-tl-[2.25rem] rounded-br-[2.25rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] py-12 sm:py-14 lg:py-16 px-8 sm:px-10 lg:px-12">
+            <div className="section-content-gap space-y-16">
+              {/* Top Section - Title and Description */}
+              <div className="text-left">
+                <span className="section-label text-white/80">Testimonials</span>
+                <h2 className="text-5xl font-bold font-title section-title-gap leading-tight text-white">What our clients say</h2>
+                <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
+                  Don&apos;t just take our word for it - hear from our satisfied clients about their experience with APX MEP.
+                </p>
+              </div>
+              
+              {/* Testimonial Carousel - Single View */}
+              <div className="max-w-4xl mx-auto">
+                <div className="service-card text-white relative overflow-hidden">
+                  <span className="glow"></span>
+                  
+                  <div className="flex items-center space-x-2 mb-4 relative z-10">
+                  {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-white fill-current" />
+                  ))}
+                </div>
+                  
+                  <div className="space-y-3 relative z-10">
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      &ldquo;{testimonials[currentTestimonial].text}&rdquo;
+                    </p>
+                    <div className="pt-2">
+                      <div className="font-semibold text-white text-lg">{testimonials[currentTestimonial].name}</div>
+                      <div className="text-gray-400">{testimonials[currentTestimonial].role}</div>
+                    </div>
+                  </div>
+            
+                  {/* Navigation dots */}
+                  <div className="flex justify-center space-x-2 mt-6 relative z-10">
+                    {testimonials.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentTestimonial(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          index === currentTestimonial ? 'bg-white' : 'bg-gray-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1023,68 +1192,65 @@ function FullSiteHome() {
         </div>
       </section>
 
-
-      {/* Ready to Get Started Section */}
-      <section id="contact" className="section-spacing relative">
+      {/* Ready to Get Started Section – black bg, white text */}
+      <section id="contact" className="section-spacing relative bg-black">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
             {/* Left side - Title and Button */}
             <div className="space-y-8 pt-16 lg:pt-24">
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold font-title leading-tight text-left`}>
-                Ready to Get Started?
+              <span className="section-label text-white/80">Contact</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-title leading-tight text-left text-white">
+                Ready to get started?
               </h2>
               
               <div className="space-y-6 max-w-lg">
-                <p className="text-base leading-relaxed text-gray-600">
-                  At APX Mechanical & Electrical, we understand that time is of the essence when it comes to your project needs. 
-                  That&apos;s why we&apos;re committed to responding to all quote requests within 24 hours, often much sooner.
+                <p className="text-base leading-relaxed text-gray-300">
+                  As one of the leading security system installers in London and the south east, we are pleased to offer a free survey and report for your property. Our systems are expertly designed in accordance with NSI Gold standards, covering both the domestic and commercial market.
                 </p>
                 
-                <p className="text-base leading-relaxed text-gray-600">
-                  Our experienced team of qualified engineers and technicians is standing by to provide you with detailed, 
-                  competitive quotes tailored specifically to your requirements. We&apos;ll also provide information about our 
-                  certifications, insurance coverage, and warranty terms to give you complete peace of mind.
+                <p className="text-base leading-relaxed text-gray-300">
+                  Whether you&apos;re looking for security, monitoring, detection or safety, simply contact us for a chat about your requirements. We respond to all enquiries promptly and will provide detailed, competitive quotes tailored to your needs.
               </p>
             </div>
             
               <button
-                className="apx-mep-services-title-box relative overflow-hidden inline-flex items-center gap-3 border-2 border-black rounded-tl-[1.75rem] rounded-br-[1.75rem] bg-black text-white px-8 py-4 font-semibold text-lg transition-colors duration-300 hover:bg-gray-900"
+                className="bg-white text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-3"
                 onClick={() => document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                <ArrowRight className="h-6 w-6 relative z-10" />
-                <span className="relative z-10">GET A QUOTE</span>
+                <ArrowRight className="h-6 w-6" />
+                GET A QUOTE
               </button>
                 </div>
             
-            {/* Right side - Contact Form */}
+            {/* Right side - Contact Form (glassmorphic) */}
             <div 
               id="quote-form" 
-              className="p-8 rounded-tl-[1.75rem] rounded-br-[1.75rem] border border-black/20 bg-gray-50 shadow-lg"
+              className="p-8 shadow-2xl"
             >
-              <h3 className={`text-2xl font-bold mb-6 font-title`}>Get Your Free Quote</h3>
+              <h3 className="text-2xl font-bold mb-6 font-title">Get Your Free Quote</h3>
               
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-2">
                       First Name *
                     </label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg"
                       placeholder="Enter your first name"
                     />
                 </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-2">
                       Last Name *
                     </label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg"
                       placeholder="Enter your last name"
                     />
                   </div>
@@ -1092,25 +1258,25 @@ function FullSiteHome() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-2">
                       Email Address *
                     </label>
                     <input
                       type="email"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg"
                       placeholder="Enter your email"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-2">
                       Phone Number *
                     </label>
                     <input
                       type="tel"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg"
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -1123,20 +1289,8 @@ function FullSiteHome() {
                   <div className="relative">
                     <button
                       type="button"
+                      className="quote-form-field quote-form-dropdown w-full px-4 py-3 rounded-lg text-left flex justify-between items-center cursor-pointer"
                       onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        borderRadius: '8px',
-                        textAlign: 'left',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        backgroundColor: themeMode.cardBg,
-                        border: `1px solid ${themeMode.border}`,
-                        color: themeMode.text,
-                        cursor: 'pointer'
-                      }}
                     >
                       <span>{selectedService || 'Select a service'}</span>
                       <svg 
@@ -1156,118 +1310,76 @@ function FullSiteHome() {
                     
                     {isServicesDropdownOpen && (
                       <div 
-                        className="dropdown-menu"
-                        style={{
-                          position: 'absolute',
-                          top: '100%',
-                          left: '0',
-                          right: '0',
-                          zIndex: '50',
-                          marginTop: '4px',
-                          borderRadius: '8px',
-                          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                          backgroundColor: themeMode.cardBg,
-                          border: `1px solid ${themeMode.border}`
-                        }}
+                        className="quote-form-dropdown-menu absolute left-0 right-0 top-full mt-1 z-50 py-2"
+                        style={{ boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)' }}
                       >
-                        <div style={{ padding: '8px 0' }}>
-                          {[
-                            { value: 'electrical', label: 'Electrical Services' },
-                            { value: 'mechanical', label: 'Mechanical Services' },
-                            { value: 'maintenance', label: 'Maintenance' },
-                            { value: 'installation', label: 'Installation' },
-                            { value: 'repair', label: 'Repair Services' },
-                            { value: 'other', label: 'Other' }
-                          ].map((service, index) => (
-                            <button
-                              key={service.value}
-                              type="button"
-                              className="dropdown-item"
-                              onClick={() => {
-                                setSelectedService(service.label)
-                                setIsServicesDropdownOpen(false)
-                              }}
-                              style={{
-                                width: '100%',
-                                padding: '8px 16px',
-                                textAlign: 'left',
-                                fontSize: '14px',
-                                transition: 'all 0.3s ease',
-                                cursor: 'pointer',
-                                color: themeMode.text,
-                                backgroundColor: 'transparent',
-                                borderBottom: index < 5 ? `1px solid ${themeMode.text === '#FFFFFF' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}` : 'none'
-                              }}
-                              onMouseEnter={(e) => {
-                                const t = e.currentTarget
-                                t.style.backgroundColor = themeMode.text === '#FFFFFF' ? '#333333' : '#f5f5f5'
-                                t.style.color = themeMode.text
-                                t.style.opacity = '1'
-                                t.style.fontWeight = 'bold'
-                                t.style.textShadow = 'none'
-                              }}
-                              onMouseLeave={(e) => {
-                                const t = e.currentTarget
-                                t.style.backgroundColor = 'transparent'
-                                t.style.color = themeMode.text
-                                t.style.opacity = '1'
-                                t.style.fontWeight = 'normal'
-                                t.style.textShadow = 'none'
-                              }}
-                            >
-                              {service.label}
-                            </button>
-                          ))}
-                        </div>
+                        {[
+                          { value: 'cctv', label: 'CCTV Systems' },
+                          { value: 'access-control', label: 'Access Control Systems' },
+                          { value: 'intruder-alarms', label: 'Intruder Alarm Systems' },
+                          { value: 'fire-alarms', label: 'Fire Alarm Systems' },
+                          { value: 'video-door-entry', label: 'Video Door Entry Systems' },
+                          { value: 'other', label: 'Other' }
+                        ].map((service, index) => (
+                          <button
+                            key={service.value}
+                            type="button"
+                            className="quote-form-dropdown-item block w-full py-2 px-4 text-left text-sm transition-colors"
+                            onClick={() => {
+                              setSelectedService(service.label)
+                              setIsServicesDropdownOpen(false)
+                            }}
+                          >
+                            {service.label}
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-medium mb-2">
                     Project Description *
                   </label>
                   <textarea
                     required
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-black/20 bg-white text-black placeholder-gray-400 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-lg"
                     placeholder="Please describe your project requirements..."
                   ></textarea>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block text-sm font-medium mb-2">
                     Preferred Contact Method
                   </label>
                   <div className="flex space-x-6">
-                    <label className="flex items-center text-gray-700">
+                    <label className="flex items-center">
                       <input type="radio" name="contact-method" value="phone" className="mr-2" />
                       Phone Call
                     </label>
-                    <label className="flex items-center text-gray-700">
+                    <label className="flex items-center">
                       <input type="radio" name="contact-method" value="email" className="mr-2" />
                       Email
                     </label>
-                    <label className="flex items-center text-gray-700">
+                    <label className="flex items-center">
                       <input type="radio" name="contact-method" value="text" className="mr-2" />
                       Text Message
                     </label>
                   </div>
                 </div>
                 
-                <button
-                  type="submit"
-                  className="w-full py-4 rounded-tl-[1.25rem] rounded-br-[1.25rem] bg-black text-white font-semibold text-lg hover:bg-gray-900 transition-colors duration-300"
-                >
+                <FormSubmitButton onSubmit={async () => {
+                  /* Wire your real submit here (e.g. fetch or form action) */
+                }}>
                   Submit Quote Request
-                </button>
+                </FormSubmitButton>
               </form>
             </div>
           </div>
         </div>
       </section>
-
 
     </div>
     </>

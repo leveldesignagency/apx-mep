@@ -220,7 +220,7 @@ export const clearNonEssentialCookies = (): void => {
  */
 export const setCache = (
   key: string,
-  value: unknown,
+  value: any,
   expirationMinutes: number = 60
 ): void => {
   if (typeof window === 'undefined') return

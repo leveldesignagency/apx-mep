@@ -4,6 +4,9 @@ import { useRef, useEffect, useState } from "react";
 
 const HOVER_TEXT_TAGS = "p, span, h1, h2, h3, h4, h5, h6, li, td, th, label, figcaption, caption, blockquote";
 
+/** Section IDs / selectors we care about for cursor behaviour (header, hero, services, etc.) */
+export type CursorSection = "header" | "hero" | "services" | "services-drawer" | "services-benefits" | "logo-marquee" | "projects" | "why-mep" | "about" | "testimonials" | "contact" | null;
+
 function isHoverTarget(el: EventTarget | null): boolean {
   if (!el || !(el instanceof Element)) return false;
   const node = el as HTMLElement;
@@ -17,12 +20,22 @@ function isHoverTarget(el: EventTarget | null): boolean {
   return isInteractive || isText;
 }
 
+function getSectionFromElement(el: EventTarget | null): CursorSection {
+  if (!el || !(el instanceof Element)) return null;
+  const node = el as HTMLElement;
+  const header = node.closest("header");
+  if (header) return "header";
+  const section = node.closest("section[id]");
+  if (section && section.id) return section.id as CursorSection;
+  return null;
+}
+
 export default function CustomCursor() {
   const circleRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [isHover, setIsHover] = useState(false);
-  const [overFooter, setOverFooter] = useState(false);
+  const [section, setSection] = useState<CursorSection>(null);
 
   useEffect(() => {
     document.documentElement.classList.add("curzr-big-circle-active");
@@ -38,9 +51,9 @@ export default function CustomCursor() {
       const x = e.clientX;
       const y = e.clientY;
       const hover = isHoverTarget(e.target);
+      const nextSection = getSectionFromElement(e.target);
       setIsHover(hover);
-      const inFooter = !!(e.target instanceof Element && e.target.closest("footer"));
-      setOverFooter(inFooter);
+      setSection(nextSection);
       // Circle and dot are offset in CSS so their center is at (0,0); translate to pointer
       circle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
@@ -73,12 +86,14 @@ export default function CustomCursor() {
     };
   }, []);
 
+  const sectionClass = section ? `apx-cursor-big-circle--${section}` : "";
   return (
     <div
-      className={`apx-cursor-big-circle${isHover ? " apx-cursor-big-circle--hover" : ""}${overFooter ? " apx-cursor-big-circle--over-footer" : ""}`}
+      className={`apx-cursor-big-circle${isHover ? " apx-cursor-big-circle--hover" : ""}${sectionClass ? ` ${sectionClass}` : ""}`}
       aria-hidden
       hidden={!visible}
       style={{ opacity: visible ? 1 : 0 }}
+      data-section={section ?? undefined}
     >
       <div ref={circleRef} className="apx-cursor-big-circle__circle" />
       <div ref={dotRef} className="apx-cursor-big-circle__dot" />

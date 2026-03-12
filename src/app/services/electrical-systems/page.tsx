@@ -1,168 +1,97 @@
 "use client"
 
+import Image from "next/image";
+import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Zap, Shield, Lightbulb, CheckCircle, ArrowRight, Power } from "lucide-react";
+import { CustomPillButton } from "@/components/ui/CustomPillButton";
+import { OurCustomers, RequestFreeSurvey } from "@/components/ServicePageSharedSections";
+import { Video, Shield, Monitor, CheckCircle, ArrowRight, Smartphone } from "lucide-react";
+
 export default function ElectricalSystemsPage() {
   const { theme } = useTheme();
+  const heroImageSrc = "/client%20logos/service%20pages%20image/home-cctv-system-installer-800x533.jpg";
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-      {/* Section Separator - Top */}
       <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Hero Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className={`text-5xl lg:text-7xl font-bold mb-6 ${font-title} ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                Electrical
-                <br />
-                <span className="text-4xl lg:text-6xl opacity-70">Systems</span>
+
+      <section className="relative h-screen overflow-visible flex flex-col bg-transparent">
+        <div className="fixed inset-0 z-0" aria-hidden>
+          <Image
+            src={heroImageSrc}
+            alt=""
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/50" aria-hidden />
+        </div>
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
+          <div className="space-y-4">
+            <div className="max-w-3xl">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-left font-title text-white">
+                Electrical Systems
               </h1>
-              <p className={`text-xl mb-8 leading-relaxed ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Advanced electrical engineering solutions for power distribution, lighting systems, and smart building technologies. 
-                From high-voltage installations to intelligent control systems, we ensure safe, efficient, and reliable electrical infrastructure.
+              <p className="text-sm sm:text-base md:text-lg font-normal mb-4 md:mb-5 text-left tracking-tight max-w-2xl text-white">
+                APX MEP designs, installs and maintains electrical systems for commercial, education, healthcare and industrial premises across London and the Home Counties. From distribution and lighting to power, data and compliance.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'bg-white text-black hover:bg-gray-200' 
-                    : 'bg-black text-white hover:bg-gray-800'
-                }`}>
-                  Get Quote
-                </button>
-                <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'border-white text-white hover:bg-white hover:text-black' 
-                    : 'border-black text-black hover:bg-black hover:text-white'
-                }`}>
-                  View Portfolio
-                </button>
-              </div>
-            </div>
-            <div className="relative">
-              <div className={`w-full h-96 rounded-2xl ${
-                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'
-              } flex items-center justify-center`}>
-                <div className="text-center">
-                  <Zap className="w-24 h-24 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg opacity-70">Electrical Systems Image Placeholder</p>
-                </div>
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
+                <CustomPillButton href="/contact" size="md">
+                  Get a free quote
+                </CustomPillButton>
+                <Link
+                  href="/contact"
+                  className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
+                >
+                  Question? get in touch
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Separator */}
+      <div className="relative z-10 -mt-64 sm:-mt-72">
       <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Services Overview */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
+
+      <section className={`py-12 lg:py-16 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
         <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Our Electrical Engineering Services
+          <h2 className={`text-4xl font-bold mb-10 text-center font-title ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+            Our Electrical Services
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              {
-                icon: <Power className="w-8 h-8" />,
-                title: "Power Distribution",
-                description: "High-voltage power distribution systems, transformers, and electrical infrastructure for industrial and commercial facilities."
-              },
-              {
-                icon: <Lightbulb className="w-8 h-8" />,
-                title: "Lighting Systems",
-                description: "LED lighting solutions, smart lighting controls, and energy-efficient illumination systems for optimal visibility and ambiance."
-              },
-              {
-                icon: <Shield className="w-8 h-8" />,
-                title: "Safety Systems",
-                description: "Fire alarm systems, emergency lighting, and electrical safety installations to ensure compliance and protection."
-              },
-              {
-                icon: <Zap className="w-8 h-8" />,
-                title: "Smart Building",
-                description: "Building automation systems, IoT integration, and intelligent electrical controls for modern smart buildings."
-              },
-              {
-                icon: <CheckCircle className="w-8 h-8" />,
-                title: "Maintenance & Testing",
-                description: "Comprehensive electrical testing, maintenance programs, and compliance inspections for ongoing safety and reliability."
-              },
-              {
-                icon: <ArrowRight className="w-8 h-8" />,
-                title: "Renewable Energy",
-                description: "Solar panel installations, wind power systems, and renewable energy integration for sustainable electrical solutions."
-              }
+              { icon: <Video className="w-8 h-8" />, title: "Distribution & Power", description: "Main and sub distribution boards, power supplies and circuit design for commercial and industrial premises." },
+              { icon: <Shield className="w-8 h-8" />, title: "Lighting", description: "Internal and external lighting design and installation, including emergency lighting and compliance." },
+              { icon: <Monitor className="w-8 h-8" />, title: "Data & Comms", description: "Structured cabling, data networks and communications infrastructure for offices and buildings." },
+              { icon: <Smartphone className="w-8 h-8" />, title: "Testing & Inspection", description: "EICRs, periodic testing and condition reporting to maintain safety and compliance." },
+              { icon: <CheckCircle className="w-8 h-8" />, title: "Maintenance & Support", description: "Planned and reactive electrical maintenance to keep your systems safe and reliable." },
+              { icon: <ArrowRight className="w-8 h-8" />, title: "Design & Build", description: "Full electrical design, specification and installation from concept through to handover." }
             ].map((service, index) => (
-              <div key={index} className={`p-8 rounded-xl transition-all duration-300 hover:scale-105 ${
-                theme === 'dark' 
-                  ? 'bg-black border border-gray-700 hover:border-white' 
-                  : 'bg-white border border-gray-200 hover:border-black'
-              }`}>
-                <div className={`mb-4 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.icon}
-                </div>
-                <h3 className={`text-xl font-semibold mb-3 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
-                }`}>
-                  {service.title}
-                </h3>
-                <p className={`${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {service.description}
-                </p>
+              <div key={index} className={`p-8 rounded-xl transition-all duration-300 hover:scale-105 ${theme === 'dark' ? 'bg-black border border-gray-700 hover:border-white' : 'bg-white border border-gray-200 hover:border-black'}`}>
+                <div className={`mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{service.icon}</div>
+                <h3 className={`text-xl font-semibold mb-3 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{service.title}</h3>
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>{service.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section Separator */}
       <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* Technical Specifications */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
+
+      <section className={`py-12 lg:py-16 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
         <div className="container mx-auto px-6">
-          <h2 className={`text-4xl font-bold mb-12 text-center ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Technical Capabilities
+          <h2 className={`text-4xl font-bold mb-10 text-center font-title ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+            Standards & Compliance
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h3 className={`text-2xl font-semibold mb-6 ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                Voltage Ranges
-              </h3>
+              <h3 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Certifications</h3>
               <ul className="space-y-4">
-                {[
-                  "Low Voltage (LV): Up to 1000V AC",
-                  "Medium Voltage (MV): 1kV to 35kV",
-                  "High Voltage (HV): 35kV to 230kV",
-                  "Extra High Voltage (EHV): Above 230kV"
-                ].map((item, index) => (
-                  <li key={index} className={`flex items-center ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
+                {["NSI approved installers", "SSAIB certification", "BS EN 50131 compliant systems", "GDPR-compliant data handling"].map((item, index) => (
+                  <li key={index} className={`flex items-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                     <CheckCircle className="w-5 h-5 mr-3 text-green-500" />
                     {item}
                   </li>
@@ -170,21 +99,10 @@ export default function ElectricalSystemsPage() {
               </ul>
             </div>
             <div>
-              <h3 className={`text-2xl font-semibold mb-6 ${
-                theme === 'dark' ? 'text-white' : 'text-black'
-              }`}>
-                Compliance & Standards
-              </h3>
+              <h3 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>What We Offer</h3>
               <ul className="space-y-4">
-                {[
-                  "IET Wiring Regulations (BS 7671)",
-                  "NICEIC Approved Contractor",
-                  "ISO 9001 Quality Management",
-                  "Health & Safety Executive (HSE) Compliance"
-                ].map((item, index) => (
-                  <li key={index} className={`flex items-center ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
+                {["Site survey and system design", "Installation and commissioning", "User training and handover", "Ongoing maintenance and monitoring"].map((item, index) => (
+                  <li key={index} className={`flex items-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                     <CheckCircle className="w-5 h-5 mr-3 text-green-500" />
                     {item}
                   </li>
@@ -195,45 +113,31 @@ export default function ElectricalSystemsPage() {
         </div>
       </section>
 
-      {/* Section Separator */}
       <div className="w-full h-[0.75px] bg-black dark:bg-white"></div>
-      
-      {/* CTA Section */}
-      <section className={`py-20 ${
-        theme === 'dark' ? 'bg-black' : 'bg-white'
-      }`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
+
+      <section className={`py-12 lg:py-16 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} style={{ backgroundColor: theme === 'dark' ? '#000000' : '#ffffff' }}>
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-          <h2 className={`text-4xl font-bold mb-6 ${font-title} ${
-            theme === 'dark' ? 'text-white' : 'text-black'
-          }`}>
-            Need Expert Electrical Engineering Services?
-          </h2>
-          <p className={`text-xl mb-8 ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Our certified electrical engineers are ready to design, install, and maintain your electrical systems with the highest standards of safety and efficiency.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className={`px-8 py-4 rounded-lg font-semibold transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'bg-white text-black hover:bg-gray-200' 
-                : 'bg-black text-white hover:bg-gray-800'
-            }`}>
-              Get Free Consultation
-            </button>
-            <button className={`px-8 py-4 rounded-lg font-semibold border transition-all duration-300 ${
-              theme === 'dark' 
-                ? 'border-white text-white hover:bg-white hover:text-black' 
-                : 'border-black text-black hover:bg-black hover:text-white'
-            }`}>
-              Call 020 4568 5986
-            </button>
-          </div>
+            <h2 className={`text-4xl font-bold mb-6 font-title ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+              Need Electrical Design Or Installation?
+            </h2>
+            <p className={`text-xl mb-8 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+              Our engineers can survey your site and recommend the right electrical solution for your premises and budget.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CustomPillButton href="/contact" size="md">
+                Get Free Consultation
+              </CustomPillButton>
+              <CustomPillButton href="tel:02045685986" size="md" variant="outline">
+                Call 020 4568 5986
+              </CustomPillButton>
+            </div>
           </div>
         </div>
       </section>
+        <OurCustomers />
+        <RequestFreeSurvey />
+      </div>
     </div>
   );
 }
-
