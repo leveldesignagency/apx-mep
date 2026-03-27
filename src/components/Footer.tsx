@@ -93,9 +93,9 @@ export default function Footer() {
                   <Phone className="h-6 w-6 flex-shrink-0" />
                   <span className="text-sm">020 4568 5986</span>
                 </a>
-                <a href="mailto:info@apx-mep.co.uk" className="flex items-center space-x-4 hover:text-white transition-colors cursor-pointer" style={{ cursor: 'pointer !important' }}>
+                <a href="mailto:enquiries@apx-mep.co.uk" className="flex items-center space-x-4 hover:text-white transition-colors cursor-pointer" style={{ cursor: 'pointer !important' }}>
                   <Mail className="h-6 w-6 flex-shrink-0" />
-                  <span className="text-sm">info@apx-mep.co.uk</span>
+                  <span className="text-sm">enquiries@apx-mep.co.uk</span>
                 </a>
                 <a href="https://maps.google.com/?q=365-369+Bexley+Road+Northumberland+Heath+Erith+Kent+DA8+3EZ" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 hover:text-white transition-colors cursor-pointer" style={{ cursor: 'pointer !important' }}>
                   <MapPin className="h-6 w-6 mt-1 flex-shrink-0" />

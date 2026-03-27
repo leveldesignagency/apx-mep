@@ -23,7 +23,8 @@ export interface CustomPillButtonProps
   className?: string
   size?: "sm" | "md" | "lg"
   /** Outline = white fill + black border off hover; black fill on hover */
-  variant?: "default" | "outline"
+  /** onLight = for white-background sections: black border, white fill, black text; hover black fill, white text */
+  variant?: "default" | "outline" | "onLight"
 }
 
 const sizeClasses = {
@@ -35,7 +36,7 @@ const sizeClasses = {
 const CustomPillButton = forwardRef<HTMLAnchorElement, CustomPillButtonProps>(
   ({ href, children, className, size = "md", variant = "default", ...props }, ref) => {
     const sizeClass = sizeClasses[size]
-    const classes = cn(baseStyles, sizeClass, variant === "outline" && "pill-btn--outline", className)
+    const classes = cn(baseStyles, sizeClass, variant === "outline" && "pill-btn--outline", variant === "onLight" && "pill-btn--onLight", className)
     return (
       <Link ref={ref} href={href} className={classes} {...props}>
         <span className="pill-btn-inner" aria-hidden />

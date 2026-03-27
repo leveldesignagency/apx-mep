@@ -8,6 +8,11 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { CountUp } from '@/components/ui/CountUp'
 import { CustomPillButton } from '@/components/ui/CustomPillButton'
 import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
+import { Button } from '@/components/ui/Button'
+
+/** Core capabilities cards: white outline + white label; hover = white fill + black text. Sharp TR + BL; rounded TL + BR only */
+const CORE_CAPS_LEARN_MORE_CLASS =
+  "h-auto min-h-9 rounded-none rounded-tl-xl rounded-tr-none rounded-br-xl rounded-bl-none border-2 border-white border-solid bg-transparent px-5 py-2.5 text-xs font-semibold uppercase tracking-normal text-white shadow-none transition-colors duration-200 hover:!bg-white hover:!text-black focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
 
 export default function Home() {
   const { theme } = useTheme()
@@ -51,6 +56,7 @@ export default function Home() {
 
   const sections = useMemo(() => [
     { id: 'hero', name: 'Home' },
+    { id: 'core-capabilities', name: 'Capabilities' },
     { id: 'about-intro', name: 'Our story' },
     { id: 'services', name: 'Services' },
     { id: 'logo-marquee', name: 'Clients' },
@@ -693,6 +699,139 @@ export default function Home() {
         
       </section>
 
+      {/* Core capabilities – black section blended from hero before Our Story */}
+      <section
+        id="core-capabilities"
+        className="relative bg-black py-20 lg:py-24 overflow-hidden"
+      >
+        <div
+          className="pointer-events-none absolute top-0 left-0 right-0 h-28 sm:h-36"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.82) 52%, rgba(0,0,0,1) 100%)",
+          }}
+          aria-hidden
+        />
+
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl">
+            <span
+              className="section-label text-white/80 font-bold"
+              style={{ fontFamily: "var(--font-menu), sans-serif" }}
+            >
+              Core capabilities
+            </span>
+            <h2
+              className="text-4xl sm:text-5xl font-bold text-white leading-tight mt-3"
+              style={{ fontFamily: "var(--font-menu), sans-serif" }}
+            >
+              Where We Thrive
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-white/70 leading-relaxed max-w-2xl">
+              APX MEP delivers coordinated mechanical, electrical and plumbing services across design, installation and maintenance. We align with programme, building services interfaces and compliance requirements.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <article className="bg-black border-2 border-white rounded-tl-[1.5rem] rounded-br-[1.5rem] p-6 flex flex-col overflow-visible">
+              <h3
+                className="text-2xl sm:text-[1.65rem] font-bold text-white mb-4 tracking-normal leading-tight"
+                style={{ fontFamily: "var(--font-menu), sans-serif" }}
+              >
+                Electrical
+              </h3>
+              <ul className="apx-capability-list">
+                <li className="apx-capability-list__item">Distribution, containment and lighting</li>
+                <li className="apx-capability-list__item">Data, power and small power</li>
+                <li className="apx-capability-list__item">Testing, certification and handover</li>
+              </ul>
+              <div className="mt-auto flex justify-end pt-6">
+                <Button
+                  href="/services/electrical"
+                  variant="ghost"
+                  size="sm"
+                  className={CORE_CAPS_LEARN_MORE_CLASS}
+                >
+                  Learn more
+                </Button>
+              </div>
+            </article>
+
+            <article className="bg-black border-2 border-white rounded-tl-[1.5rem] rounded-br-[1.5rem] p-6 flex flex-col overflow-visible">
+              <h3
+                className="text-2xl sm:text-[1.65rem] font-bold text-white mb-4 tracking-normal leading-tight"
+                style={{ fontFamily: "var(--font-menu), sans-serif" }}
+              >
+                Mechanical
+              </h3>
+              <ul className="apx-capability-list">
+                <li className="apx-capability-list__item">HVAC and ventilation systems</li>
+                <li className="apx-capability-list__item">Plant, controls and commissioning</li>
+                <li className="apx-capability-list__item">Energy efficiency and lifecycle support</li>
+              </ul>
+              <div className="mt-auto flex justify-end pt-6">
+                <Button
+                  href="/services/mechanical"
+                  variant="ghost"
+                  size="sm"
+                  className={CORE_CAPS_LEARN_MORE_CLASS}
+                >
+                  Learn more
+                </Button>
+              </div>
+            </article>
+
+            <article className="bg-black border-2 border-white rounded-tl-[1.5rem] rounded-br-[1.5rem] p-6 flex flex-col overflow-visible">
+              <h3
+                className="text-2xl sm:text-[1.65rem] font-bold text-white mb-4 tracking-normal leading-tight"
+                style={{ fontFamily: "var(--font-menu), sans-serif" }}
+              >
+                Plumbing
+              </h3>
+              <ul className="apx-capability-list">
+                <li className="apx-capability-list__item">Hot and cold water distribution</li>
+                <li className="apx-capability-list__item">Drainage and sanitary systems</li>
+                <li className="apx-capability-list__item">Testing, flushing and handover</li>
+              </ul>
+              <div className="mt-auto flex justify-end pt-6">
+                <Button
+                  href="/services/plumbing"
+                  variant="ghost"
+                  size="sm"
+                  className={CORE_CAPS_LEARN_MORE_CLASS}
+                >
+                  Learn more
+                </Button>
+              </div>
+            </article>
+
+            <article className="bg-black border-2 border-white rounded-tl-[1.5rem] rounded-br-[1.5rem] p-6 flex flex-col overflow-visible">
+              <h3
+                className="text-2xl sm:text-[1.65rem] font-bold text-white mb-4 tracking-normal leading-tight"
+                style={{ fontFamily: "var(--font-menu), sans-serif" }}
+              >
+                Building services
+              </h3>
+              <ul className="apx-capability-list">
+                <li className="apx-capability-list__item">Integrated MEP coordination</li>
+                <li className="apx-capability-list__item">Interfaces with fabric and specialist trades</li>
+                <li className="apx-capability-list__item">O&amp;M, as-builts and client training</li>
+              </ul>
+              <div className="mt-auto flex justify-end pt-6">
+                <Button
+                  href="/services/building-services"
+                  variant="ghost"
+                  size="sm"
+                  className={CORE_CAPS_LEARN_MORE_CLASS}
+                >
+                  Learn more
+                </Button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* Wrapper so CCTV overlay can sit above both about and services */}
       <div className="relative">
         {/* ABOUT – floorplan.jpg as full background; scroll-driven character reveal + content fade */}
@@ -721,7 +860,7 @@ export default function Home() {
                 Since 1986 APX MEP has delivered mechanical, electrical and building services across London and the Home Counties. Our engineers are qualified in HVAC, electrical installations and plumbing. We work with commercial, education, healthcare and industrial clients to deliver design, installation and maintenance to the highest standards.
               </p>
               <div className="transition-opacity duration-700" style={{ opacity: aboutContentFade }}>
-                <CustomPillButton href="/about" size="md">
+                <CustomPillButton href="/about" size="md" variant="onLight">
                   Our story
                 </CustomPillButton>
               </div>
@@ -753,7 +892,7 @@ export default function Home() {
                       <li>Full electrical design, installation and maintenance. From distribution and lighting to power, data and compliance. We deliver for commercial, education, healthcare and industrial projects across London and the Home Counties.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=electrical-systems" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -768,7 +907,7 @@ export default function Home() {
                       <li>HVAC design, installation and maintenance. Heating, ventilation and air conditioning for offices, schools, healthcare and industrial premises. We ensure comfort, efficiency and compliance.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=mechanical-systems" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -783,7 +922,7 @@ export default function Home() {
                       <li>Plumbing, drainage and building services. From domestic and commercial installations to maintenance and compliance. We work across all sectors with qualified engineers.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=plumbing-building-services" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -798,7 +937,7 @@ export default function Home() {
                       <li>Planned and reactive maintenance for electrical, mechanical and plumbing systems. Condition reports, testing and compliance to keep your buildings safe and efficient.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=maintenance-compliance" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -813,7 +952,7 @@ export default function Home() {
                       <li>Full design and project management for MEP works. From feasibility and specification through to installation, commissioning and handover. We coordinate with clients and other trades to deliver on time and on budget.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=design-project-management" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -828,7 +967,7 @@ export default function Home() {
                       <li>EICRs, periodic testing, condition surveys and compliance reporting for electrical and mechanical systems. We help landlords and facility managers meet their statutory duties.</li>
                     </ul>
                   </div>
-                  <CustomPillButton href="/contact" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
+                  <CustomPillButton href="/contact?service=condition-reports-testing" size="sm" className="mt-auto w-fit">Book Engineer</CustomPillButton>
                 </div>
                 <span className="service-card-unified-arrow" aria-hidden />
               </div>
@@ -1314,13 +1453,14 @@ export default function Home() {
                         style={{ boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)' }}
                       >
                         {[
-                          { value: 'cctv', label: 'CCTV Systems' },
-                          { value: 'access-control', label: 'Access Control Systems' },
-                          { value: 'intruder-alarms', label: 'Intruder Alarm Systems' },
-                          { value: 'fire-alarms', label: 'Fire Alarm Systems' },
-                          { value: 'video-door-entry', label: 'Video Door Entry Systems' },
+                          { value: 'electrical-systems', label: 'Electrical Systems' },
+                          { value: 'mechanical-systems', label: 'Mechanical Systems' },
+                          { value: 'plumbing-building-services', label: 'Plumbing & Building Services' },
+                          { value: 'maintenance-compliance', label: 'Maintenance & Compliance' },
+                          { value: 'design-project-management', label: 'Design & Project Management' },
+                          { value: 'condition-reports-testing', label: 'Condition Reports & Testing' },
                           { value: 'other', label: 'Other' }
-                        ].map((service, index) => (
+                        ].map((service) => (
                           <button
                             key={service.value}
                             type="button"

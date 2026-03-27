@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { Phone, Mail, Menu, X, ArrowRight, Check, Facebook, Instagram, Linkedin, ChevronDown } from "lucide-react"
 import { useState, useRef } from "react"
 import { useTheme } from '@/contexts/ThemeContext'
+import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
 
 export default function Header() {
   const pathname = usePathname()
@@ -300,7 +301,8 @@ export default function Header() {
             </div>
             <div className="hidden md:flex items-center space-x-8 text-white [&_a]:!text-white [&_.nav-menu-item]:!text-white [&_svg]:stroke-white flex-shrink-0 relative z-10">
               <div className="relative header-nav-item-in flex items-center" style={{ animationDelay: '2.9s' }}>
-                <div
+                <Link
+                  href="/services"
                   className="nav-menu-item relative text-sm font-medium leading-relaxed cursor-pointer group uppercase opacity-100 hover:opacity-100"
                   style={{ color: '#fff' }}
                   onMouseEnter={openServices}
@@ -309,14 +311,14 @@ export default function Header() {
                   Services
                   <span className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
                   <span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
-                </div>
+                </Link>
                 <div
                   className="absolute z-40 overflow-hidden rounded-br-2xl"
                   style={{
                     top: 'calc(100% + 1.2rem)',
                     left: '-32.5px',
                     width: '264.5px',
-                    maxHeight: isServicesOpen ? '220px' : '0',
+                    maxHeight: isServicesOpen ? '400px' : '0',
                     pointerEvents: isServicesOpen ? 'auto' : 'none',
                     transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                     backgroundColor: 'black',
@@ -327,17 +329,13 @@ export default function Header() {
                   onMouseLeave={() => closeServices()}
                 >
                   <div className="py-0 rounded-br-2xl">
-                    {/* MEP Services */}
-                    {[
-                      { href: '/services/electrical-systems', label: 'ELECTRICAL SYSTEMS' },
-                      { href: '/services/mechanical-engineering', label: 'MECHANICAL SYSTEMS' },
-                      { href: '/services/maintenance', label: 'PLUMBING & BUILDING SERVICES' },
-                    ].map(({ href, label }, i) => (
+                    {/* Service-line pages (not core capability pillars — those are homepage-only) */}
+                    {MEP_SERVICE_HUB_ITEMS.map(({ href, navLabel }, i) => (
                       <a
                         key={href}
                         href={href}
-                        className={`dropdown-item relative group block px-4 py-2 text-sm leading-relaxed cursor-pointer uppercase ${i < 2 ? 'border-b' : ''}`}
-                        style={{ color: '#fff', borderBottomColor: i < 2 ? 'rgba(255,255,255,0.2)' : undefined }}
+                        className={`dropdown-item relative group block px-4 py-2 text-sm leading-relaxed cursor-pointer uppercase ${i < MEP_SERVICE_HUB_ITEMS.length - 1 ? 'border-b' : ''}`}
+                        style={{ color: '#fff', borderBottomColor: i < MEP_SERVICE_HUB_ITEMS.length - 1 ? 'rgba(255,255,255,0.2)' : undefined }}
                         onClick={() => {
                           setIsServicesOpen(false)
                           if (servicesCloseTimeoutRef.current) {
@@ -348,7 +346,7 @@ export default function Header() {
                       >
                         <span className="absolute top-0 left-0 w-full h-0.5 transform scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
                         <span className="absolute bottom-0 left-0 w-full h-0.5 transform scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
-                        {label}
+                        {navLabel}
                       </a>
                     ))}
                   </div>
@@ -360,7 +358,13 @@ export default function Header() {
                 <span className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
                 <span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
               </Link>
-              <div className="h-5 w-px flex-shrink-0 header-nav-item-in bg-white/90" style={{ animationDelay: '3.14s' }} aria-hidden />
+              <div className="h-5 w-px flex-shrink-0 header-nav-item-in bg-white/90" style={{ animationDelay: '3.1s' }} aria-hidden />
+              <Link href="/methodology" className="nav-menu-item relative text-sm font-medium leading-relaxed cursor-pointer group uppercase header-nav-item-in" style={{ color: '#fff', animationDelay: '3.14s' }}>
+                Methodology
+                <span className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
+                <span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
+              </Link>
+              <div className="h-5 w-px flex-shrink-0 header-nav-item-in bg-white/90" style={{ animationDelay: '3.18s' }} aria-hidden />
               <Link href="/projects" className="nav-menu-item relative text-sm font-medium leading-relaxed cursor-pointer group uppercase header-nav-item-in" style={{ color: '#fff', animationDelay: '3.22s' }}>
                 Projects
                 <span className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: '#fff' }} />
@@ -407,8 +411,9 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden mt-6 pb-6 border-t border-t-white/20 pt-6" style={{ backgroundColor: 'black' }}>
             <div className="flex flex-col space-y-4">
-              <Link href="#" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }} onClick={(e) => e.preventDefault()}>Services</Link>
+              <Link href="/services" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Services</Link>
               <Link href="/about" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>About</Link>
+              <Link href="/methodology" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Methodology</Link>
               <Link href="/projects" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Projects</Link>
               <Link href="/contact" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Contact</Link>
               <div className="pt-4">
@@ -450,11 +455,11 @@ export default function Header() {
           </button>
           <button
             type="button"
-            onClick={() => handleContactClick('email', 'info@apx-mep.co.uk')}
+            onClick={() => handleContactClick('email', 'enquiries@apx-mep.co.uk')}
             className="header-contact-btn relative flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full cursor-pointer"
           >
             <Mail className="h-3.5 w-3.5" />
-            <span className="text-xs">info@apx-mep.co.uk</span>
+            <span className="text-xs">enquiries@apx-mep.co.uk</span>
           </button>
         </div>
         {toast && (

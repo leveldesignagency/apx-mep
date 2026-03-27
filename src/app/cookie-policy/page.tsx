@@ -266,7 +266,7 @@ export default function CookiePolicyPage() {
                   theme === 'dark' ? 'bg-gray-900 border border-gray-700' : 'bg-gray-50 border border-gray-300'
                 }`}>
                   <p className="mb-2">
-                    <strong>Email:</strong> info@apx-mep.co.uk
+                    <strong>Email:</strong> enquiries@apx-mep.co.uk
                   </p>
                   <p>
                     <strong>Phone:</strong> 020 4568 5986

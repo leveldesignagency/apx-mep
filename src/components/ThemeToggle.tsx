@@ -66,10 +66,7 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
   #about-intro p {
     color: rgba(0, 0, 0, 0.9) !important;
   }
-  #about-intro a[href="/about"] {
-    background: #000000 !important;
-    color: #ffffff !important;
-  }
+  /* Our story button uses .pill-btn--onLight (black border, white fill; hover black fill) */
 
   /* Footer – always light text on black background so it stays visible */
   footer,
