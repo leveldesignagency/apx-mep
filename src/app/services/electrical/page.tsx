@@ -1,26 +1,25 @@
 import type { Metadata } from "next"
 import { MepCapabilityPageLayout } from "@/components/MepCapabilityPageLayout"
-import {
-  LOREM_CAPABILITIES,
-  LOREM_COMPLIANCE,
-  LOREM_DELIVERABLES,
-} from "@/lib/mep-capability-placeholders"
+import { MEP_ELECTRICAL_CAPABILITY } from "@/lib/mep-capability-content"
+import { buildMepMetadata } from "@/lib/seo-metadata"
 
-export const metadata: Metadata = {
-  title: "Electrical | APX MEP",
+export const metadata: Metadata = buildMepMetadata({
+  title: "Domestic & New Builds | 1st & 2nd Fix MEP | London | APX",
   description:
-    "Placeholder — electrical services overview (copy to be supplied).",
-}
+    "Domestic and new-build mechanical and electrical — 1st and 2nd fix, distribution, testing and certification across Greater London and the Home Counties.",
+  pathname: "/services/electrical",
+})
 
 export default function ElectricalCapabilityPage() {
+  const c = MEP_ELECTRICAL_CAPABILITY
   return (
     <MepCapabilityPageLayout
-      title="Electrical"
-      intro="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua — placeholder intro until final MEP copy is ready."
-      capabilities={LOREM_CAPABILITIES}
-      compliance={LOREM_COMPLIANCE}
-      deliverables={LOREM_DELIVERABLES}
-      ctaLabel="Discuss electrical"
+      title="Domestic & new builds — 1st & 2nd fix"
+      intro={c.intro}
+      capabilities={[...c.capabilities]}
+      compliance={[...c.compliance]}
+      deliverables={[...c.deliverables]}
+      ctaLabel={c.ctaLabel}
     />
   )
 }

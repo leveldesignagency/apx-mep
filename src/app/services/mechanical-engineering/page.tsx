@@ -1,276 +1,206 @@
 "use client"
 
-import Image from "next/image";
-import Link from "next/link";
-import { useTheme } from "@/contexts/ThemeContext";
-import { CustomPillButton } from "@/components/ui/CustomPillButton";
-import { RequestFreeSurvey } from "@/components/ServicePageSharedSections";
+import Link from "next/link"
+import { CustomPillButton } from "@/components/ui/CustomPillButton"
+import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
+import { OurCustomers } from "@/components/ServicePageSharedSections"
+import { ServicePageHero } from "@/components/ServicePageHero"
+import { serviceHeroImages } from "@/lib/serviceHeroImages"
 
-const MEP_SURVEY_TITLE = "Request Your Free Mechanical Systems Survey";
-const MEP_SURVEY_DESCRIPTION = "Not sure what kind of HVAC or mechanical system you need? We offer a free, no obligation survey to assess your building and recommend the right heating, ventilation and air conditioning solution. Contact us for a chat about your requirements.";
+const MEP_SURVEY_TITLE = "Request your free mechanical systems survey"
+const MEP_SURVEY_DESCRIPTION =
+  "Not sure what HVAC or mechanical scope you need? We offer a free, no-obligation discussion to review your building and outline heating, ventilation, air conditioning and plant options. Contact us to talk through your requirements."
 
 const SYSTEM_TYPES = [
-  "HVAC Design & Installation",
-  "Heating Systems",
-  "Ventilation & Air Conditioning",
-  "Building Management Systems (BMS)",
-];
+  "HVAC design & installation",
+  "Heating systems",
+  "Ventilation & air conditioning",
+  "Building management systems (BMS) interfaces",
+]
 
 const MEP_CUSTOMERS = [
-  { name: "The Mayfair Townhouse", tagline: "Luxury Lifestyle Hotel" },
-  { name: "Hilton DoubleTree", tagline: "Hotel Group" },
-  { name: "Firmdale Hotels", tagline: "Hotel Group" },
-  { name: "United Living", tagline: "Housing & Infrastructure" },
-  { name: "Camden Council", tagline: "Local Authority, London" },
-  { name: "University of West London", tagline: "Higher Education" },
-  { name: "Scape Bloomsbury", tagline: "Student Accommodation" },
-];
+  { name: "The Mayfair Townhouse", tagline: "Luxury lifestyle hotel" },
+  { name: "Hilton DoubleTree", tagline: "Hotel group" },
+  { name: "Firmdale Hotels", tagline: "Hotel group" },
+  { name: "United Living", tagline: "Housing & infrastructure" },
+  { name: "Camden Council", tagline: "Local authority, London" },
+  { name: "University of West London", tagline: "Higher education" },
+  { name: "Scape Bloomsbury", tagline: "Student accommodation" },
+]
 
 const MEP_INSTALLATIONS = [
-  { title: "HVAC Installation Dimco Exhibition Building Westfield", org: "Dimco Exhibition Building, Westfield, Stratford" },
-  { title: "Mechanical Systems University of West London", org: "University of West London, Higher Education" },
-  { title: "HVAC Sancroft Building", org: "Sancroft Building, Office Space, London" },
-  { title: "Heating & Ventilation Oaklands House London", org: "Oaklands House, London, Apartment Blocks" },
-  { title: "Mechanical Systems Hilton DoubleTree Kingston", org: "Hilton DoubleTree Kingston, Central London Hotel" },
+  { title: "HVAC installation Dimco Exhibition Building, Westfield", org: "Dimco Exhibition Building, Westfield, Stratford" },
+  { title: "Mechanical systems University of West London", org: "University of West London" },
+  { title: "HVAC Sancroft Building", org: "Sancroft Building, office space, London" },
+  { title: "Heating & ventilation Oaklands House", org: "Oaklands House, London, apartment blocks" },
+  { title: "Mechanical systems Hilton DoubleTree Kingston", org: "Hilton DoubleTree Kingston" },
   { title: "HVAC John Keats Primary School", org: "John Keats Primary School, Rotherhithe, London" },
-  { title: "Mechanical Systems Mayfair Townhouse London", org: "Mayfair Townhouse, Luxury Lifestyle Hotel" },
-  { title: "HVAC Scape Bloomsbury", org: "Scape Bloomsbury, Student Accommodation" },
-  { title: "Mechanical Systems Wembley French School", org: "Wembley French School, International School" },
-];
+  { title: "Mechanical systems Mayfair Townhouse", org: "Mayfair Townhouse, luxury lifestyle hotel" },
+  { title: "HVAC Scape Bloomsbury", org: "Scape Bloomsbury, student accommodation" },
+  { title: "Mechanical systems Wembley French School", org: "Wembley French School" },
+]
 
-const MEP_BRANDS = ["Daikin", "Mitsubishi", "Vaillant", "Worcester", "Viessmann", "Ideal"];
+const MEP_BRANDS = ["Daikin", "Mitsubishi", "Vaillant", "Worcester", "Viessmann", "Ideal"]
 
-const REGULATION_QUESTIONS = [
-  "Are your premises small, single-storey or open-plan?",
-  "Do you have any high-risk substances on-site such as chemicals?",
-  "Are there any high-risk activities on-site, such as cooking?",
-  "Are there vulnerable people in the building (e.g. children, elderly, disabled)?",
-  "If a fire broke out on-site it would be easily spotted straight away?",
-  "Would shouting 'fire' be easily heard by all occupants of the building?",
-];
+const SPECIALIST_QUESTIONS = [
+  "Is the building use or occupancy changing (e.g. office to lab or residential)?",
+  "Does the landlord or lease require specific efficiency or metering targets?",
+  "Are you replacing plant while the building stays occupied?",
+  "Do you need BMS or controls integration with existing site systems?",
+  "Is ventilation or overheating risk a concern for compliance or comfort?",
+  "Are acoustic, space or structural constraints limiting plant location?",
+]
 
-export default function MechanicalSystemsPage() {
-  const { theme } = useTheme();
-  const heroImageSrc = "/client%20logos/service%20pages%20image/home-fire-alarm-system-installer-800x533.jpg";
-  const isDark = theme === "dark";
-  const textClass = isDark ? "text-white" : "text-black";
-  const mutedClass = isDark ? "text-gray-300" : "text-gray-600";
-  const bgStyle = { backgroundColor: isDark ? "#000000" : "#ffffff" };
+const cardBorder = "rounded-tl-[1.5rem] rounded-br-[1.5rem] border border-white/20 bg-black p-8 text-white"
 
+export default function MechanicalEngineeringPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden" style={bgStyle}>
-      <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+      <ServicePageHero
+        title="Commercial and industrial installations"
+        intro={
+          <>
+            <p className="mb-4">
+              APX MEP designs and installs mechanical and electrical systems at scale for commercial, education, healthcare and industrial premises across London and the Home Counties — plant, distribution, HVAC and site delivery.
+            </p>
+            <p>
+              For dedicated BMS field wiring, panels and controls interfaces, see our{" "}
+              <Link href="/services/bms-control-wiring" className="underline underline-offset-4 hover:text-white/90">
+                BMS and control wiring
+              </Link>{" "}
+              service line.
+            </p>
+          </>
+        }
+      />
 
-      {/* Hero */}
-      <section className="relative h-screen overflow-visible flex flex-col bg-transparent">
-        <div className="fixed inset-0 z-0" aria-hidden>
-          <Image
-            src={heroImageSrc}
-            alt=""
-            fill
-            className="object-cover object-center"
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-black/50" aria-hidden />
-        </div>
-        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
-          <div className="space-y-4">
-            <div className="max-w-3xl">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-left font-title text-white">
-                Mechanical Systems
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg font-normal mb-3 text-left tracking-tight max-w-2xl text-white">
-                APX MEP designs, installs and maintains HVAC and mechanical systems for commercial, education, healthcare and industrial premises across London and the Home Counties.
-              </p>
-              <p className="text-sm sm:text-base md:text-lg font-normal mb-4 md:mb-5 text-left tracking-tight max-w-2xl text-white">
-                We offer heating, ventilation and air conditioning solutions tailored to your building and use. From single systems through to fully integrated BMS, our experienced engineers deliver design, installation and maintenance to the highest standards.
-              </p>
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
-                <CustomPillButton href="/contact" size="md">
-                  Get a free quote
-                </CustomPillButton>
-                <Link
-                  href="/contact"
-                  className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
-                >
-                  Question? get in touch
-                </Link>
+      <div className="relative bg-black">
+        <div
+          className="pointer-events-none absolute top-0 left-0 right-0 h-28 sm:h-36"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.82) 52%, rgba(0,0,0,1) 100%)",
+          }}
+          aria-hidden
+        />
+
+        <section className="container relative z-[1] mx-auto max-w-4xl px-6 py-12 lg:py-16">
+          <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical & HVAC in London & the Home Counties</h2>
+          <h3 className="mb-6 text-left font-title text-2xl font-semibold text-white">Tailored mechanical packages</h3>
+          <div className="space-y-4 text-left text-gray-300">
+            <p>
+              We work throughout London and the Home Counties to design and install mechanical systems that combine robust equipment with clear communication and site
+              discipline. We support commercial, education, healthcare and industrial clients from early coordination through commissioning.
+            </p>
+            <p>We routinely deliver:</p>
+          </div>
+          <ul className="mb-6 list-inside list-disc space-y-2 text-left text-gray-300">
+            {SYSTEM_TYPES.map((name, i) => (
+              <li key={i}>{name}</li>
+            ))}
+          </ul>
+          <p className="text-left text-gray-300">
+            A structured survey or design review helps confirm scope, interfaces and programme before we commit to installation — contact us to arrange a conversation.
+          </p>
+        </section>
+
+        <div className="border-t border-white/15" />
+
+        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+          <h2 className="mb-8 text-left font-title text-3xl font-bold text-white">Design standards & compliance</h2>
+          <div className="space-y-4 text-left text-gray-300">
+            <p>
+              Mechanical work is delivered against employer requirements, statutory guidance and good practice — including Building Regulations Part L and ventilation expectations where they apply, manufacturer data, and project-specific performance criteria (often aligned with CIBSE or client standards).
+            </p>
+            <p>
+              We plan RAMS under CDM, coordinate builders work in connection, and support pressure testing, cleanliness and balancing activities in line with the specification so handover evidence is clear for facilities teams.
+            </p>
+          </div>
+        </section>
+
+        <div className="border-t border-white/15" />
+
+        <section className="container mx-auto px-6 py-12 lg:py-16">
+          <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical systems customers</h2>
+          <p className="mb-12 max-w-2xl text-left text-gray-300">A selection of organisations we have supported:</p>
+          <div className="flex flex-wrap justify-start gap-6 sm:gap-8">
+            {MEP_CUSTOMERS.map((c, i) => (
+              <div key={i} className={`min-w-[180px] ${cardBorder} text-center`}>
+                <p className="font-semibold text-white">{c.name}</p>
+                <p className="mt-1 text-sm text-gray-400">{c.tagline}</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="relative z-10 -mt-64 sm:-mt-72">
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
-
-        {/* Mechanical Systems – London & Home Counties */}
-        {/* Mechanical Systems Installer London / Bespoke */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6 max-w-4xl">
-            <h2 className={`text-3xl font-bold mb-4 font-title ${textClass}`}>
-              Mechanical Systems Installer London
-            </h2>
-            <h3 className={`text-2xl font-semibold mb-6 font-title ${textClass}`}>
-              Bespoke Mechanical & HVAC Systems
-            </h3>
-            <div className={`space-y-4 ${mutedClass}`}>
-              <p>
-                Established in 1986 we work throughout London and the Home Counties to design and install HVAC and mechanical systems that combine high-quality equipment with strong customer care. We deliver heating, ventilation and air conditioning for commercial, education, healthcare and industrial premises.
-              </p>
-              <p>
-                Our systems are expertly designed in accordance with NSI Gold standards, covering both the domestic and commercial market. We specialise in the following systems:
-              </p>
-            </div>
-            <ul className={`list-disc list-inside space-y-2 mb-6 ${mutedClass}`}>
-              {SYSTEM_TYPES.map((name, i) => (
-                <li key={i}>{name}</li>
-              ))}
-            </ul>
-            <p className={`${mutedClass}`}>
-              By designing and installing the right HVAC and mechanical systems for your building, we help you achieve comfort, efficiency and compliance. Our free survey will help identify the right solution for your needs.
-            </p>
+            ))}
           </div>
         </section>
 
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+        <div className="border-t border-white/15" />
 
-        {/* We are BAFE Accredited */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6 max-w-4xl">
-            <h2 className={`text-3xl font-bold mb-8 font-title ${textClass}`}>
-              We are BAFE Accredited
-            </h2>
-            <div className={`space-y-4 ${mutedClass}`}>
-              <p>
-                BAFE (British Approvals for Fire Equipment) is an independent British organisation that publishes and maintains a national register of competent fire safety service providers. We are proud to be BAFE accredited.
-              </p>
-              <p>
-                BAFE registration is very important for those in the UK fire safety and protection industry. Many organisations now require BAFE registration from those who install or maintain their fire safety systems, products and services. For many working in the fire and protection industry, BAFE registration is a commercial imperative.
-              </p>
-              <p>
-                The BAFE register also brings customers together with companies they can trust, with a directory of independently audited and approved providers. If you would like to know more you can view our BAFE registration online.
-              </p>
-            </div>
-            <p className={`mt-6 font-semibold ${textClass}`}>
-              BAFE Fire Safety Register Registered Organisation 301168
-            </p>
+        <section className="container mx-auto px-6 py-12 lg:py-16">
+          <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical installations</h2>
+          <p className="mb-12 max-w-2xl text-left text-gray-300">Examples of mechanical and HVAC projects we have delivered:</p>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {MEP_INSTALLATIONS.map((item, index) => (
+              <div key={index} className={`${cardBorder} transition-colors hover:border-white/45`}>
+                <h3 className="mb-2 text-left text-lg font-semibold text-white">{item.title}</h3>
+                <p className="text-left text-gray-300">{item.org}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+        <div className="border-t border-white/15" />
 
-        {/* Our Fire Alarm System Customers */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6">
-            <h2 className={`text-3xl font-bold mb-4 font-title text-center ${textClass}`}>
-              Our Mechanical Systems Customers
-            </h2>
-            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
-              A small selection of our mechanical and HVAC customers:
-            </p>
-            <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
-              {MEP_CUSTOMERS.map((c, i) => (
-                <div
-                  key={i}
-                  className={`text-center p-6 rounded-xl min-w-[180px] ${isDark ? "bg-white/5 border border-gray-700" : "bg-gray-50 border border-gray-200"}`}
-                >
-                  <p className={`font-semibold ${textClass}`}>{c.name}</p>
-                  <p className={`text-sm mt-1 ${mutedClass}`}>{c.tagline}</p>
-                </div>
-              ))}
-            </div>
+        <section className="container mx-auto px-6 py-12 lg:py-16">
+          <h2 className="mb-2 text-left font-title text-3xl font-bold text-white">HVAC & mechanical equipment</h2>
+          <p className="mb-12 max-w-2xl text-left text-gray-300">We install equipment from leading manufacturers where the specification requires.</p>
+          <div className="flex flex-wrap items-center justify-start gap-8 sm:gap-12">
+            {MEP_BRANDS.map((name, i) => (
+              <div key={i} className="rounded-lg bg-white/10 px-6 py-3 font-semibold text-white">
+                {name}
+              </div>
+            ))}
           </div>
         </section>
 
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+        <div className="border-t border-white/15" />
 
-        {/* Our Fire Alarm System Installations */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6">
-            <h2 className={`text-3xl font-bold mb-4 font-title text-center ${textClass}`}>
-              Our Mechanical Systems Installations
-            </h2>
-            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
-              Examples of mechanical and HVAC systems we have installed for our customers:
+        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+          <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">When to involve a mechanical specialist</h2>
+          <div className="space-y-4 text-left text-gray-300">
+            <p>
+              Early mechanical input reduces rework on plant space, risers, acoustics and electrical load. If any of the following apply, it is worth a structured review before you fix the design or programme.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {MEP_INSTALLATIONS.map((item, index) => (
-                <div
-                  key={index}
-                  className={`p-8 rounded-xl border ${isDark ? "border-gray-700 hover:border-white" : "border-gray-200 hover:border-black"}`}
-                >
-                  <h3 className={`text-lg font-semibold mb-2 ${textClass}`}>
-                    {item.title}
-                  </h3>
-                  <p className={mutedClass}>{item.org}</p>
-                </div>
-              ))}
-            </div>
+          </div>
+          <ul className="my-6 list-inside list-disc space-y-2 text-left text-gray-300">
+            {SPECIALIST_QUESTIONS.map((q, i) => (
+              <li key={i}>{q}</li>
+            ))}
+          </ul>
+          <p className="text-gray-300">We can help translate your brief into a proportionate scope and installation plan — start with a call or site visit.</p>
+          <div className="mt-8">
+            <CustomPillButton href="/contact" size="md">
+              Arrange a discussion
+            </CustomPillButton>
           </div>
         </section>
 
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
+        <div className="border-t border-white/15" />
 
-        {/* Fire Alarm & Detection Systems Equipment */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6">
-            <h2 className={`text-3xl font-bold mb-2 font-title text-center ${textClass}`}>
-              HVAC & Mechanical Equipment
-            </h2>
-            <p className={`text-center max-w-2xl mx-auto mb-12 ${mutedClass}`}>
-              We are proud to install HVAC and mechanical equipment from leading brands
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
-              {MEP_BRANDS.map((name, i) => (
-                <div
-                  key={i}
-                  className={`px-6 py-3 rounded-lg font-semibold ${isDark ? "bg-white/10 text-white" : "bg-gray-100 text-black"}`}
-                >
-                  {name}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <OurCustomers />
 
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
-
-        {/* Do all businesses need a fire alarm system? */}
-        <section className="py-12 lg:py-16" style={bgStyle}>
-          <div className="container mx-auto px-6 max-w-4xl">
-            <h2 className={`text-3xl font-bold mb-6 font-title ${textClass}`}>
-              Do all businesses need a fire alarm system?
-            </h2>
-            <div className={`space-y-4 ${mutedClass}`}>
-              <p>
-                Current UK fire alarm regulations state that all business premises must have "an appropriate fire detection system". This basically means that if a fire breaks out, could it easily be detected and could the people within the building easily be told about it?
-              </p>
-              <p>
-                This doesn't mean that all business premises need a fire alarm system. Try asking yourself the following questions to demonstrate potential situations:
-              </p>
-            </div>
-            <ul className={`list-disc list-inside space-y-2 my-6 ${mutedClass}`}>
-              {REGULATION_QUESTIONS.map((q, i) => (
-                <li key={i}>{q}</li>
-              ))}
-            </ul>
-            <p className={`${mutedClass}`}>
-              If your answer to one or more of these questions is "no" then it's likely that you do need a fire alarm system. Our free survey will help to decide the level of protection you need.
-            </p>
-            <div className="mt-8">
-              <CustomPillButton href="/contact" size="md">
-                Get a free survey
-              </CustomPillButton>
-            </div>
-          </div>
-        </section>
-
-        <div className="w-full h-[0.75px] bg-black dark:bg-white" />
-
-        <RequestFreeSurvey title={MEP_SURVEY_TITLE} description={MEP_SURVEY_DESCRIPTION} />
+        <ServicePageBottomCta
+          imageSrc={serviceHeroImages.cctv}
+          title={MEP_SURVEY_TITLE}
+          description={MEP_SURVEY_DESCRIPTION}
+        >
+          <CustomPillButton href="/contact" size="md">
+            Get a free quote
+          </CustomPillButton>
+          <CustomPillButton href="tel:02045685986" size="md" variant="outline">
+            Call 020 4568 5986
+          </CustomPillButton>
+        </ServicePageBottomCta>
       </div>
     </div>
-  );
+  )
 }

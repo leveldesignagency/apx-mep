@@ -5,8 +5,7 @@ import { createPortal } from "react-dom"
 import { usePathname } from "next/navigation"
 
 /**
- * Fixed hero background image (FS site). Image fades out once scrolled past hero so it never shows through below.
- * Rendered via portal into body. Portal only runs after mount to avoid hydration mismatch.
+ * Homepage only. Service routes use per-page hero imagery in ServicePageHero (placeholder or none).
  */
 export default function HeroVideoBackground() {
   const pathname = usePathname()
@@ -17,8 +16,11 @@ export default function HeroVideoBackground() {
     setMounted(true)
   }, [])
 
+  const path = pathname.replace(/\/$/, "") || "/"
+  const showHeroBackdrop = path === "/"
+
   useEffect(() => {
-    if (pathname !== "/" || typeof window === "undefined") return
+    if (!showHeroBackdrop || typeof window === "undefined") return
     const heroHeight = window.innerHeight
     const threshold = heroHeight * 0.85
 
@@ -28,9 +30,9 @@ export default function HeroVideoBackground() {
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
-  }, [pathname])
+  }, [pathname, showHeroBackdrop])
 
-  if (pathname !== "/") return null
+  if (!showHeroBackdrop) return null
   if (!mounted || typeof document === "undefined") return null
 
   const layer = (

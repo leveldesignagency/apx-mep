@@ -59,14 +59,13 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     color: #ffffff !important;
   }
 
-  /* ABOUT intro – white bg, dark text */
-  #about-intro, #about-intro h2, #about-intro p {
-    color: #000000 !important;
+  /* ABOUT intro – black bg, light text */
+  #about-intro, #about-intro h2, #about-intro p, #about-intro span.section-label {
+    color: #ffffff !important;
   }
   #about-intro p {
-    color: rgba(0, 0, 0, 0.9) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
   }
-  /* Our story button uses .pill-btn--onLight (black border, white fill; hover black fill) */
 
   /* Footer – always light text on black background so it stays visible */
   footer,

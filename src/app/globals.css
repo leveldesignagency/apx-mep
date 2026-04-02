@@ -32,7 +32,6 @@
 /* White-background sections: dark highlight so selection is visible on white */
 /* #services is black with white text – uses default light selection, so not listed here */
 .about-block--white ::selection,
-#about-intro ::selection,
 #about ::selection,
 #testimonials ::selection,
 .logo-marquee-section ::selection,
@@ -41,7 +40,6 @@ section.bg-white ::selection {
   color: inherit;
 }
 .about-block--white ::-moz-selection,
-#about-intro ::-moz-selection,
 #about ::-moz-selection,
 #testimonials ::-moz-selection,
 .logo-marquee-section ::-moz-selection,
@@ -165,6 +163,15 @@ section h2 {
   font-weight: 400;
 }
 
+/* Service page heroes — match homepage #hero copy treatment */
+.service-page-hero h1 {
+  font-weight: 700;
+}
+.service-page-hero .service-page-hero__intro,
+.service-page-hero .service-page-hero__intro p {
+  font-weight: 400;
+}
+
 /* FS: hero text white on hero image */
 #hero h1,
 #hero h2,
@@ -172,6 +179,13 @@ section h2 {
 #hero p,
 #hero .text-base,
 #hero .text-xs {
+  color: #ffffff !important;
+}
+
+.service-page-hero h1,
+.service-page-hero .service-page-hero__intro,
+.service-page-hero .service-page-hero__intro p,
+.service-page-hero .service-page-hero__intro a {
   color: #ffffff !important;
 }
 
@@ -272,24 +286,24 @@ section h2 {
   color: #ffffff !important;
 }
 
-/* FS: ABOUT intro – background from placeholder layer; dark text; equal top/bottom padding */
-#about-intro {
-  padding-top: 14rem;   /* 224px – equal to bottom */
-  padding-bottom: 14rem;
+/* Square corners: no TL/BR radius (e.g. MEP projects grid) */
+.pill-btn--square {
+  border-radius: 0 !important;
 }
-@media (min-width: 1024px) {
-  #about-intro {
-    padding-top: 18rem;   /* 288px – equal to bottom */
-    padding-bottom: 18rem;
-  }
+.pill-btn--square .pill-btn-inner {
+  border-radius: 0 !important;
 }
+.pill-btn--square .pill-btn-border {
+  border-radius: 0 !important;
+}
+
+/* MEP homepage: Our story – black panel, light text (padding from section classes) */
 #about-intro h2 {
-  color: #000000 !important;
+  color: #ffffff !important;
 }
 #about-intro p {
-  color: rgba(0, 0, 0, 0.9) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
-/* Our story button uses .pill-btn--onLight (black border, white fill; hover black fill) */
 
 /* MEP: Services section – black background */
 #services {
@@ -1168,6 +1182,14 @@ html.about-page-active header {
   background: radial-gradient(ellipse 80% 50% at 50% 120%, rgba(255,255,255,0.06) 0%, transparent 50%);
   pointer-events: none;
 }
+/* About hero: taller glow layer so translateY parallax doesn’t show gaps */
+.about-hero-parallax .about-hero-parallax__bg {
+  left: 0;
+  right: 0;
+  top: -15%;
+  height: 130%;
+  min-height: 130%;
+}
 /* Horizontal scroll strip */
 .about-horizontal-scroll {
   width: 100%;
@@ -1208,15 +1230,40 @@ html.about-page-active header {
 
 /* About page – shared horizontal padding + vertical rhythm (FS + MEP) */
 .about-page-shell {
-  --about-px: clamp(1.25rem, 5vw, 3.25rem);
+  /* Match Services/Projects gutters more closely (less inset than before) */
+  --about-px: clamp(1rem, 2.5vw, 2rem);
 }
 .about-section-px {
   padding-left: var(--about-px);
   padding-right: var(--about-px);
 }
 .about-section-y {
-  padding-top: clamp(3.75rem, 10vw, 7rem);
-  padding-bottom: clamp(3.75rem, 10vw, 7rem);
+  padding-top: clamp(2.75rem, 8vw, 5.25rem);
+  padding-bottom: clamp(2.75rem, 8vw, 5.25rem);
+}
+/* MEP about: extra vertical rhythm between black sections */
+.about-page-shell.mep-about-page .about-section-y {
+  padding-top: clamp(3.75rem, 9.5vw, 7.25rem);
+  padding-bottom: clamp(3.75rem, 9.5vw, 7.25rem);
+}
+/* Angled top (left rises from 8%): extra top inset so labels/copy clear the diagonal */
+.about-block--white.about-block--angle-top.about-section-y {
+  padding-top: clamp(6rem, 16vw, 11rem);
+}
+/* Expertise only: less “air” above headline, more below copy/logos so the bottom angle doesn’t crowd content */
+.about-page-shell .about-block--white.about-expertise-section.about-section-y {
+  padding-top: clamp(3.75rem, 9vw, 6.25rem);
+  padding-bottom: clamp(4.25rem, 11vw, 7.5rem);
+}
+/* Commitments: pull heading up (diagonal splice reads as empty space otherwise) */
+.about-block--black.about-commitments-section.about-section-y {
+  padding-top: clamp(2.25rem, 5.5vw, 3.75rem);
+  padding-bottom: clamp(2.5rem, 7vw, 4.5rem);
+}
+/* Quote + stats black section directly under commitments */
+.about-page-shell .about-block--black.about-proof-section.about-section-y {
+  padding-top: clamp(1.75rem, 4.5vw, 3rem);
+  padding-bottom: clamp(3.5rem, 8vw, 6rem);
 }
 .about-hero {
   padding-top: clamp(5.25rem, 11vh, 8.5rem);
@@ -1224,7 +1271,7 @@ html.about-page-active header {
 }
 .about-section-inner {
   width: 100%;
-  max-width: 80rem;
+  max-width: min(100%, 92rem);
   margin-left: auto;
   margin-right: auto;
 }
@@ -1329,6 +1376,14 @@ html.about-page-active header {
 .logo-marquee-section .logo-marquee .logo-marquee__img {
   object-fit: contain;
   background: rgba(255, 255, 255, 0.06);
+}
+/* Service pages — Our Customers strip: solid white tile behind each logo (matches FS) */
+.logo-marquee-section.our-customers-marquee {
+  --marquee-duration: 50s;
+}
+.logo-marquee-section.our-customers-marquee .logo-marquee .logo-marquee__img {
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 .logo-marquee-section .logo-marquee svg use {
   pointer-events: none;
@@ -3108,6 +3163,11 @@ header {
   background: transparent !important;
   background-color: transparent !important;
 }
+/* Services hub + capability pillars: full-width black (overrides rule above; inline/Tailwind lose to header {}) */
+header.header--solid-black {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
 header.header-border-light {
   border-bottom: 1px solid #000000 !important;
   border-right: 1px solid #000000 !important;
@@ -3707,9 +3767,15 @@ html:not(.dark) .mep-cards-section .mep-cards-grid li {
     padding-left: 0.25rem;
   }
 }
-html:not(.dark) body:has(.fs-capability-page) {
+html:not(.dark) body:has(.fs-capability-page),
+html:not(.dark) body:has(.service-page-root) {
   background: #000000 !important;
   background-color: #000000 !important;
+}
+
+/* Capability content after homepage-style hero — avoid forcing full viewport height */
+.fs-capability-page.fs-capability-page--section {
+  min-height: auto;
 }
 .fs-capability-page .font-title {
   text-transform: none;
@@ -3909,6 +3975,27 @@ html:not(.dark) body:has(.dm-page) {
   }
   .dm-journey-digit-inner {
     animation: none !important;
+  }
+}
+
+/* Mount / scroll fade-in — see components/Reveal.tsx */
+.about-reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition-property: opacity, transform;
+  transition-duration: 0.65s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.about-reveal--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+    transition-delay: 0ms !important;
   }
 }
 

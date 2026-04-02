@@ -1,26 +1,25 @@
 import type { Metadata } from "next"
 import { MepCapabilityPageLayout } from "@/components/MepCapabilityPageLayout"
-import {
-  LOREM_CAPABILITIES,
-  LOREM_COMPLIANCE,
-  LOREM_DELIVERABLES,
-} from "@/lib/mep-capability-placeholders"
+import { MEP_BUILDING_SERVICES_CAPABILITY } from "@/lib/mep-capability-content"
+import { buildMepMetadata } from "@/lib/seo-metadata"
 
-export const metadata: Metadata = {
-  title: "Building services | APX MEP",
+export const metadata: Metadata = buildMepMetadata({
+  title: "Integrated Building Services | MEP Contractors London | APX",
   description:
-    "Placeholder — building services overview (copy to be supplied).",
-}
+    "Coordinated building services — mechanical, electrical and plumbing interfaces, handover and O&M for projects across London boroughs and the Home Counties.",
+  pathname: "/services/building-services",
+})
 
 export default function BuildingServicesCapabilityPage() {
+  const c = MEP_BUILDING_SERVICES_CAPABILITY
   return (
     <MepCapabilityPageLayout
       title="Building services"
-      intro="Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum — placeholder intro until final MEP copy is ready."
-      capabilities={LOREM_CAPABILITIES}
-      compliance={LOREM_COMPLIANCE}
-      deliverables={LOREM_DELIVERABLES}
-      ctaLabel="Discuss building services"
+      intro={c.intro}
+      capabilities={[...c.capabilities]}
+      compliance={[...c.compliance]}
+      deliverables={[...c.deliverables]}
+      ctaLabel={c.ctaLabel}
     />
   )
 }

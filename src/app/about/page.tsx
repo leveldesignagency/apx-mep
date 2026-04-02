@@ -1,26 +1,114 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Reveal } from "@/components/Reveal";
 
-const ABOUT_PROJECTS = [
-  { image: "/cctv%20systems.jpg", title: "PROJECT 1", description: "Electrical and HVAC installation for commercial premises", quote: "Delivered on time and to a high standard." },
-  { image: "/home-fire-alarm-system-installer-800x533.jpg", title: "PROJECT 2", description: "Mechanical systems design and commissioning", quote: "Professional from design through handover." },
-  { image: "/intruder%20alarm%20systems.jpg", title: "PROJECT 3", description: "Plumbing and building services upgrade", quote: "Reliable support with clear communication." },
-  { image: "/access%20control%20systems.jpg", title: "PROJECT 4", description: "Multi-site electrical and mechanical integration", quote: "The coordinated approach exceeded expectations." },
-  { image: "/video%20door%20entry%20systems.jpg", title: "PROJECT 5", description: "HVAC and electrical system upgrade", quote: "Quality delivery with strong site coordination." },
+/** Commitment icons: public/__quality assurance.svg, __health and safety.svg, __environmental.svg */
+const ABOUT_COMMITMENTS = [
+  { line1: "QUALITY", line2: "ASSURANCE", iconSrc: "/__quality assurance.svg", iconAlt: "Quality assurance" },
+  { line1: "HEALTH", line2: "& SAFETY", iconSrc: "/__health and safety.svg", iconAlt: "Health and safety" },
+  { line1: "ENVIRONMENTAL", line2: "COMMITMENT", iconSrc: "/__environmental.svg", iconAlt: "Environmental commitment" },
 ] as const;
 
+/**
+ * Parallax multipliers (px translate per px of “scroll through” distance).
+ * Uses scroll position through the hero so text/image drift vs the page while you scroll.
+ */
+const PARALLAX = { bg: 0.38, text: 0.42, image: 0.22 } as const;
+
+/** Public folder uses a space in "accreditations mono" — literal paths load reliably in <img> */
+const ACC_MONO = "/accreditations mono";
+const EXPERTISE_ACCRED_LOGOS = [
+  { href: "/accreditations/bafe", src: `${ACC_MONO}/Coloured/BAFE-01.svg`, alt: "BAFE" },
+  { href: "/accreditations/nsi", src: `${ACC_MONO}/NSI-01.svg`, alt: "NSI" },
+  { href: "/accreditations/constructionline", src: `${ACC_MONO}/Coloured/ConstructionOnline-01.svg`, alt: "Constructionline" },
+  { href: "/accreditations/fia", src: `${ACC_MONO}/Coloured/FIA-01.svg`, alt: "FIA" },
+] as const;
+
+function readDocumentScrollY(): number {
+  if (typeof window === "undefined") return 0;
+  return (
+    window.pageYOffset ||
+    document.documentElement.scrollTop ||
+    document.body.scrollTop ||
+    0
+  );
+}
+
 export default function AboutPage() {
-  const [scrollY, setScrollY] = useState(0);
+  const [parallaxY, setParallaxY] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [heroReveal, setHeroReveal] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const rafRef = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrollY(typeof window !== "undefined" ? window.scrollY : 0);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduceMotion(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setHeroReveal(true);
+      return;
+    }
+    const id = requestAnimationFrame(() => setHeroReveal(true));
+    return () => cancelAnimationFrame(id);
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    const update = () => {
+      rafRef.current = 0;
+      if (reduceMotion) {
+        setParallaxY(0);
+        return;
+      }
+      const scrollY = readDocumentScrollY();
+      const hero = heroRef.current;
+      if (!hero) {
+        setParallaxY(scrollY);
+        return;
+      }
+      const rect = hero.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const h = Math.max(rect.height, 1);
+      // Distance the hero block has moved up past the viewport top (0 while hero top is still below/at top edge)
+      const scrolledPastHeroTop = Math.max(0, -rect.top);
+      // While hero is still entering (top below viewport top), blend in movement from document scroll
+      const leadIn = rect.top > 0 ? scrollY * 0.45 : 0;
+      const t = Math.min(scrolledPastHeroTop + leadIn, h + vh * 0.35);
+      setParallaxY(t);
+    };
+
+    const onScroll = () => {
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    const vv = window.visualViewport;
+    vv?.addEventListener("scroll", onScroll, { passive: true });
+    vv?.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("scroll", onScroll, { capture: true });
+      window.removeEventListener("resize", onScroll);
+      vv?.removeEventListener("scroll", onScroll);
+      vv?.removeEventListener("resize", onScroll);
+    };
+  }, [reduceMotion]);
+
+  const py = reduceMotion ? 0 : parallaxY;
 
   useEffect(() => {
     document.documentElement.classList.add("about-page-active");
@@ -28,182 +116,351 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="about-parallax-page about-page-shell overflow-x-hidden snap-y snap-mandatory">
+    <div className="about-parallax-page about-page-shell mep-about-page overflow-x-hidden">
       {/* Hero – same vertical rhythm/structure as homepage hero */}
-      <section className="about-block about-block--black about-block--angle-bottom relative h-screen overflow-visible flex flex-col snap-start">
-        <div className="about-parallax-bg" style={{ transform: `translateY(${scrollY * 0.12}px)` }} aria-hidden />
-        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
-          <div className="space-y-4">
-            <div className="max-w-2xl">
-              <span className="section-label mb-3 block text-white/75">About</span>
+      {/* overflow-visible on the section keeps angled splice + margin behaviour with the next block; parallax is clipped inside inner layers only */}
+      <section
+        ref={heroRef}
+        className="about-block about-block--black about-block--angle-bottom about-hero-parallax relative h-screen overflow-visible flex flex-col"
+      >
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+          <div
+            className="about-parallax-bg about-hero-parallax__bg will-change-transform"
+            style={{ transform: `translate3d(0, ${py * PARALLAX.bg}px, 0)` }}
+          />
+        </div>
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-6 pb-6 sm:pt-8 lg:pt-10 lg:pb-10 relative z-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 xl:gap-16 items-start w-full">
+            <div
+              className="mt-6 space-y-4 max-w-2xl sm:mt-8 lg:mt-12 xl:mt-16 lg:max-w-none will-change-transform"
+              style={reduceMotion ? undefined : { transform: `translate3d(0, ${py * PARALLAX.text}px, 0)` }}
+            >
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left text-white"
+                className="mb-2 md:mb-3 text-left text-white leading-[0.95]"
                 style={{ fontFamily: "var(--font-menu)" }}
               >
-                Why Choose APX Mechanical &amp; Electrical?
+                <Reveal show={heroReveal} delayMs={0}>
+                  <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal italic text-white/75">
+                    everything you
+                  </span>
+                </Reveal>
+                <Reveal show={heroReveal} delayMs={75}>
+                  <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal italic text-white/75">
+                    need to know
+                  </span>
+                </Reveal>
+                <Reveal show={heroReveal} delayMs={150}>
+                  <span className="mt-1 block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold not-italic">
+                    ABOUT APX
+                  </span>
+                </Reveal>
+                <Reveal show={heroReveal} delayMs={225}>
+                  <span className="block whitespace-nowrap text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold not-italic">
+                    MECHANICAL &amp; ELECTRICAL
+                  </span>
+                </Reveal>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl font-normal text-left tracking-tight max-w-lg text-white/90">
-                APX MEP delivers coordinated mechanical, electrical and plumbing services across London and the Home Counties — from design and installation to commissioning, maintenance and compliance. We work with contractors, consultants and end clients across commercial, education, healthcare and industrial projects.
-              </p>
+              <Reveal show={heroReveal} delayMs={300}>
+                <div className="space-y-4 text-lg sm:text-xl md:text-xl font-normal text-left tracking-tight max-w-xl text-white/90">
+                  <p>
+                    APX is a go-to contractor for major commercial and industrial projects in London and the Southeast. With established divisions for mechanical,
+                    electrical and security services, we can now offer a comprehensive range of expert services for your project.
+                  </p>
+                  <p>
+                    With over 8 successful years as an independent company, we have the robust and trusted experience to deliver exceptional, efficient and safe
+                    workmanship from start to finish on any type or scale of project.
+                  </p>
+                  <p>
+                    We&apos;re known on site for our innovation and for bringing good ideas to the table. Our experience and reliability means projects are delivered on
+                    time, every time &ndash; within programme parameters and to specification.
+                  </p>
+                  <p>At APX, we have the strength, capability, expertise and resources to power your next project.</p>
+                </div>
+              </Reveal>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 2 – white, angled top & bottom, image placeholder */}
-      <section className="about-block about-block--white about-block--angle-top about-block--angle-bottom-alt about-section-y about-section-px flex snap-start items-center min-h-screen">
-        <div className="about-section-inner grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-24">
-          <div>
-            <span className="section-label section-label--black mb-3 block">Expertise</span>
-            <h2 className="mb-6 text-4xl font-bold text-black lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-              Certified MEP Specialists
-            </h2>
-            <p className="mb-6 text-lg leading-relaxed text-black/80">
-              Our engineers are trained across electrical, mechanical, plumbing and building services interfaces — so installations align with programme, specification and the latest regulations.
-            </p>
-            <ul className="space-y-3 text-black/90">
-              <li>• Qualified mechanical, electrical and plumbing engineers</li>
-              <li>• Testing, certification and clear handover documentation</li>
-              <li>• Ongoing training on standards, safety and best practice</li>
-            </ul>
-          </div>
-          <div className="grid grid-cols-2 gap-0 sm:gap-1 lg:min-h-full">
-            {[
-              { href: "/about/accreditors/bafe", src: "/accreditations%20mono/Coloured/BAFE-01.svg", alt: "BAFE" },
-              { href: "/about/accreditors/nsi", src: "/accreditations%20mono/NSI-01.svg", alt: "NSI" },
-              { href: "/about/accreditors/constructionline", src: "/accreditations%20mono/Coloured/ConstructionOnline-01.svg", alt: "Constructionline" },
-              { href: "/about/accreditors/fia", src: "/accreditations%20mono/Coloured/FIA-01.svg", alt: "FIA" },
-            ].map((item) => (
-              <Link
-                key={item.alt}
-                href={item.href}
-                className="group flex items-center justify-center py-3 sm:py-4"
-                aria-label={`Learn more about ${item.alt}`}
+            <Reveal show={heroReveal} delayMs={200} className="self-start">
+              <div
+                className="relative w-full max-w-md mx-auto lg:max-w-none aspect-[3/4] sm:aspect-[4/5] lg:aspect-[5/6] overflow-hidden rounded-2xl shadow-[0_20px_48px_rgba(0,0,0,0.35)] will-change-transform"
+                style={reduceMotion ? undefined : { transform: `translate3d(0, ${py * PARALLAX.image}px, 0)` }}
               >
-                <img
-                  src={item.src}
-                  alt={item.alt}
-                  className="max-h-24 sm:max-h-28 lg:max-h-32 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                <Image
+                  src="/access%20control%20systems.jpg"
+                  alt="MEP building services"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 90vw, 44vw"
+                  priority
                 />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Block 3 – black, homepage-style projects strip (smaller cards) */}
-      <section className="about-block about-block--black about-block--angle-top about-section-y flex snap-start flex-col justify-center">
-        <div className="about-section-px mb-12 md:mb-14">
-          <span className="section-label mb-3 block text-white/75">Portfolio</span>
-          <h2 className="text-4xl font-bold text-white lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-            Our Work
-          </h2>
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
-            MEP projects across London and the South East.
-          </p>
-        </div>
-        <div className="w-screen relative left-1/2 -translate-x-1/2">
-          <div className="about-horizontal-scroll about-section-px pb-2">
-            <div className="about-horizontal-scroll__inner">
-              {ABOUT_PROJECTS.map((project, i) => (
-                <Link key={project.title} href="/projects" className="projects-card group flex-shrink-0 flex flex-col rounded-xl overflow-hidden bg-black w-[260px] sm:w-[290px]">
-                  <div className="relative aspect-[3/4] min-h-[360px] projects-card__inner">
-                    <span className="projects-card-number absolute top-4 right-4 z-10 text-4xl font-bold text-white tabular-nums drop-shadow-md" style={{ fontFamily: 'var(--font-title, "Outfit", sans-serif)' }} aria-hidden>
-                      {(i + 1).toString().padStart(2, "0")}
-                    </span>
-                    <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url(${project.image})` }} />
-                    <div className="projects-card-glass absolute inset-x-0 bottom-0 top-1/2 overflow-hidden p-4 pt-14 pb-4 pr-12 flex flex-col justify-end">
-                      <div className="projects-card-glass-overlay absolute inset-0" aria-hidden />
-                      <p className="text-2xl font-bold text-white mb-1 relative z-10">{project.title}</p>
-                      <p className="text-white/90 text-xs mb-2 relative z-10">{project.description}</p>
-                      <p className="text-white/80 text-xs italic line-clamp-2 relative z-10">&ldquo;{project.quote}&rdquo;</p>
-                      <span className="projects-card-arrow absolute bottom-4 right-4 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white transition-transform duration-200 group-hover:rotate-12" aria-hidden>
-                        <ChevronRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 4 – white, angled top & bottom, text + image */}
-      <section className="about-block about-block--white about-block--angle-bottom about-block--angle-top-alt about-section-y about-section-px flex snap-start items-center">
-        <div className="about-section-inner grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-24">
-          <div className="order-2 relative aspect-[3/4] overflow-hidden rounded-xl lg:order-1">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/intruder%20alarm%20systems.jpg')" }} />
-          </div>
-          <div className="order-1 lg:order-2">
-            <span className="section-label section-label--black mb-3 block">Support</span>
-            <h2 className="mb-6 text-4xl font-bold text-black lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-              Maintenance &amp; Response
-            </h2>
-            <p className="text-lg leading-relaxed text-black/80">
-              Planned preventative maintenance and responsive support for critical building services. We help keep plant, power and water systems reliable — with clear communication and minimal disruption to your operations.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 5 – black, angled, stats / quote */}
-      <section className="about-block about-block--black about-block--angle-top about-block--angle-bottom-alt about-section-y about-section-px flex snap-start flex-col justify-center">
-        <div className="about-section-inner mx-auto max-w-5xl text-center">
-          <p className="text-2xl font-medium leading-relaxed text-white/90 md:text-3xl lg:text-4xl">
-            &ldquo;We don&apos;t just install plant and pipework — we deliver coordinated MEP that fits programme and performs long after handover.&rdquo;
-          </p>
-          <div className="mt-14 grid grid-cols-1 gap-10 sm:mt-20 sm:grid-cols-3 sm:gap-12 md:gap-14">
-            <div>
-              <div className="text-4xl font-bold text-white md:text-5xl">500+</div>
-              <div className="mt-2 text-sm text-white/60 md:text-base">Projects completed</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white md:text-5xl">99%</div>
-              <div className="mt-2 text-sm text-white/60 md:text-base">Customer satisfaction</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white md:text-5xl">20+</div>
-              <div className="mt-2 text-sm text-white/60 md:text-base">Years experience</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 6 – white, angled, image grid placeholders */}
-      <section className="about-block about-block--white about-block--angle-top about-block--angle-bottom-alt about-section-y about-section-px flex snap-start items-center">
-        <div className="about-section-inner w-full">
-          <span className="section-label section-label--black mb-3 block">Assurance</span>
-          <h2 className="mb-10 text-4xl font-bold text-black lg:mb-14 lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-            Quality &amp; Compliance
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {["/cctv%20systems.jpg", "/access%20control%20systems.jpg", "/video%20door%20entry%20systems.jpg"].map((src) => (
-              <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
-                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${src})` }} />
               </div>
-            ))}
+            </Reveal>
           </div>
-          <p className="mt-10 max-w-2xl text-base leading-relaxed text-black/80 md:text-lg">
-            Robust QA processes, clear documentation and standards-led delivery — so your building services meet specification and regulation.
-          </p>
         </div>
       </section>
 
-      {/* Block 7 – black, angled bottom, CTA */}
-      <section className="about-block about-block--black about-block--angle-top about-section-y about-section-px flex snap-start flex-col items-center justify-center text-center">
-        <h2 className="mb-5 text-4xl font-bold text-white lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-          Get in touch
-        </h2>
-        <p className="mb-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
-          Ready to discuss mechanical, electrical or plumbing requirements? We&apos;d love to hear from you.
-        </p>
-        <Link
-          href="/contact"
-          className="rounded-xl bg-white px-10 py-4 text-lg font-semibold text-black transition-colors hover:bg-white/90"
-        >
-          Contact us
-        </Link>
+      {/* Accreditation section (keep white background) */}
+      <section className="about-block about-block--white about-section-px pt-24 pb-36 md:pt-28 md:pb-40 lg:pt-32 lg:pb-48">
+        <div className="about-section-inner grid grid-cols-1 justify-items-center gap-12 lg:grid-cols-2 lg:items-center lg:justify-items-stretch lg:gap-x-16 lg:gap-y-10 xl:gap-x-24">
+          <Reveal>
+            <div className="w-full max-w-xl text-center lg:max-w-none lg:text-left">
+              <span className="section-label section-label--black mb-3 block leading-none tracking-[0.12em]">Accreditations</span>
+              <h2 className="mb-6 text-4xl font-bold leading-tight text-black lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+                Certified MEP specialists
+              </h2>
+              <p className="mb-6 text-lg leading-snug text-black/80">
+                Our engineers are trained across mechanical, electrical, plumbing and building services interfaces — so installations align with programme,
+                specification and the latest standards, with testing, certification and clear handover documentation.
+              </p>
+              <ul className="space-y-2.5 text-black/90">
+                <li>• Qualified mechanical, electrical and plumbing engineers</li>
+                <li>• Industry accreditations and ongoing compliance training</li>
+                <li>• Coordinated delivery alongside fire, security and controls where required</li>
+              </ul>
+            </div>
+          </Reveal>
+          <div className="grid w-full min-w-0 max-w-md grid-cols-2 justify-items-center gap-2 lg:max-w-none">
+            {EXPERTISE_ACCRED_LOGOS.map((item, i) => (
+              <Reveal key={item.alt} delayMs={i * 70}>
+                <Link
+                  href={item.href}
+                  className="group flex w-full max-w-[210px] items-center justify-center px-4 py-5 transition-opacity hover:opacity-90"
+                  aria-label={`Learn more about ${item.alt}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    width={280}
+                    height={180}
+                    loading="eager"
+                    decoding="async"
+                    className="h-auto max-h-24 w-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:max-h-28 lg:max-h-32"
+                  />
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Brand-led black sections (no canted dividers) */}
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner space-y-10 md:space-y-12">
+          <Reveal>
+            <div className="max-w-3xl">
+              <span className="section-label mb-3 block text-white/65">Who we support</span>
+              <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+                Delivery-first partner for complex projects
+              </h2>
+            </div>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-7 xl:grid-cols-4 xl:gap-8">
+            {["M&E contractors", "Facility management teams", "Consultants and architects", "Main contractors"].map((client, i) => (
+              <Reveal key={client} delayMs={i * 55}>
+                <div className="rounded-2xl border border-white/25 bg-white/[0.06] p-6 text-white backdrop-blur-md md:p-7">
+                  <p className="text-lg font-semibold leading-snug">{client}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner max-w-3xl">
+          <Reveal>
+            <span className="section-label mb-3 block text-white/65">Our mission</span>
+            <h2
+              className="mb-6 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl"
+              style={{ fontFamily: "var(--font-menu)" }}
+            >
+              The highest level of work and customer care
+            </h2>
+            <p className="text-base leading-relaxed text-white/82 md:text-lg">
+              We are driven by the desire to deliver the highest level of work and customer care in the industry. By doing this, we can build on our already impressive
+              reputation — and deliver more high quality projects.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner space-y-10 md:space-y-12">
+          <Reveal>
+            <div className="max-w-3xl">
+              <span className="section-label mb-3 block text-white/65">Our values</span>
+              <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+                How we operate every day
+              </h2>
+            </div>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
+            {(
+              [
+                {
+                  title: "Knowledge",
+                  body: "Every job for every customer is backed by the extensive knowledge and expertise we have acquired from the industry.",
+                },
+                {
+                  title: "Workmanship",
+                  body: "Quality of work is a defining factor for our business, and perfection being the driving force.",
+                },
+                {
+                  title: "Safety",
+                  body: "Underpinning every aspect of our work, safety is our most important value.",
+                },
+                {
+                  title: "Customer care",
+                  body: "We pride ourselves on an enduring reputation for excellent customer care. We know that strong partnerships and trust are the foundation of successful projects.",
+                },
+              ] as const
+            ).map((v, i) => (
+              <Reveal key={v.title} delayMs={i * 60}>
+                <div className="rounded-2xl border border-white/25 bg-white/[0.06] p-6 text-white backdrop-blur-md md:p-7">
+                  <p className="text-lg font-semibold text-white md:text-xl">{v.title}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/80 md:text-base">{v.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner max-w-3xl">
+          <Reveal>
+            <span className="section-label mb-3 block text-white/65">Our vision</span>
+            <h2
+              className="mb-6 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl"
+              style={{ fontFamily: "var(--font-menu)" }}
+            >
+              The best choice for high-value contracts
+            </h2>
+            <p className="text-base leading-relaxed text-white/82 md:text-lg">
+              To build on our reputation for professionalism, safety, workmanship and delivery that makes APX Mechanical &amp; Electrical Ltd, without a doubt, the best
+              choice for large, high-value contracts in London and the South East.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-white/82 md:text-lg">
+              We invest in innovation on site, clear communication with project teams, and delivery that respects programme and specification &mdash; so complex MEP packages
+              land on time and perform after handover.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner w-full">
+          <Reveal>
+            <span className="section-label mb-3 block text-white/70">Our commitments</span>
+            <h2
+              className="mb-8 text-3xl font-bold leading-tight text-white md:mb-10 md:text-4xl lg:text-5xl"
+              style={{ fontFamily: "var(--font-menu)" }}
+            >
+              Quality, safety &amp; environment
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
+            {ABOUT_COMMITMENTS.map((item, i) => (
+              <Reveal key={item.line1} delayMs={i * 85}>
+                <div className="text-center">
+                  <div className="mx-auto mb-3 flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- local SVG commitment artwork */}
+                    <img
+                      src={item.iconSrc}
+                      alt={item.iconAlt}
+                      className="h-20 w-auto max-w-[5.75rem] object-contain object-center sm:h-24 sm:max-w-[6.5rem] md:max-w-[7rem]"
+                    />
+                  </div>
+                  <p
+                    className="text-base font-bold uppercase tracking-[0.12em] text-white"
+                    style={{ fontFamily: "var(--font-menu)" }}
+                  >
+                    {item.line1}
+                  </p>
+                  <p
+                    className="mt-1 text-base uppercase tracking-[0.12em] text-white/85"
+                    style={{ fontFamily: "var(--font-menu)" }}
+                  >
+                    {item.line2}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner rounded-3xl border border-white/20 bg-white/[0.04] p-7 text-center sm:p-9 lg:p-12 backdrop-blur-md">
+          <Reveal>
+            <p className="mx-auto max-w-4xl text-2xl font-medium leading-relaxed text-white/90 md:text-3xl lg:text-[2.45rem]">
+              &ldquo;We don&apos;t just install plant and pipework — we deliver coordinated MEP that fits programme and performs long after handover.&rdquo;
+            </p>
+          </Reveal>
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-3 sm:gap-6">
+            {[
+              { value: "500+", label: "Projects completed" },
+              { value: "99%", label: "Customer satisfaction" },
+              { value: "8+", label: "Years as APX MEP" },
+            ].map((stat, i) => (
+              <Reveal key={stat.label} delayMs={i * 90}>
+                <div className="rounded-2xl border border-white/20 bg-black/35 p-6">
+                  <div className="text-4xl font-bold text-white md:text-5xl">{stat.value}</div>
+                  <div className="mt-2 text-sm text-white/70 md:text-base">{stat.label}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner">
+          <Reveal>
+            <span className="section-label mb-3 block text-white/70">Assurance</span>
+            <h2 className="mb-8 text-4xl font-bold text-white lg:mb-10 lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+              Quality &amp; Compliance
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-10">
+            {["/cctv%20systems.jpg", "/access%20control%20systems.jpg", "/video%20door%20entry%20systems.jpg"].map((src, i) => (
+              <Reveal key={src} delayMs={i * 75}>
+                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/20">
+                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${src})` }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p className="mt-10 max-w-2xl text-base leading-relaxed text-white/80 md:mt-12 md:text-lg">
+              Robust QA processes, clear documentation and standards-led delivery — so your mechanical, electrical and building services meet specification and
+              regulation.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="about-block about-block--black about-section-y about-section-px">
+        <div className="about-section-inner rounded-3xl border border-white/25 bg-white/[0.05] px-6 py-10 text-center sm:px-8 md:py-12 backdrop-blur-md">
+          <Reveal>
+            <h2 className="mb-5 text-4xl font-bold text-white lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+              Get in touch
+            </h2>
+          </Reveal>
+          <Reveal delayMs={80}>
+            <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-white/75 md:text-lg">
+              Ready to discuss mechanical, electrical, plumbing or building services? We&apos;d love to hear from you.
+            </p>
+          </Reveal>
+          <Reveal delayMs={140}>
+            <Link
+              href="/contact"
+              className="inline-flex rounded-xl border border-white bg-white px-10 py-4 text-lg font-semibold text-black transition-colors hover:bg-black hover:text-white"
+            >
+              Contact us
+            </Link>
+          </Reveal>
+        </div>
       </section>
     </div>
   );

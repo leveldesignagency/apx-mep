@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
-import { MethodologyPageContent } from "@/components/MethodologyPageContent"
+import { DeliveryMethodologyPageContent } from "@/components/DeliveryMethodologyPageContent"
+import { buildMepMetadata } from "@/lib/seo-metadata"
 
-export const metadata: Metadata = {
-  title: "Methodology | APX MEP",
+export const metadata: Metadata = buildMepMetadata({
+  title: "Methodology | MEP Delivery Steps | London Contractors | APX",
   description:
-    "How APX MEP delivers mechanical, electrical and plumbing projects — our delivery methodology.",
-}
+    "APX MEP delivery methodology — coordinated mechanical, electrical and plumbing for commercial and industrial projects across London boroughs and the South East.",
+  pathname: "/methodology",
+})
 
 export default function MethodologyPage() {
-  return <MethodologyPageContent />
+  return <DeliveryMethodologyPageContent />
 }

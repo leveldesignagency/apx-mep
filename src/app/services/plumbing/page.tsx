@@ -1,26 +1,25 @@
 import type { Metadata } from "next"
 import { MepCapabilityPageLayout } from "@/components/MepCapabilityPageLayout"
-import {
-  LOREM_CAPABILITIES,
-  LOREM_COMPLIANCE,
-  LOREM_DELIVERABLES,
-} from "@/lib/mep-capability-placeholders"
+import { MEP_PLUMBING_CAPABILITY } from "@/lib/mep-capability-content"
+import { buildMepMetadata } from "@/lib/seo-metadata"
 
-export const metadata: Metadata = {
-  title: "Plumbing | APX MEP",
+export const metadata: Metadata = buildMepMetadata({
+  title: "Commercial Plumbing & Drainage | MEP London | APX",
   description:
-    "Placeholder — plumbing services overview (copy to be supplied).",
-}
+    "Hot and cold water, drainage and sanitary systems — commercial and residential-scale plumbing across London and the Home Counties.",
+  pathname: "/services/plumbing",
+})
 
 export default function PlumbingCapabilityPage() {
+  const c = MEP_PLUMBING_CAPABILITY
   return (
     <MepCapabilityPageLayout
       title="Plumbing"
-      intro="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur — placeholder intro until final MEP copy is ready."
-      capabilities={LOREM_CAPABILITIES}
-      compliance={LOREM_COMPLIANCE}
-      deliverables={LOREM_DELIVERABLES}
-      ctaLabel="Discuss plumbing"
+      intro={c.intro}
+      capabilities={[...c.capabilities]}
+      compliance={[...c.compliance]}
+      deliverables={[...c.deliverables]}
+      ctaLabel={c.ctaLabel}
     />
   )
 }

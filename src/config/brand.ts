@@ -30,7 +30,7 @@ export const brandConfig = {
       ],
       whyChoose: {
         title: 'Why Choose APX MEP?',
-        description: 'With over 20 years of experience in mechanical, electrical, and plumbing services, we\'ve built a reputation for excellence, reliability, and customer satisfaction across the UK.',
+        description: 'With over 8 successful years as an independent MEP contractor serving London and the Southeast, we\'ve built a reputation for excellence, reliability, and delivery on complex commercial and industrial projects.',
         features: [
           {
             title: 'Certified MEP Engineers',

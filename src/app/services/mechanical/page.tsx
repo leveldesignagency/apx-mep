@@ -1,26 +1,25 @@
 import type { Metadata } from "next"
 import { MepCapabilityPageLayout } from "@/components/MepCapabilityPageLayout"
-import {
-  LOREM_CAPABILITIES,
-  LOREM_COMPLIANCE,
-  LOREM_DELIVERABLES,
-} from "@/lib/mep-capability-placeholders"
+import { MEP_MECHANICAL_CAPABILITY } from "@/lib/mep-capability-content"
+import { buildMepMetadata } from "@/lib/seo-metadata"
 
-export const metadata: Metadata = {
-  title: "Mechanical | APX MEP",
+export const metadata: Metadata = buildMepMetadata({
+  title: "Mechanical & HVAC Services | London MEP | APX",
   description:
-    "Placeholder — mechanical services overview (copy to be supplied).",
-}
+    "Mechanical engineering, ventilation and plant — design and installation for commercial and industrial buildings across Greater London, Kent, Essex and Surrey.",
+  pathname: "/services/mechanical",
+})
 
 export default function MechanicalCapabilityPage() {
+  const c = MEP_MECHANICAL_CAPABILITY
   return (
     <MepCapabilityPageLayout
       title="Mechanical"
-      intro="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat — placeholder intro until final MEP copy is ready."
-      capabilities={LOREM_CAPABILITIES}
-      compliance={LOREM_COMPLIANCE}
-      deliverables={LOREM_DELIVERABLES}
-      ctaLabel="Discuss mechanical"
+      intro={c.intro}
+      capabilities={[...c.capabilities]}
+      compliance={[...c.compliance]}
+      deliverables={[...c.deliverables]}
+      ctaLabel={c.ctaLabel}
     />
   )
 }

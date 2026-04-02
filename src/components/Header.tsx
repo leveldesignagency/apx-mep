@@ -7,13 +7,22 @@ import { Button } from "@/components/ui/Button"
 import { Phone, Mail, Menu, X, ArrowRight, Check, Facebook, Instagram, Linkedin, ChevronDown } from "lucide-react"
 import { useState, useRef } from "react"
 import { useTheme } from '@/contexts/ThemeContext'
+import { isMepCapabilityPath } from "@/lib/mepCapabilityPaths"
 import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
 
 export default function Header() {
   const pathname = usePathname()
   const { theme } = useTheme()
-  const isTransparentHeaderPage = pathname.startsWith("/services/")
-  const isServicesPage = pathname.startsWith("/services/")
+  /** Normalise so `/services` and `/services/` are the hub; only `/services/...` subpaths use transparent overlay bar */
+  const path = pathname.replace(/\/$/, "") || "/"
+  const isServicesHub = path === "/services"
+  const isMepCapabilityPage = isMepCapabilityPath(path)
+  const isServiceSubpage = path.startsWith("/services/")
+  const isProjectsRoute = path === "/projects" || path.startsWith("/projects/")
+  /** Service-line pages only — capability pillars use solid black header like the hub */
+  const isTransparentHeaderPage = isServiceSubpage && !isMepCapabilityPage
+  const headerSolidBlack = isServicesHub || isMepCapabilityPage || isProjectsRoute
+  const isServicesPage = pathname.startsWith("/services") || pathname.startsWith("/projects")
   const isDark = theme === 'dark'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
@@ -58,8 +67,8 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-50 bg-transparent ${isTransparentHeaderPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
-      style={{ backgroundColor: "transparent" }}
+      className={`relative z-50 ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isTransparentHeaderPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
+      style={{ backgroundColor: headerSolidBlack ? "#000000" : "transparent" }}
     >
       {/* ========== SAVED VERSION (original header – not rendered) ========== */}
       {false && (
@@ -108,7 +117,7 @@ export default function Header() {
                   top: 'calc(100% + 1.2rem)',
                   left: '-32.5px',
                   width: '264.5px',
-                  maxHeight: isServicesOpen ? '320px' : '0',
+                  maxHeight: isServicesOpen ? '520px' : '0',
                   pointerEvents: isServicesOpen ? 'auto' : 'none',
                   transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                   backgroundColor: 'black',
@@ -120,17 +129,21 @@ export default function Header() {
               >
                 <div className="py-0 rounded-br-2xl">
                   {[
-                    { href: '/services/electrical-systems', label: 'CCTV SYSTEMS' },
-                    { href: '/services/energy-efficiency', label: 'ACCESS CONTROL SYSTEMS' },
-                    { href: '/services/sustainability', label: 'INTRUDER ALARM SYSTEMS' },
-                    { href: '/services/mechanical-engineering', label: 'FIRE ALARM SYSTEMS' },
-                    { href: '/services/maintenance', label: 'VIDEO DOOR ENTRY SYSTEMS' },
+                    { href: "/services/project-management", label: "Design & build" },
+                    { href: "/services/electrical", label: "Domestic & new build" },
+                    { href: "/services/mechanical-engineering", label: "Commercial & industrial" },
+                    { href: "/services/building-services", label: "Refurb & fit-out" },
+                    { href: "/services/electrical-systems", label: "Inspection & testing" },
+                    { href: "/services/energy-efficiency", label: "Solar PV" },
+                    { href: "/services/security-systems", label: "Access & entry" },
+                    { href: "/services/bms-control-wiring", label: "BMS & controls" },
+                    { href: "/services/fire-life-safety", label: "Security, IRS & fire" },
                   ].map(({ href, label }, i) => (
                     <a
                       key={href}
                       href={href}
-                      className={`dropdown-item relative group block px-4 py-2 text-sm leading-relaxed cursor-pointer uppercase ${i < 4 ? 'border-b' : ''}`}
-                      style={{ color: 'white', borderBottomColor: i < 4 ? 'rgba(255, 255, 255, 0.2)' : undefined }}
+                      className={`dropdown-item relative group block px-4 py-2 text-sm leading-relaxed cursor-pointer uppercase ${i < 8 ? 'border-b' : ''}`}
+                      style={{ color: 'white', borderBottomColor: i < 8 ? 'rgba(255, 255, 255, 0.2)' : undefined }}
                       onClick={() => {
                         setIsServicesOpen(false)
                         if (servicesCloseTimeoutRef.current) {
@@ -318,7 +331,7 @@ export default function Header() {
                     top: 'calc(100% + 1.2rem)',
                     left: '-32.5px',
                     width: '264.5px',
-                    maxHeight: isServicesOpen ? '400px' : '0',
+                    maxHeight: isServicesOpen ? '560px' : '0',
                     pointerEvents: isServicesOpen ? 'auto' : 'none',
                     transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                     backgroundColor: 'black',

@@ -9,6 +9,8 @@ import { TitleFontProvider } from "@/contexts/TitleFontContext";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
 import CustomCursor from "@/components/CustomCursor";
+import { RootJsonLd } from "@/components/RootJsonLd";
+import { MEP_SITE_NAME, getMepSiteUrl, mepDefaultDescription, mepKeywordsMetaString } from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,22 +22,40 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
 });
 
+const mepSiteUrl = getMepSiteUrl();
+
 export const metadata: Metadata = {
-  title: "APX MEP - Mechanical, Electrical & Building Services | UK",
-  description: "Mechanical, electrical and building services across London and the Home Counties. HVAC, electrical systems, plumbing, design and maintenance. Trusted MEP partner.",
-  keywords: "MEP, mechanical electrical plumbing, HVAC, electrical systems, building services, London, Home Counties, APX MEP",
+  metadataBase: new URL(mepSiteUrl),
+  title: {
+    default: `${MEP_SITE_NAME} | MEP Contractors | London & South East`,
+    template: `%s | ${MEP_SITE_NAME}`,
+  },
+  description: mepDefaultDescription(),
+  keywords: mepKeywordsMetaString(),
+  applicationName: MEP_SITE_NAME,
+  authors: [{ name: MEP_SITE_NAME }],
+  creator: MEP_SITE_NAME,
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
     icon: [
-      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
-    shortcut: '/favicon.png',
-    apple: '/apple-touch-icon.png',
+    shortcut: "/favicon.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "APX MEP - Mechanical, Electrical & Building Services",
-    description: "Mechanical, electrical and building services across London and the Home Counties.",
     type: "website",
+    locale: "en_GB",
+    url: mepSiteUrl,
+    siteName: MEP_SITE_NAME,
+    title: `${MEP_SITE_NAME} | HVAC, Electrical & Plumbing | London, Kent, Essex`,
+    description: mepDefaultDescription(),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${MEP_SITE_NAME} | London & Home Counties`,
+    description: mepDefaultDescription(),
   },
 };
 
@@ -45,8 +65,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
+    <html lang="en-GB" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="font-sans antialiased">
+        <RootJsonLd />
         <HeroVideoBackground />
         <div className="relative z-10">
           <ThemeProvider>
