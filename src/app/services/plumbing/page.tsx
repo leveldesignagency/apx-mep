@@ -14,6 +14,7 @@ export default function PlumbingCapabilityPage() {
   const c = MEP_PLUMBING_CAPABILITY
   return (
     <MepCapabilityPageLayout
+      variant="pillar"
       title="Plumbing"
       intro={c.intro}
       capabilities={[...c.capabilities]}

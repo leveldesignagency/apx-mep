@@ -32,7 +32,7 @@ export default async function MepProjectDetailPage({ params }: Props) {
   if (!project) notFound()
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="mep-project-detail-page min-h-screen bg-black text-white">
       <section className="relative isolate min-h-[50vh] overflow-hidden border-b border-white/10 md:min-h-[56vh]">
         <div className="absolute inset-0">
           <Image
@@ -46,7 +46,7 @@ export default async function MepProjectDetailPage({ params }: Props) {
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/70" />
         </div>
-        <div className="relative z-10 mx-auto w-full max-w-[min(100%,92rem)] px-4 pb-14 pt-28 sm:px-6 md:pb-16 md:pt-32 lg:px-8">
+        <div className="relative z-10 mx-auto w-full max-w-[min(100%,92rem)] px-4 pb-14 page-title-top sm:px-6 md:pb-16 lg:px-8">
           <Link href="/projects" className="text-sm uppercase tracking-[0.18em] text-white/70 hover:text-white">
             Back to projects
           </Link>

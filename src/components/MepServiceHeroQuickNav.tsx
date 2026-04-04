@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { MEP_SERVICE_QUICK_LINKS, normalizeMepPath } from "@/lib/mep-service-navigation"
 
 const pillClass =
-  "inline-flex items-center rounded-tl-xl rounded-br-xl border border-white/40 bg-black/45 px-3 py-1.5 text-xs font-semibold tracking-tight text-white/95 backdrop-blur-sm transition-colors hover:border-white/70 hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:px-4 sm:py-2 sm:text-sm"
+  "quick-nav-pill-shimmer inline-flex items-center rounded-tl-xl rounded-br-xl border border-white/40 bg-black/45 px-3 py-1.5 text-xs font-semibold tracking-tight text-white/95 backdrop-blur-sm transition-[border-color,color] duration-300 hover:border-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:px-4 sm:py-2 sm:text-sm"
 
 /** Horizontal pill links at the bottom of the service hero — hub lines minus capability pillars */
 export function MepServiceHeroQuickNav() {
@@ -19,7 +19,7 @@ export function MepServiceHeroQuickNav() {
         {items.map(({ href, label }) => (
           <li key={href}>
             <Link href={href} className={pillClass}>
-              {label}
+              <span className="relative z-10">{label}</span>
             </Link>
           </li>
         ))}

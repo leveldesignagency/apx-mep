@@ -14,6 +14,7 @@ export default function MechanicalCapabilityPage() {
   const c = MEP_MECHANICAL_CAPABILITY
   return (
     <MepCapabilityPageLayout
+      variant="pillar"
       title="Mechanical"
       intro={c.intro}
       capabilities={[...c.capabilities]}

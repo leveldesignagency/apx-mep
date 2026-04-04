@@ -4,6 +4,7 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { HelpCircle, Camera, FileCheck } from "lucide-react"
 
 const cardClass =
@@ -11,7 +12,7 @@ const cardClass =
 
 export default function UsefulCctvAdvicePage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Useful CCTV advice"
         heroNav="cctv-tabs"
@@ -28,7 +29,7 @@ export default function UsefulCctvAdvicePage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">CCTV advice & guidance</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
@@ -59,7 +60,7 @@ export default function UsefulCctvAdvicePage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">Free survey & expert advice</h2>
           <p className="mb-8 text-left text-lg text-gray-300">
             The best way to get advice tailored to your property is a free, no-obligation survey. We&apos;ll assess your site, discuss your requirements, and recommend the right CCTV solution.

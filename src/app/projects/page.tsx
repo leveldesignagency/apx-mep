@@ -49,7 +49,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="mep-projects-page min-h-screen overflow-x-hidden" style={bgStyle}>
-      <section className="py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
+      <section className="page-title-band px-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-[min(100%,92rem)]">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-14">
             <div className="max-w-2xl lg:col-span-5">

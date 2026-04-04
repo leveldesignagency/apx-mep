@@ -6,6 +6,7 @@ import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Sun, Battery, Gauge, CheckCircle, ArrowRight, Zap } from "lucide-react"
 
 const SURVEY_TITLE = "Request a solar PV or energy review"
@@ -17,7 +18,7 @@ const cardClass =
 
 export default function EnergyEfficiencyPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Solar PV installations"
         intro="APX MEP installs solar PV and supports electrical packages that improve operational efficiency — coordinated with distribution, metering, protection and handover so generation and building loads work together safely."
@@ -33,7 +34,7 @@ export default function EnergyEfficiencyPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">What we deliver</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -80,7 +81,7 @@ export default function EnergyEfficiencyPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Standards & interfaces</h2>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <div>
@@ -117,7 +118,7 @@ export default function EnergyEfficiencyPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <div className="max-w-3xl">
             <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">Add solar or strengthen your electrical strategy</h2>
             <p className="mb-8 text-left text-lg text-white/75 sm:text-xl">

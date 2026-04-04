@@ -4,6 +4,7 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Home, Shield, Smartphone, CheckCircle } from "lucide-react"
 
 const cardClass =
@@ -11,7 +12,7 @@ const cardClass =
 
 export default function DomesticCctvPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Domestic CCTV systems"
         heroNav="cctv-tabs"
@@ -28,7 +29,7 @@ export default function DomesticCctvPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Why choose domestic CCTV?</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
@@ -59,7 +60,7 @@ export default function DomesticCctvPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">What we offer</h2>
           <ul className="space-y-3">
             {[

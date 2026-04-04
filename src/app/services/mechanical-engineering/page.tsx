@@ -6,6 +6,7 @@ import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 
 const MEP_SURVEY_TITLE = "Request your free mechanical systems survey"
 const MEP_SURVEY_DESCRIPTION =
@@ -55,7 +56,7 @@ const cardBorder = "rounded-tl-[1.5rem] rounded-br-[1.5rem] border border-white/
 
 export default function MechanicalEngineeringPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Commercial and industrial installations"
         intro={
@@ -84,7 +85,7 @@ export default function MechanicalEngineeringPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical & HVAC in London & the Home Counties</h2>
           <h3 className="mb-6 text-left font-title text-2xl font-semibold text-white">Tailored mechanical packages</h3>
           <div className="space-y-4 text-left text-gray-300">
@@ -106,7 +107,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-8 text-left font-title text-3xl font-bold text-white">Design standards & compliance</h2>
           <div className="space-y-4 text-left text-gray-300">
             <p>
@@ -120,9 +121,9 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical systems customers</h2>
-          <p className="mb-12 max-w-2xl text-left text-gray-300">A selection of organisations we have supported:</p>
+          <p className="mb-12 text-left text-gray-300">A selection of organisations we have supported:</p>
           <div className="flex flex-wrap justify-start gap-6 sm:gap-8">
             {MEP_CUSTOMERS.map((c, i) => (
               <div key={i} className={`min-w-[180px] ${cardBorder} text-center`}>
@@ -135,9 +136,9 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical installations</h2>
-          <p className="mb-12 max-w-2xl text-left text-gray-300">Examples of mechanical and HVAC projects we have delivered:</p>
+          <p className="mb-12 text-left text-gray-300">Examples of mechanical and HVAC projects we have delivered:</p>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {MEP_INSTALLATIONS.map((item, index) => (
               <div key={index} className={`${cardBorder} transition-colors hover:border-white/45`}>
@@ -150,9 +151,9 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-2 text-left font-title text-3xl font-bold text-white">HVAC & mechanical equipment</h2>
-          <p className="mb-12 max-w-2xl text-left text-gray-300">We install equipment from leading manufacturers where the specification requires.</p>
+          <p className="mb-12 text-left text-gray-300">We install equipment from leading manufacturers where the specification requires.</p>
           <div className="flex flex-wrap items-center justify-start gap-8 sm:gap-12">
             {MEP_BRANDS.map((name, i) => (
               <div key={i} className="rounded-lg bg-white/10 px-6 py-3 font-semibold text-white">
@@ -164,7 +165,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">When to involve a mechanical specialist</h2>
           <div className="space-y-4 text-left text-gray-300">
             <p>
@@ -189,7 +190,7 @@ export default function MechanicalEngineeringPage() {
         <OurCustomers />
 
         <ServicePageBottomCta
-          imageSrc={serviceHeroImages.cctv}
+          imageSrc={serviceHeroImages.intruder}
           title={MEP_SURVEY_TITLE}
           description={MEP_SURVEY_DESCRIPTION}
         >

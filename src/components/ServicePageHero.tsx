@@ -5,18 +5,20 @@ import Image from "next/image"
 import { MepCctvHeroNav } from "@/components/MepCctvHeroNav"
 import { MepServiceHeroQuickNav } from "@/components/MepServiceHeroQuickNav"
 import { HERO_BG_GRADIENT_BOTTOM, HERO_BG_GRADIENT_LEFT } from "@/lib/heroBackgroundGradients"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
+import { mepHeroImages } from "@/lib/serviceHeroImages"
 
-const DEFAULT_HERO_IMAGE = "/placeholders/mep-placeholder.svg"
+const DEFAULT_HERO_IMAGE = mepHeroImages.panelIndustrialBlue
 
 export type ServicePageHeroProps = {
-  title: string
+  title: ReactNode
   intro: ReactNode
   /**
-   * Service-line pages: default `true` uses the placeholder image (or `imageSrc` when set).
+   * Service-line pages: default `true` uses the stock hero photo (or `imageSrc` when set).
    * Core capability pillar pages: set `false` for text-only hero on solid black (no photo).
    */
   backgroundImage?: boolean
-  /** Override default placeholder; ignored when `backgroundImage` is false */
+  /** Override default stock photo; ignored when `backgroundImage` is false */
   imageSrc?: string
   imageAlt?: string
   imageClassName?: string
@@ -37,7 +39,7 @@ function HeroIntro({ children }: { children: ReactNode }) {
 
 /**
  * Same text block as homepage #hero. Band is 70vh.
- * Default: placeholder image. Capability pillars: `backgroundImage={false}` — no photo.
+ * Default: stock hero image from `mepHeroImages`. Capability pillars: `backgroundImage={false}` — no photo.
  */
 export function ServicePageHero({
   title,
@@ -50,7 +52,7 @@ export function ServicePageHero({
 }: ServicePageHeroProps) {
   return (
     <section
-      className="service-page-hero relative flex h-[70vh] min-h-0 flex-col overflow-hidden bg-transparent"
+      className="service-page-hero relative flex min-h-[70vh] flex-col overflow-x-hidden bg-transparent"
       style={{ background: "transparent" }}
       aria-label="Introduction"
     >
@@ -76,15 +78,17 @@ export function ServicePageHero({
 
       {heroNav === "cctv-tabs" ? <MepCctvHeroNav /> : null}
 
-      <div className="container relative z-20 mx-auto flex h-full min-h-0 flex-1 flex-col px-6 pt-44 pb-8 sm:pb-10">
+      <div
+        className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-20 flex min-h-[70vh] w-full min-w-0 flex-1 flex-col pt-44 pb-8 sm:pb-10`}
+      >
         <div
           className={
             heroNav === "quick-links"
-              ? "flex min-h-0 w-full min-w-0 flex-1 flex-col"
+              ? "flex w-full min-w-0 flex-1 flex-col gap-6 sm:gap-8"
               : "space-y-4"
           }
         >
-          <div className="w-full min-w-0 max-w-full space-y-4 md:max-w-[min(40rem,40vw)]">
+          <div className="w-full min-w-0 max-w-full space-y-4 md:max-w-[min(52rem,68vw)] lg:max-w-[min(60rem,72vw)]">
             <h1 className="mb-2 font-title text-3xl font-bold text-left text-white sm:mb-3 sm:text-4xl md:text-5xl lg:text-6xl">
               {title}
             </h1>

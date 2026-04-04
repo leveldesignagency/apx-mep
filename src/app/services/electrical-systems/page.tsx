@@ -6,6 +6,7 @@ import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Zap, Shield, Monitor, CheckCircle, ArrowRight, Smartphone } from "lucide-react"
 
 const cardClass =
@@ -13,7 +14,7 @@ const cardClass =
 
 export default function ElectricalSystemsPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Inspection & testing"
         intro="APX MEP provides inspection, testing and compliance evidence for electrical installations on commercial, education, healthcare and industrial projects — aligned to BS 7671, programme and handover. We also design and install distribution, lighting, power and data as part of wider MEP delivery."
@@ -29,7 +30,7 @@ export default function ElectricalSystemsPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Electrical services</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -75,7 +76,7 @@ export default function ElectricalSystemsPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Standards & compliance</h2>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <div>
@@ -115,7 +116,7 @@ export default function ElectricalSystemsPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <div className="max-w-3xl">
             <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">
               Need inspection, testing or electrical installation?

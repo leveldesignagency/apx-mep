@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { Building2, DraftingCompass, HardHat, Wrench, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { CustomPillButton } from "@/components/ui/CustomPillButton";
+import { FS_SERVICE_SHIMMER_CARD } from "@/lib/fsServicePageCards";
 
 /** Commitment icons: public/__quality assurance.svg, __health and safety.svg, __environmental.svg */
 const ABOUT_COMMITMENTS = [
@@ -26,6 +29,44 @@ const EXPERTISE_ACCRED_LOGOS = [
   { href: "/accreditations/constructionline", src: `${ACC_MONO}/Coloured/ConstructionOnline-01.svg`, alt: "Constructionline" },
   { href: "/accreditations/fia", src: `${ACC_MONO}/Coloured/FIA-01.svg`, alt: "FIA" },
 ] as const;
+
+type WhoWeSupportItem = {
+  title: string;
+  description: string;
+  highlights: string;
+  Icon: LucideIcon;
+};
+
+const WHO_WE_SUPPORT: WhoWeSupportItem[] = [
+  {
+    title: "M&E contractors",
+    description:
+      "We integrate mechanical, electrical and plumbing packages with clear interfaces, coordinated drawings, and commissioning that lines up with your wider MEP strategy — from containment and plant rooms through to testing, balancing and handover.",
+    highlights: "Coordinated delivery · Testing & commissioning",
+    Icon: Wrench,
+  },
+  {
+    title: "Facility management teams",
+    description:
+      "Planned maintenance, reactive callouts and lifecycle upgrades for building services across estates and portfolios. We help keep plant and distribution systems reliable, efficient and documented for compliance and insurance.",
+    highlights: "PPM & reactive · Lifecycle planning",
+    Icon: Building2,
+  },
+  {
+    title: "Consultants and architects",
+    description:
+      "Early engagement on loads, routes, plant space and energy strategy so specifications are deliverable on site. We support design reviews, RIBA stages and value engineering without losing performance or compliance intent.",
+    highlights: "Design stages · Technical workshops",
+    Icon: DraftingCompass,
+  },
+  {
+    title: "Main contractors",
+    description:
+      "Programme-led site delivery with disciplined coordination with other trades, clear lookahead and snag-free interfaces — plus the O&M and record documentation your package needs to close out and hand over.",
+    highlights: "Site logistics · Handover documentation",
+    Icon: HardHat,
+  },
+];
 
 function readDocumentScrollY(): number {
   if (typeof window === "undefined") return 0;
@@ -253,11 +294,27 @@ export default function AboutPage() {
               </h2>
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-7 xl:grid-cols-4 xl:gap-8">
-            {["M&E contractors", "Facility management teams", "Consultants and architects", "Main contractors"].map((client, i) => (
-              <Reveal key={client} delayMs={i * 55}>
-                <div className="rounded-2xl border border-white/25 bg-white/[0.06] p-6 text-white backdrop-blur-md md:p-7">
-                  <p className="text-lg font-semibold leading-snug">{client}</p>
+          <div className="grid grid-cols-1 gap-y-12 gap-x-6 pt-6 md:grid-cols-2 md:gap-x-7 md:gap-y-14 xl:grid-cols-4 xl:gap-x-8">
+            {WHO_WE_SUPPORT.map(({ title, description, highlights, Icon }, i) => (
+              <Reveal key={title} delayMs={i * 55}>
+                <div className="flex h-full flex-col items-center">
+                  <div
+                    className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-black shadow-[0_8px_28px_rgba(0,0,0,0.55)]"
+                    aria-hidden
+                  >
+                    <Icon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
+                  </div>
+                  <article
+                    className={`${FS_SERVICE_SHIMMER_CARD} -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:px-7 md:pb-7 md:pt-12`}
+                  >
+                    <h3 className="text-lg font-semibold leading-snug text-white md:text-xl">{title}</h3>
+                    <p className="mb-5 mt-3 flex-1 text-left text-sm leading-relaxed text-white/80 md:mt-4 md:text-[0.9375rem]">
+                      {description}
+                    </p>
+                    <p className="border-t border-white/10 pt-4 text-center text-xs font-medium uppercase tracking-[0.14em] text-white/55">
+                      {highlights}
+                    </p>
+                  </article>
                 </div>
               </Reveal>
             ))}
@@ -400,7 +457,7 @@ export default function AboutPage() {
             {[
               { value: "500+", label: "Projects completed" },
               { value: "99%", label: "Customer satisfaction" },
-              { value: "8+", label: "Years as APX MEP" },
+              { value: "8+", label: "Years Experience" },
             ].map((stat, i) => (
               <Reveal key={stat.label} delayMs={i * 90}>
                 <div className="rounded-2xl border border-white/20 bg-black/35 p-6">
@@ -441,24 +498,21 @@ export default function AboutPage() {
       </section>
 
       <section className="about-block about-block--black about-section-y about-section-px">
-        <div className="about-section-inner rounded-3xl border border-white/25 bg-white/[0.05] px-6 py-10 text-center sm:px-8 md:py-12 backdrop-blur-md">
+        <div className="about-section-inner text-center">
           <Reveal>
-            <h2 className="mb-5 text-4xl font-bold text-white lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
+            <h2 className="mb-6 text-4xl font-bold text-white lg:mb-8 lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
               Get in touch
             </h2>
           </Reveal>
           <Reveal delayMs={80}>
-            <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-white/75 md:text-lg">
+            <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/75 md:text-lg">
               Ready to discuss mechanical, electrical, plumbing or building services? We&apos;d love to hear from you.
             </p>
           </Reveal>
           <Reveal delayMs={140}>
-            <Link
-              href="/contact"
-              className="inline-flex rounded-xl border border-white bg-white px-10 py-4 text-lg font-semibold text-black transition-colors hover:bg-black hover:text-white"
-            >
+            <CustomPillButton href="/contact" size="md">
               Contact us
-            </Link>
+            </CustomPillButton>
           </Reveal>
         </div>
       </section>

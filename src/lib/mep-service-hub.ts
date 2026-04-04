@@ -16,7 +16,7 @@ export const MEP_SERVICE_HUB_ITEMS = [
   {
     href: "/services/electrical",
     navLabel: "DOMESTIC & NEW BUILD",
-    title: "Domestic & new builds — 1st & 2nd fix",
+    title: "Domestic & new builds: 1st & 2nd fix",
     description:
       "Residential and new-build electrical and mechanical first and second fix, with testing, certification and clear documentation.",
     cta: "Go to domestic & new build",

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { useState } from "react"
 import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 
 export default function MepServicesHubPage() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0)
@@ -13,7 +14,7 @@ export default function MepServicesHubPage() {
       <div className="h-[0.75px] w-full bg-white" aria-hidden />
 
       <main className="pb-20">
-        <section className="container mx-auto px-6 pt-16 lg:px-8 lg:pt-24">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} page-title-top`}>
           <h1 className="font-title text-4xl font-bold tracking-tight text-white md:text-5xl">
             APX Mechanical & Electrical Services
           </h1>

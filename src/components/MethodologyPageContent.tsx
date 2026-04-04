@@ -7,11 +7,11 @@ import { MethodologyJourney } from "@/components/MethodologyJourney"
 export function MethodologyPageContent() {
   return (
     <div className="dm-page min-h-screen bg-black text-white pb-16 md:pb-20">
-      <section className="mx-auto w-full max-w-[min(100%,90rem)] px-3 pb-7 pt-28 sm:px-4 sm:pb-8 sm:pt-32 md:px-5 md:pb-9 lg:px-6">
+      <section className="mx-auto w-full max-w-[min(100%,92rem)] px-4 pb-7 page-title-top sm:px-6 sm:pb-8 md:pb-9 lg:px-8">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
           <div className="min-w-0 max-w-4xl">
             <span className="section-label text-white/75">Methodology</span>
-            <h1 className="mt-2 text-4xl font-title font-bold tracking-tight text-white normal-case sm:text-5xl lg:text-6xl [line-height:0.9]">
+            <h1 className="mt-2 text-3xl font-title font-bold tracking-tight text-white normal-case sm:text-4xl md:text-5xl lg:text-6xl">
               Delivery methodology
             </h1>
             <p className="mt-6 max-w-xl text-sm text-white/65 leading-relaxed sm:text-base">

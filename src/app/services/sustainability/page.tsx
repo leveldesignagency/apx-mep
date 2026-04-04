@@ -5,6 +5,7 @@ import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Leaf, Droplets, Wind, Recycle, CheckCircle, Building2, Zap } from "lucide-react"
 
 const SURVEY_TITLE = "Sustainable MEP on your project"
@@ -16,7 +17,7 @@ const cardClass =
 
 export default function SustainabilityPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Sustainable building services"
         intro="APX MEP supports projects where environmental performance matters — from Part L and operational efficiency to water use, refrigerant choices and coordination with wider design teams. We focus on installable, maintainable solutions that match the employer's requirements."
@@ -32,7 +33,7 @@ export default function SustainabilityPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto max-w-4xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">How we support sustainable MEP</h2>
           <div className="space-y-6 text-left text-lg leading-relaxed text-gray-300">
             <p>
@@ -46,7 +47,7 @@ export default function SustainabilityPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Focus areas</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -92,7 +93,7 @@ export default function SustainabilityPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto max-w-3xl px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-8 text-left font-title text-3xl font-bold text-white sm:text-4xl">Frameworks & evidence</h2>
           <ul className="space-y-4">
             {[

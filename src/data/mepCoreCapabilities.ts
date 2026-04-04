@@ -33,7 +33,7 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
     icon: DraftingCompass,
   },
   {
-    title: "Domestic & new builds — 1st & 2nd fix",
+    title: "Domestic & new builds: 1st & 2nd fix",
     bullets: [
       "1st and 2nd fix electrical and mechanical",
       "New-build and residential-scale installations",

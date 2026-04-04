@@ -1,6 +1,6 @@
 /**
- * Copy for MEP pillar pages (Electrical / Mechanical / Plumbing / Building services)
- * used with MepCapabilityPageLayout — single source to keep tone aligned.
+ * Copy for the four trade pillar pages only (`variant="pillar"` on MepCapabilityPageLayout).
+ * Hub service-line pages (access, fire/IRS, BMS, maintenance) use their own page-level copy.
  */
 
 export const MEP_ELECTRICAL_CAPABILITY = {

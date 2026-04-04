@@ -5,6 +5,7 @@ import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Target, Calendar, Users, CheckCircle, ArrowRight, BarChart3, Layers } from "lucide-react"
 
 const cardClass =
@@ -12,7 +13,7 @@ const cardClass =
 
 export default function ProjectManagementPage() {
   return (
-    <div className="service-page-root min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
         title="Design and Build"
         intro="APX MEP delivers coordinated M&E design and build — from early design input and procurement through installation, commissioning and handover. We align mechanical and electrical packages with programme, interfaces and employer requirements so your project stays on track."
@@ -28,7 +29,7 @@ export default function ProjectManagementPage() {
           aria-hidden
         />
 
-        <section className="container relative z-[1] mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">MEP project delivery</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -75,7 +76,7 @@ export default function ProjectManagementPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className="container mx-auto px-6 py-12 lg:py-16">
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Project types</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -123,7 +124,7 @@ export default function ProjectManagementPage() {
         <OurCustomers />
 
         <ServicePageBottomCta
-          imageSrc={serviceHeroImages.cctv}
+          imageSrc={serviceHeroImages.accessControl}
           title="Plan your next MEP package"
           description="From single disciplines to fully integrated design and build, we can structure delivery around your programme and compliance needs."
         >

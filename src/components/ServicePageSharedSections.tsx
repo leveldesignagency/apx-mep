@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import { useTheme } from "@/contexts/ThemeContext"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
+import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 
 const CLIENT_LOGO_PATHS = [
   "/Clients/_-01.png",
@@ -52,7 +53,7 @@ export function OurCustomers() {
     <>
       <div className="w-full h-[0.75px] bg-black dark:bg-white" />
       <section className="pt-12 pb-20 sm:pb-24 lg:pt-16 lg:pb-32" style={{ backgroundColor: bgColor }}>
-        <div className="container mx-auto px-6">
+        <div className={MEP_SERVICE_CONTENT_OUTER_CLASS}>
           <h2 className={`mb-10 text-center font-title text-4xl font-bold ${textClass}`}>Our Customers</h2>
         </div>
         <OurCustomersMarquee />
@@ -81,7 +82,7 @@ export function RequestFreeSurvey({ title = DEFAULT_SURVEY_TITLE, description = 
     <>
       <div className="w-full h-[0.75px] bg-black dark:bg-white" />
       <section className="py-12 lg:py-16" style={{ backgroundColor: bgColor }}>
-        <div className="container mx-auto px-6">
+        <div className={MEP_SERVICE_CONTENT_OUTER_CLASS}>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className={`text-4xl font-bold mb-6 font-title ${textClass}`}>
               {title}

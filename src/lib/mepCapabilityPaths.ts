@@ -1,16 +1,12 @@
-/** Pillar / “core capabilities” routes — not the service-line pages from the /services hub. */
-export const MEP_CAPABILITY_PATHS = new Set([
-  "/services/electrical",
-  "/services/building-services",
-  "/services/plumbing",
-  "/services/mechanical",
-  "/services/fire-life-safety",
-  "/services/maintenance-support",
-  "/services/bms-control-wiring",
-  "/services/security-systems",
-])
+/**
+ * Trade “pillar” routes only — solid header + `MepCapabilityPageLayout` with Electrical/Mechanical/Plumbing/Building tabs.
+ * Other `/services/...` routes use the standard transparent overlay header on hero imagery (or solid black on hub).
+ */
+/** Trade pillar pages that use `MepCapabilityPageLayout` variant `pillar` (tabs + 3-column table). */
+/** Only Mechanical & Plumbing still use the pillar layout (tabs + 3-column table). */
+export const MEP_TRADE_PILLAR_PATHS = new Set(["/services/plumbing", "/services/mechanical"])
 
 export function isMepCapabilityPath(pathname: string): boolean {
   const p = pathname.replace(/\/$/, "") || "/"
-  return MEP_CAPABILITY_PATHS.has(p)
+  return MEP_TRADE_PILLAR_PATHS.has(p)
 }

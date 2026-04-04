@@ -1,20 +1,87 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, CheckCircle, Star, ArrowRight, Clock, Cog, Zap, Wind, Leaf, Wrench, ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  Shield,
+  CheckCircle,
+  Star,
+  ArrowRight,
+  Clock,
+  Cog,
+  Zap,
+  Wind,
+  Leaf,
+  Wrench,
+  ChevronLeft,
+  ChevronRight,
+  BadgeCheck,
+  type LucideIcon,
+} from "lucide-react"
 import { useEffect, useState, useMemo, useCallback, useRef } from "react"
 import { GlobalStyles, lightTheme, darkTheme } from '@/components/ThemeToggle'
 import { useTheme } from '@/contexts/ThemeContext'
 import { CountUp } from '@/components/ui/CountUp'
 import { CustomPillButton } from '@/components/ui/CustomPillButton'
 import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
-import { Button } from '@/components/ui/Button'
-import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
+import { AboutIntroSection } from "@/components/home/AboutIntroSection"
+import { MepWhatWeOfferSection } from "@/components/home/MepWhatWeOfferSection"
 import { MEP_CORE_CAPABILITIES } from "@/data/mepCoreCapabilities"
+import { FS_SERVICE_SHIMMER_CARD } from "@/lib/fsServicePageCards"
+import HeroVideoBackground from "@/components/HeroVideoBackground"
 
-/** Core capabilities cards: white outline + white label; hover = white fill + black text. Sharp TR + BL; rounded TL + BR only */
-const CORE_CAPS_LEARN_MORE_CLASS =
-  "h-auto min-h-9 rounded-none rounded-tl-xl rounded-tr-none rounded-br-xl rounded-bl-none border-2 border-white border-solid bg-transparent px-5 py-2.5 text-xs font-semibold uppercase tracking-normal text-white shadow-none transition-colors duration-200 hover:!bg-white hover:!text-black focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+const SERVICES_BENEFITS: {
+  title: string
+  description: string
+  Icon: LucideIcon
+  animationDelay: string
+}[] = [
+  {
+    title: "Expert Installation",
+    description: "Professional installation of all MEP systems with precision and care",
+    Icon: Wrench,
+    animationDelay: "0.1s",
+  },
+  {
+    title: "24/7 Maintenance",
+    description: "Round-the-clock maintenance and emergency repair services",
+    Icon: Clock,
+    animationDelay: "0.25s",
+  },
+  {
+    title: "Quality Assurance",
+    description: "All work backed by comprehensive warranties and quality guarantees",
+    Icon: BadgeCheck,
+    animationDelay: "0.4s",
+  },
+]
+
+const WHY_CHOOSE_CARDS: { Icon: LucideIcon; title: string; bullets: string[] }[] = [
+  {
+    Icon: CheckCircle,
+    title: "NSI Gold Accredited",
+    bullets: ["BS EN ISO 9001:2015", "BAFE Fire Safety Registered", "UKAS Quality Management", "FIA Member"],
+  },
+  {
+    Icon: Clock,
+    title: "24/7 Emergency Service",
+    bullets: [
+      "Round-the-clock security support",
+      "Rapid response times",
+      "Monitored alarm response",
+      "When you need it most",
+    ],
+  },
+  {
+    Icon: Shield,
+    title: "Quality Guarantee",
+    bullets: [
+      "Constructionline Gold Member",
+      "All work to NSI Gold standards",
+      "Quality assurance",
+      "Reliable service",
+    ],
+  },
+]
 
 export default function Home() {
   const { theme } = useTheme()
@@ -25,6 +92,7 @@ export default function Home() {
   const [selectedService, setSelectedService] = useState('')
   
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [testimonialsPaused, setTestimonialsPaused] = useState(false)
   const [activeMepIndex, setActiveMepIndex] = useState(0)
   const [activeNewsIndex, setActiveNewsIndex] = useState(0)
   const [newsProgress, setNewsProgress] = useState(0)
@@ -34,11 +102,6 @@ export default function Home() {
   const projectsScrollRef = useRef<HTMLDivElement>(null)
   const projectsSectionRef = useRef<HTMLElement>(null)
   const projectsLabelRef = useRef<HTMLSpanElement>(null)
-  const aboutIntroRef = useRef<HTMLElement>(null)
-  /* Scroll-driven: about intro fade; services cards: path animation when section in view */
-  const [aboutScrollProgress, setAboutScrollProgress] = useState(0)
-  const [aboutContentFade, setAboutContentFade] = useState(0)
-  const [servicesInView, setServicesInView] = useState(false)
 
   const [heroAnimation, setHeroAnimation] = useState({
     videoVisible: false,
@@ -167,9 +230,17 @@ export default function Home() {
       name: "Emma Williams",
       role: "Property Manager, Retail Group",
       text: "Our MEP systems were designed and installed flawlessly. Clear communication throughout and excellent after-sales and maintenance support.",
-      rating: 5
-    }
+      rating: 5,
+    },
   ]
+
+  const testimonialPrev = useCallback(() => {
+    setCurrentTestimonial((p) => (p - 1 + testimonials.length) % testimonials.length)
+  }, [testimonials.length])
+
+  const testimonialNext = useCallback(() => {
+    setCurrentTestimonial((p) => (p + 1) % testimonials.length)
+  }, [testimonials.length])
 
   // Hero animation sequence
   useEffect(() => {
@@ -346,53 +417,15 @@ export default function Home() {
     }
   }, [sections, updateActiveSection])
 
-  // Testimonial carousel effect
+  // Testimonial carousel — pauses while pointer is over the section
   useEffect(() => {
+    if (testimonialsPaused) return
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
-    }, 3000)
+    }, 6000)
 
     return () => clearInterval(interval)
-  }, [testimonials.length])
-
-  // Scroll-driven: about section fade-in; services: trigger path animation when section in view
-  useEffect(() => {
-    const thresholds = Array.from({ length: 101 }, (_, i) => i / 100)
-    let observer: IntersectionObserver | null = null
-
-    const setup = (): boolean => {
-      const aboutEl = document.getElementById('about-intro')
-      const servicesEl = document.getElementById('services')
-      if (!aboutEl) return false
-      observer?.disconnect()
-      observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            const ratio = Math.max(0, Math.min(1, entry.intersectionRatio))
-            if (entry.target.id === 'about-intro') {
-              setAboutScrollProgress(ratio)
-              setAboutContentFade(Math.max(0, (ratio - 0.05) / 0.95))
-            } else if (entry.target.id === 'services' && ratio > 0.15) {
-              setServicesInView(true)
-            }
-          }
-        },
-        { root: null, rootMargin: '0px', threshold: thresholds }
-      )
-      observer.observe(aboutEl)
-      if (servicesEl) observer.observe(servicesEl)
-      return true
-    }
-
-    if (!setup()) {
-      const t = setTimeout(() => setup(), 200)
-      return () => {
-        clearTimeout(t)
-        observer?.disconnect()
-      }
-    }
-    return () => observer?.disconnect()
-  }, [])
+  }, [testimonials.length, testimonialsPaused])
 
   // Force dark mode styling for form
   useEffect(() => {
@@ -427,11 +460,20 @@ export default function Home() {
           input.style.backgroundColor = '#000000';
           input.style.border = '2px solid #ffffff';
           input.style.color = '#ffffff';
+          input.style.fontSize = '1.0625rem';
+          input.style.fontWeight = '600';
           input.style.outline = 'none';
           input.style.boxShadow = 'none';
           input.style.setProperty('--tw-ring-color', 'transparent', 'important');
         });
-        
+
+        const serviceDropdown = form.querySelector('.quote-form-dropdown') as HTMLElement | null;
+        if (serviceDropdown) {
+          serviceDropdown.style.backgroundColor = '#000000';
+          serviceDropdown.style.fontSize = '1.0625rem';
+          serviceDropdown.style.fontWeight = '600';
+        }
+
         // Select dropdown - custom styling
         const select = form.querySelector('select');
         if (select) {
@@ -448,30 +490,8 @@ export default function Home() {
           select.style.paddingRight = '50px';
         }
         
-        // Radio buttons - custom styling
-        const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: any) => {
-          radio.style.appearance = 'none';
-          radio.style.width = '20px';
-          radio.style.height = '20px';
-          radio.style.border = '2px solid #ffffff';
-          radio.style.borderRadius = '50%';
-          radio.style.backgroundColor = '#000000';
-          radio.style.outline = 'none';
-          radio.style.boxShadow = 'none';
-          radio.style.cursor = 'pointer';
-          
-          // Checked state
-          radio.addEventListener('change', () => {
-            radios.forEach((r: any) => {
-              r.style.backgroundColor = '#000000';
-            });
-            if (radio.checked) {
-              radio.style.backgroundColor = '#ffffff';
-            }
-          });
-        });
-        
+        // Preferred contact radios: globals.css (#contact #quote-form)
+
         // Submit button
         const button = form.querySelector('button');
         if (button) {
@@ -502,10 +522,18 @@ export default function Home() {
           input.style.backgroundColor = '#ffffff';
           input.style.border = '1px solid #000000';
           input.style.color = '#000000';
+          input.style.fontSize = '';
+          input.style.fontWeight = '';
           input.style.outline = 'none';
           input.style.boxShadow = 'none';
         });
-        
+
+        const serviceDropdownLight = form.querySelector('.quote-form-dropdown') as HTMLElement | null;
+        if (serviceDropdownLight) {
+          serviceDropdownLight.style.fontSize = '';
+          serviceDropdownLight.style.fontWeight = '';
+        }
+
         // Select dropdown - reset to default browser styling
         const select = form.querySelector('select');
         if (select) {
@@ -644,12 +672,13 @@ export default function Home() {
   return (
     <>
       <GlobalStyles theme={themeMode} />
-      <div className="min-h-screen overflow-x-hidden relative z-10">
+      <div className="min-h-screen overflow-x-clip relative z-10">
       
-      {/* Hero Section – transparent so video layer shows; video fades to white on scroll */}
+      {/* Hero Section – background image scrolls with this section (not viewport-fixed) */}
       <section id="hero" className="relative h-screen overflow-visible bg-transparent flex flex-col" style={{ background: 'transparent' }}>
+        <HeroVideoBackground />
         {/* Content */}
-        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-44 pb-40 relative z-20">
+        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-52 pb-40 relative z-20">
           <div className="space-y-4">
             {/* Title + paragraph: white text on hero image */}
             <div className="max-w-2xl">
@@ -734,147 +763,90 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 gap-y-14 gap-x-6 md:grid-cols-3 md:gap-x-7 md:gap-y-16 lg:gap-x-8">
             {MEP_CORE_CAPABILITIES.map((cap) => {
               const CapIcon = cap.icon
               return (
-              <article
-                key={cap.title}
-                className="bg-black border-2 border-white rounded-tl-[1.5rem] rounded-br-[1.5rem] p-6 flex flex-col overflow-visible"
-              >
-                <div className="mb-4 flex items-start gap-3">
-                  <CapIcon className="mt-0.5 h-8 w-8 shrink-0 text-white/90" strokeWidth={1.5} aria-hidden />
-                  <h3
-                    className="text-2xl sm:text-[1.65rem] font-bold text-white tracking-normal leading-tight"
-                    style={{ fontFamily: "var(--font-menu), sans-serif" }}
+                <div key={cap.title} className="flex h-full flex-col items-center">
+                  <div
+                    className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-black shadow-[0_8px_28px_rgba(0,0,0,0.55)]"
+                    aria-hidden
                   >
-                    {cap.title}
-                  </h3>
+                    <CapIcon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
+                  </div>
+                  <article
+                    className={`${FS_SERVICE_SHIMMER_CARD} -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:min-h-[20rem] md:px-7 md:pb-7 md:pt-12`}
+                  >
+                    <h3
+                      className="text-lg font-semibold leading-snug text-white md:text-xl"
+                      style={{ fontFamily: "var(--font-menu), sans-serif" }}
+                    >
+                      {cap.title}
+                    </h3>
+                    <ul className="apx-capability-list mt-6 flex-1 text-center sm:mt-7">
+                      {cap.bullets.map((line) => (
+                        <li key={line} className="apx-capability-list__item">
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6 flex justify-end border-t border-white/10 pt-6 md:mt-8">
+                      <CustomPillButton
+                        href={cap.href}
+                        size="sm"
+                        className="pill-btn--corners-sm text-xs font-semibold uppercase tracking-normal [&_span.pill-text]:!font-semibold"
+                      >
+                        Learn more
+                      </CustomPillButton>
+                    </div>
+                  </article>
                 </div>
-                <ul className="apx-capability-list">
-                  {cap.bullets.map((line) => (
-                    <li key={line} className="apx-capability-list__item">
-                      {line}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-auto flex justify-end pt-6">
-                  <Button href={cap.href} variant="ghost" size="sm" className={CORE_CAPS_LEARN_MORE_CLASS}>
-                    Learn more
-                  </Button>
-                </div>
-              </article>
-            )})}
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* Wrapper so CCTV overlay can sit above both about and services */}
       <div className="relative">
-        {/* ABOUT – floorplan.jpg as full background; scroll-driven character reveal + content fade */}
-        <section ref={aboutIntroRef} id="about-intro" className="relative bg-black py-24 lg:py-32 overflow-hidden">
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            <div className="lg:col-span-5 order-2 lg:order-1" aria-hidden />
-            <div className="lg:col-span-7 order-1 lg:order-2 max-w-2xl">
-              <span
-                className="section-label mb-3 block text-white/80 transition-opacity duration-500"
-                style={{ opacity: aboutScrollProgress }}
-              >
-                OUR STORY
-              </span>
-              <h2
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6 font-title transition-opacity duration-500"
-                style={{ fontFamily: 'var(--font-title, inherit)', opacity: aboutScrollProgress }}
-              >
-                Where it began.
-              </h2>
-              <p
-                className="text-lg sm:text-xl text-white/90 leading-relaxed mb-8 transition-opacity duration-700"
-                style={{ opacity: aboutContentFade }}
-              >
-                APX is a go-to contractor for major commercial and industrial projects in London and the Southeast. With established divisions for mechanical, electrical
-                and security services, we deliver coordinated MEP across London and the Home Counties. With over 8 successful years as an independent company, we work
-                with commercial, education, healthcare and industrial clients to deliver design, installation and maintenance to the highest standards.
-              </p>
-              <div className="transition-opacity duration-700" style={{ opacity: aboutContentFade }}>
-                <CustomPillButton href="/about" size="md">
-                  Our story
-                </CustomPillButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        </section>
+        <AboutIntroSection />
 
         {/* Services Section – black bg, white text; 3×3 grid; tall cards; feathered image; white border */}
         <section id="services" className="section-spacing relative overflow-visible bg-black" style={{ backgroundColor: '#000000' }}>
         <div className="container mx-auto px-6 lg:px-8">
             <div className="section-content-gap space-y-16 text-white">
-            <div className="flex flex-col min-h-[180px]">
-              <span className="section-label text-white/80">APX MEP SERVICES</span>
-              <h2 className="text-5xl font-bold text-left tracking-wide section-title-gap services-section-title leading-tight font-title text-white">What we offer</h2>
-              <p className="text-base leading-relaxed max-w-xl section-intro-gap hero-services-intro text-white/90 mt-auto">
-                Service lines aligned with how we deliver on site — from design and build through commercial and domestic M&amp;E, testing, solar, access, fire and ongoing support.
-              </p>
-            </div>
-            
-            <div className={`services-cards-animate grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 ${servicesInView ? 'services-cards-visible' : ''}`}>
-              {MEP_SERVICE_HUB_ITEMS.map((service) => (
-                <div key={service.href} className="service-card-unified service-card-in from-left">
-                  <div className="service-card-unified-bg" aria-hidden />
-                  <div className="service-card-unified-body">
-                    <div className="service-card-unified-body-inner">
-                      <h4 className="service-card-unified-title font-title">{service.title}</h4>
-                      <ul className="service-card-unified-list">
-                        <li>{service.description}</li>
-                      </ul>
-                    </div>
-                    <CustomPillButton href={service.href} size="sm" className="mt-auto w-fit">
-                      Learn more
-                    </CustomPillButton>
-                  </div>
-                  <span className="service-card-unified-arrow" aria-hidden />
-                </div>
-              ))}
-            </div>
+            <MepWhatWeOfferSection />
           </div>
         </div>
         </section>
       </div>
 
-      {/* Benefits strip: “What is” */}
-      {/* Benefits strip: Expert Installation, 24/7 Maintenance, Quality Assurance */}
+      {/* Benefits strip: Expert Installation, 24/7 Maintenance, Quality Assurance — same icon + shimmer card pattern as core capabilities */}
       <section id="services-benefits" className="section-spacing relative overflow-hidden">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-            <div className="services-benefit-card" style={{ animationDelay: '0.1s' }}>
-              <div className="services-benefit-card-inner">
-                <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
+          <div className="grid grid-cols-1 gap-y-14 gap-x-6 md:grid-cols-3 md:gap-x-7 md:gap-y-16 lg:gap-x-8">
+            {SERVICES_BENEFITS.map(({ title, description, Icon, animationDelay }) => (
+              <div
+                key={title}
+                className="services-benefit-card flex h-full flex-col items-center"
+                style={{ animationDelay }}
+              >
+                <div className="services-benefit-icon-badge relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-black shadow-[0_8px_28px_rgba(0,0,0,0.55)]" aria-hidden>
+                  <Icon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
                 </div>
-                <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Expert Installation</h3>
-                <p className="services-benefit-desc">Professional installation of all MEP systems with precision and care</p>
+                <article
+                  className={`${FS_SERVICE_SHIMMER_CARD} services-benefit-article -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:px-7 md:pb-7 md:pt-12`}
+                >
+                  <h3
+                    className="services-benefit-title text-lg font-semibold leading-snug text-white md:text-xl"
+                    style={{ fontFamily: "var(--font-menu)" }}
+                  >
+                    {title}
+                  </h3>
+                  <p className="services-benefit-desc mt-6 text-center sm:mt-7">{description}</p>
+                </article>
               </div>
-            </div>
-            <div className="services-benefit-card" style={{ animationDelay: '0.25s' }}>
-              <div className="services-benefit-card-inner">
-                <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
-                </div>
-                <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>24/7 Maintenance</h3>
-                <p className="services-benefit-desc">Round-the-clock maintenance and emergency repair services</p>
-              </div>
-            </div>
-            <div className="services-benefit-card" style={{ animationDelay: '0.4s' }}>
-              <div className="services-benefit-card-inner">
-                <div className="services-benefit-icon-wrap">
-                  <CheckCircle className="h-7 w-7 text-white" strokeWidth={2} />
-                </div>
-                <h3 className="services-benefit-title" style={{ fontFamily: 'var(--font-menu)' }}>Quality Assurance</h3>
-                <p className="services-benefit-desc">All work backed by comprehensive warranties and quality guarantees</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1033,49 +1005,30 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Benefits Cards - 3 Column Grid: black bg, white border, top-left + bottom-right rounded, white text */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-              {/* NSI Gold Accredited */}
-              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-5">
-                  <CheckCircle className="h-7 w-7 flex-shrink-0 text-white" />
-                  <h4 className="text-2xl font-semibold text-white font-title">NSI Gold Accredited</h4>
+            {/* Benefits cards — icon badge + shimmer panel (same pattern as core capabilities) */}
+            <div className="grid grid-cols-1 gap-y-12 gap-x-4 sm:grid-cols-2 sm:gap-x-5 md:grid-cols-3 md:gap-x-5 md:gap-y-14">
+              {WHY_CHOOSE_CARDS.map(({ Icon, title, bullets }) => (
+                <div key={title} className="flex flex-col items-center">
+                  <div
+                    className="why-choose-icon-badge relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-black shadow-[0_8px_28px_rgba(0,0,0,0.55)]"
+                    aria-hidden
+                  >
+                    <Icon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
+                  </div>
+                  <article
+                    className="why-choose-card -mt-7 flex w-full min-w-0 flex-col rounded-tl-[1.75rem] rounded-br-[1.75rem] border-2 border-white bg-black px-6 pb-6 pt-11 text-center text-white md:px-7 md:pb-7 md:pt-12"
+                  >
+                    <h4 className="text-lg font-semibold leading-snug text-white md:text-xl font-title">{title}</h4>
+                    <ul className="apx-capability-list mt-6 flex-1 text-center sm:mt-7">
+                      {bullets.map((line) => (
+                        <li key={line} className="apx-capability-list__item">
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
                 </div>
-                <ul className="why-choose-list">
-                  <li>BS EN ISO 9001:2015</li>
-                  <li>BAFE Fire Safety Registered</li>
-                  <li>UKAS Quality Management</li>
-                  <li>FIA Member</li>
-                </ul>
-              </div>
-
-              {/* 24/7 Emergency Service */}
-              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-5">
-                  <Clock className="h-7 w-7 flex-shrink-0 text-white" />
-                  <h4 className="text-2xl font-semibold text-white font-title">24/7 Emergency Service</h4>
-                </div>
-                <ul className="why-choose-list">
-                  <li>Round-the-clock security support</li>
-                  <li>Rapid response times</li>
-                  <li>Monitored alarm response</li>
-                  <li>When you need it most</li>
-                </ul>
-              </div>
-
-              {/* Quality Guarantee */}
-              <div className="why-choose-card bg-black border-2 border-white rounded-tl-[1.75rem] rounded-br-[1.75rem] text-white p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-5">
-                  <Shield className="h-7 w-7 flex-shrink-0 text-white" />
-                  <h4 className="text-2xl font-semibold text-white font-title">Quality Guarantee</h4>
-                </div>
-                <ul className="why-choose-list">
-                  <li>Constructionline Gold Member</li>
-                  <li>All work to NSI Gold standards</li>
-                  <li>Quality assurance</li>
-                  <li>Reliable service</li>
-                </ul>
-              </div>
+              ))}
             </div>
             
             {/* Stats Section – black text forced via data attribute + inline style */}
@@ -1096,18 +1049,33 @@ export default function Home() {
                 <div className="stats-card-number text-4xl font-bold leading-none" data-stats-text style={{ color: '#000000' }}>
                   <CountUp target={8} suffix="+" duration={2000} />
                 </div>
-                <div className="stats-card-label text-sm mt-2" data-stats-text style={{ color: '#000000' }}>Years as APX MEP</div>
+                <div className="stats-card-label text-sm mt-2" data-stats-text style={{ color: '#000000' }}>Years Experience</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Accreditations Section – black bg, white text, two columns */}
+      {/* Accreditations Section – same structure as FS (black bg, card + two columns) */}
       <section id="accreditations" className="section-spacing section-canted-top accreditations-section bg-black">
         <div className="container mx-auto px-6 lg:px-8 py-10 lg:py-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16 items-start">
-            {/* Left – qualifications list (card frame) */}
+            {/* Left – copy and CTA (no card; sits on section background) */}
+            <div className="pt-0 lg:pt-2">
+              <h3 className="accreditations-heading text-2xl lg:text-3xl font-bold font-title mb-4 text-white">
+                Trusted & Fully Qualified
+              </h3>
+              <p className="accreditations-text text-white/90 mb-4">
+                We maintain independent certification and industry alignment so your mechanical and electrical packages are delivered with clear governance, competent engineers and documentation that stands up to handover and audit.
+              </p>
+              <p className="accreditations-text text-white/90 mb-6">
+                Each accreditation page explains what the body requires, why it matters on your project, and how APX MEP applies those expectations from design intent through commissioning and maintenance.
+              </p>
+              <CustomPillButton href="/accreditations" size="md">
+                View all our accreditations
+              </CustomPillButton>
+            </div>
+            {/* Right – qualifications list (card frame) */}
             <div className="accreditations-card service-card overflow-hidden py-10 lg:py-14 px-8 lg:px-12 relative">
               <span className="glow"></span>
               <div className="relative z-10">
@@ -1116,81 +1084,124 @@ export default function Home() {
                   Qualifications that speak for themselves
                 </h2>
                 <ul className="space-y-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <li key={i} className="flex items-center gap-3 accreditations-text text-white">
-                      <CheckCircle className="h-5 w-5 shrink-0 text-white" aria-hidden />
-                      <span>Accreditation placeholder {i}</span>
+                  {(
+                    [
+                      { slug: "nsi", label: "NSI Gold — fire & security certification" },
+                      { slug: "bafe", label: "BAFE — fire equipment & competence schemes" },
+                      { slug: "constructionline", label: "Constructionline — pre-qualified supplier" },
+                      { slug: "fia", label: "FIA — fire industry association alignment" },
+                    ] as const
+                  ).map(({ slug, label }) => (
+                    <li key={slug}>
+                      <Link
+                        href={`/accreditations/${slug}`}
+                        className="group flex items-center gap-3 accreditations-text text-white transition-opacity hover:opacity-90"
+                      >
+                        <CheckCircle className="h-5 w-5 shrink-0 text-white" aria-hidden />
+                        <span className="border-b border-transparent group-hover:border-white/40">{label}</span>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-            {/* Right – copy and CTA (no card; sits on section background) */}
-            <div className="pt-0 lg:pt-2">
-              <h3 className="accreditations-heading text-2xl lg:text-3xl font-bold font-title mb-4 text-white">
-                Trusted & Fully Qualified
-              </h3>
-              <p className="accreditations-text text-white/90 mb-4">
-                Paragraph placeholder. Replace with short intro about quality and safety affiliations.
-              </p>
-              <p className="accreditations-text text-white/90 mb-6">
-                Second paragraph placeholder. Replace with detail on certifications and standards.
-              </p>
-              <CustomPillButton href="/accreditations" size="md">
-                View all our accreditations
-              </CustomPillButton>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section – white bg; black box bleeds into sections above/below */}
-      <section id="testimonials" className="section-spacing bg-white overflow-visible">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="testimonials-lifted relative z-10 -mt-16 -mb-16 bg-black border-2 border-white rounded-tl-[2.25rem] rounded-br-[2.25rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] py-12 sm:py-14 lg:py-16 px-8 sm:px-10 lg:px-12">
-            <div className="section-content-gap space-y-16">
-              {/* Top Section - Title and Description */}
-              <div className="text-left">
-                <span className="section-label text-white/80">Testimonials</span>
-                <h2 className="text-5xl font-bold font-title section-title-gap leading-tight text-white">What our clients say</h2>
-                <p className="text-base text-gray-300 leading-relaxed max-w-xl section-intro-gap">
-                  Don&apos;t just take our word for it - hear from our satisfied clients about their experience with APX MEP.
-                </p>
+      {/* Testimonials — full-bleed black, large display type, arrows + fade */}
+      <section
+        id="testimonials"
+        className="relative overflow-hidden bg-black py-20 sm:py-24 lg:py-32"
+        onMouseEnter={() => setTestimonialsPaused(true)}
+        onMouseLeave={() => setTestimonialsPaused(false)}
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_50%_-10%,rgba(255,255,255,0.07),transparent_55%)]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          aria-hidden
+        />
+        <div className="relative z-10 container mx-auto px-6 lg:px-8">
+          <div className="grid items-end gap-14 lg:grid-cols-12 lg:gap-x-16 lg:gap-y-12">
+            <div className="lg:col-span-5">
+              <span className="section-label text-white/70">Testimonials</span>
+              <h2
+                className="mt-4 font-title text-[clamp(2.75rem,8vw,5.5rem)] font-bold leading-[0.92] tracking-tight text-white"
+                style={{ fontFamily: "var(--font-menu)" }}
+              >
+                What our
+                <span className="block text-white/90">clients say</span>
+              </h2>
+              <p className="mt-8 max-w-md text-base leading-relaxed text-white/55">
+                Don&apos;t just take our word for it — hear from clients about their experience with APX Mechanical &amp;
+                Electrical across London and the Home Counties.
+              </p>
+            </div>
+
+            <div className="relative lg:col-span-7">
+              <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-2.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    fill="white"
+                    className="h-8 w-8 shrink-0 stroke-white stroke-[1.25] text-white sm:h-10 sm:w-10 sm:stroke-[1.2]"
+                    strokeLinejoin="miter"
+                    strokeLinecap="butt"
+                    style={{ vectorEffect: "non-scaling-stroke" }}
+                    aria-hidden
+                  />
+                ))}
+                <span className="ml-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/40 sm:ml-3">5.0</span>
               </div>
-              
-              {/* Testimonial Carousel - Single View */}
-              <div className="max-w-4xl mx-auto">
-                <div className="service-card text-white relative overflow-hidden">
-                  <span className="glow"></span>
-                  
-                  <div className="flex items-center space-x-2 mb-4 relative z-10">
-                  {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-white fill-current" />
-                  ))}
+
+              <div key={currentTestimonial} className="apx-testimonial-fade">
+                <blockquote className="apx-testimonials-quote text-2xl font-medium leading-snug text-white/95 sm:text-3xl lg:text-[1.85rem] lg:leading-relaxed xl:text-4xl">
+                  <span className="text-white/20">&ldquo;</span>
+                  {testimonials[currentTestimonial].text}
+                  <span className="text-white/20">&rdquo;</span>
+                </blockquote>
+                <footer className="mt-10 border-t border-white/10 pt-8">
+                  <div className="text-lg font-semibold text-white">{testimonials[currentTestimonial].name}</div>
+                  <div className="mt-1 text-sm text-white/45">{testimonials[currentTestimonial].role}</div>
+                </footer>
+              </div>
+
+              <div className="mt-10 flex flex-wrap items-center justify-between gap-6">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    aria-label="Previous testimonial"
+                    onClick={testimonialPrev}
+                    className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next testimonial"
+                    onClick={testimonialNext}
+                    className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
                 </div>
-                  
-                  <div className="space-y-3 relative z-10">
-                    <p className="text-gray-300 text-lg leading-relaxed">
-                      &ldquo;{testimonials[currentTestimonial].text}&rdquo;
-                    </p>
-                    <div className="pt-2">
-                      <div className="font-semibold text-white text-lg">{testimonials[currentTestimonial].name}</div>
-                      <div className="text-gray-400">{testimonials[currentTestimonial].role}</div>
-                    </div>
-                  </div>
-            
-                  {/* Navigation dots */}
-                  <div className="flex justify-center space-x-2 mt-6 relative z-10">
-                    {testimonials.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentTestimonial(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          index === currentTestimonial ? 'bg-white' : 'bg-gray-600'
-                        }`}
-                      />
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2" role="tablist" aria-label="Choose testimonial">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      role="tab"
+                      aria-selected={index === currentTestimonial}
+                      aria-label={`Testimonial ${index + 1}`}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentTestimonial ? "w-8 bg-white" : "w-2 bg-white/25 hover:bg-white/40"
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -1316,7 +1327,7 @@ export default function Home() {
                     
                     {isServicesDropdownOpen && (
                       <div 
-                        className="quote-form-dropdown-menu absolute left-0 right-0 top-full mt-1 z-50 py-2"
+                        className="quote-form-dropdown-menu absolute left-0 right-0 top-full mt-1 z-50 overflow-hidden rounded-lg py-0"
                         style={{ boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)' }}
                       >
                         {[
@@ -1361,17 +1372,17 @@ export default function Home() {
                   <label className="block text-sm font-medium mb-2">
                     Preferred Contact Method
                   </label>
-                  <div className="flex space-x-6">
-                    <label className="flex items-center">
-                      <input type="radio" name="contact-method" value="phone" className="mr-2" />
+                  <div className="flex flex-wrap gap-6">
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input type="radio" name="contact-method" value="phone" className="mr-0" />
                       Phone Call
                     </label>
-                    <label className="flex items-center">
-                      <input type="radio" name="contact-method" value="email" className="mr-2" />
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input type="radio" name="contact-method" value="email" defaultChecked className="mr-0" />
                       Email
                     </label>
-                    <label className="flex items-center">
-                      <input type="radio" name="contact-method" value="text" className="mr-2" />
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input type="radio" name="contact-method" value="text" className="mr-0" />
                       Text Message
                     </label>
                   </div>
@@ -1380,7 +1391,7 @@ export default function Home() {
                 <FormSubmitButton onSubmit={async () => {
                   /* Wire your real submit here (e.g. fetch or form action) */
                 }}>
-                  Submit Quote Request
+                  Send message
                 </FormSubmitButton>
               </form>
             </div>

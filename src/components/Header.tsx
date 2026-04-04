@@ -15,12 +15,19 @@ export default function Header() {
   const { theme } = useTheme()
   /** Normalise so `/services` and `/services/` are the hub; only `/services/...` subpaths use transparent overlay bar */
   const path = pathname.replace(/\/$/, "") || "/"
+  const isHomePage = path === "/"
   const isServicesHub = path === "/services"
   const isMepCapabilityPage = isMepCapabilityPath(path)
   const isServiceSubpage = path.startsWith("/services/")
   const isProjectsRoute = path === "/projects" || path.startsWith("/projects/")
   /** Service-line pages only — capability pillars use solid black header like the hub */
   const isTransparentHeaderPage = isServiceSubpage && !isMepCapabilityPage
+  /**
+   * Absolute top of .site-shell (see layout) — hero/main start at y=0 so imagery sits behind the bar.
+   * Not `fixed`: the bar scrolls away with the page because the shell is the positioning context.
+   */
+  const headerLayoutClass =
+    "absolute top-0 left-0 right-0 z-[100] w-full max-w-[100vw] pointer-events-auto"
   const headerSolidBlack = isServicesHub || isMepCapabilityPage || isProjectsRoute
   const isServicesPage = pathname.startsWith("/services") || pathname.startsWith("/projects")
   const isDark = theme === 'dark'
@@ -67,7 +74,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-50 ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isTransparentHeaderPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
+      className={`site-header ${headerLayoutClass} ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isHomePage || isTransparentHeaderPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
       style={{ backgroundColor: headerSolidBlack ? "#000000" : "transparent" }}
     >
       {/* ========== SAVED VERSION (original header – not rendered) ========== */}
@@ -281,9 +288,13 @@ export default function Header() {
             <div
               className="header-bar-expand h-full w-full rounded-br-[30px] border-2"
               style={{
-                backgroundColor: isTransparentHeaderPage ? "transparent" : "#000",
+                /* Dark tint + blur — transparent + blur alone reads white over html:not(.dark) body */
+                backgroundColor: isHomePage || isTransparentHeaderPage ? "rgba(0,0,0,0.42)" : "#000",
                 boxSizing: "border-box",
                 borderColor: "#fff",
+                ...(isHomePage || isTransparentHeaderPage
+                  ? { backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" as const }
+                  : {}),
               }}
             />
           </div>
