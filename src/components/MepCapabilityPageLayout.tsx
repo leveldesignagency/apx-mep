@@ -2,6 +2,8 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { ListChecks, ShieldCheck, Package, Check } from "lucide-react"
 import { MepCapabilityTabs } from "@/components/MepCapabilityTabs"
+import { MepServiceFaqByRoute } from "@/components/MepServiceFaqByRoute"
+import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero, type ServicePageHeroProps } from "@/components/ServicePageHero"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 
@@ -189,6 +191,10 @@ export function MepCapabilityPageLayout({
             </div>
           </div>
         </div>
+
+        <OurCustomers serviceTitleShort={title} />
+
+        <MepServiceFaqByRoute />
       </div>
     </div>
   )

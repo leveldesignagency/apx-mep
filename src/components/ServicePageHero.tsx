@@ -69,6 +69,18 @@ export function ServicePageHero({
             />
             <div className="pointer-events-none absolute inset-0" style={{ background: HERO_BG_GRADIENT_LEFT }} />
             <div className="pointer-events-none absolute inset-0" style={{ background: HERO_BG_GRADIENT_BOTTOM }} />
+            <div
+              className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay"
+              style={{
+                backgroundImage: [
+                  "radial-gradient(circle at 0 0, rgba(255,255,255,0.28) 0.8px, transparent 1px)",
+                  "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.42) 0.9px, transparent 1.2px)",
+                ].join(", "),
+                backgroundSize: "3px 3px, 4px 4px",
+                backgroundPosition: "0 0, 1px 1px",
+              }}
+              aria-hidden
+            />
             <div className="pointer-events-none absolute inset-0 bg-black/45" aria-hidden />
           </>
         ) : (
@@ -83,7 +95,7 @@ export function ServicePageHero({
       >
         <div
           className={
-            heroNav === "quick-links"
+            heroNav === "quick-links" || heroNav === "cctv-tabs"
               ? "flex w-full min-w-0 flex-1 flex-col gap-6 sm:gap-8"
               : "space-y-4"
           }
@@ -94,7 +106,7 @@ export function ServicePageHero({
             </h1>
             <HeroIntro>{intro}</HeroIntro>
           </div>
-          {heroNav === "quick-links" ? (
+          {heroNav === "quick-links" || heroNav === "cctv-tabs" ? (
             <div className="mt-auto shrink-0 border-t border-white/15 pt-6 sm:pt-8">
               <MepServiceHeroQuickNav />
             </div>

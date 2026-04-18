@@ -38,6 +38,17 @@ export default function HeroVideoBackground() {
         />
         <div className="absolute inset-0 pointer-events-none" style={{ background: HERO_BG_GRADIENT_LEFT }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: HERO_BG_GRADIENT_BOTTOM }} />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay"
+          style={{
+            backgroundImage: [
+              "radial-gradient(circle at 0 0, rgba(255,255,255,0.28) 0.8px, transparent 1px)",
+              "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.42) 0.9px, transparent 1.2px)",
+            ].join(", "),
+            backgroundSize: "3px 3px, 4px 4px",
+            backgroundPosition: "0 0, 1px 1px",
+          }}
+        />
       </div>
     </div>
   )

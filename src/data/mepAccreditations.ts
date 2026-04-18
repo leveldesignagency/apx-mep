@@ -1,121 +1,159 @@
+/**
+ * MEP site accreditations — artwork in `/public/Accreditations/` (capital A).
+ */
+const ACC = "/Accreditations"
+
+/** NICEIC mark for dark backgrounds (hero, footer). Use `NICEIC.svg` on light sections via {@link mepAccreditationLogoSrc}. */
+export const MEP_NICEIC_ICON_ON_DARK = `${ACC}/NICEIC-02.svg`
+
 export const MEP_ACCREDITATIONS = {
-  bafe: {
-    name: "BAFE",
-    title: "About BAFE",
-    shortLabel: "BAFE — fire equipment certification",
-    icon: "/accreditations%20mono/Coloured/BAFE-01.svg",
+  niceic: {
+    name: "NICEIC",
+    title: "About NICEIC",
+    shortLabel: "NICEIC — electrical contractor certification",
+    icon: `${ACC}/NICEIC.svg`,
     intro:
-      "BAFE (British Approvals for Fire Equipment) is an independent, UKAS-accredited certification body focused on competence and quality across fire safety services.",
+      "NICEIC is one of the UK’s leading certification bodies for electrical contractors. Registration demonstrates that our work is regularly assessed against recognised technical and safety standards.",
     sections: [
       {
-        heading: "BAFE In The Built Environment",
+        heading: "What NICEIC certification means",
         body:
-          "BAFE maintains third-party certification schemes for organisations delivering life-safety services. These schemes are structured to verify competence, management controls and technical consistency. For project stakeholders, this provides stronger confidence that provider capability has been independently assessed rather than self-declared.",
+          "NICEIC assesses the competence of contractors undertaking electrical installation work. It provides assurance that businesses have the right skills, processes and governance to deliver safe, compliant installations — from initial design through to inspection, testing and certification.",
       },
       {
-        heading: "Why It Matters To MEP Projects",
+        heading: "Why it matters on site",
         body:
-          "On complex projects, fire and life-safety systems must integrate cleanly with wider mechanical and electrical packages. BAFE-aligned delivery expectations help teams maintain robust records, dependable commissioning controls and clear evidence at handover. This improves risk management through design, build and operational readiness.",
+          "On live projects, electrical work interfaces with structure, containment, fire strategy and commissioning. Third-party certification gives clients, consultants and principal contractors confidence that installations are carried out by qualified people and verified against current wiring regulations and industry practice.",
       },
       {
-        heading: "Assurance Through Documentation",
+        heading: "Documentation and compliance",
         body:
-          "Certification-driven practices encourage stronger audit trails, clearer test evidence and improved accountability throughout delivery. That becomes especially valuable where multiple parties rely on the same compliance pack, including principal contractors, duty holders and facilities teams.",
+          "Certification-backed delivery supports clearer traceability: test records, certification of electrical installations, and consistent handover packs. That reduces ambiguity at completion and helps FM teams and insurers understand what has been installed and verified.",
       },
       {
-        heading: "How APX MEP Applies This",
+        heading: "How APX MEP applies this",
         body:
-          "We align our coordination, commissioning and handover processes with recognised quality frameworks so clients receive clear, traceable and operationally useful documentation — not just paperwork for completion.",
+          "We align site practices, supervision and handover documentation with NICEIC expectations so electrical packages are delivered safely, coherently with wider MEP works, and with evidence that stands up to audit and handover.",
       },
     ],
   },
-  nsi: {
-    name: "NSI",
-    title: "About NSI",
-    shortLabel: "NSI Gold — security & fire certification",
-    icon: "/accreditations%20mono/NSI-01.svg",
+  "gas-safe": {
+    name: "Gas Safe Register",
+    title: "About Gas Safe Register",
+    shortLabel: "Gas Safe — registered gas engineers",
+    icon: `${ACC}/gas-safe-1.svg`,
     intro:
-      "NSI (National Security Inspectorate) is one of the UK’s most recognised independent certification bodies for security and fire safety providers.",
+      "Gas Safe Register is the official list of engineers legally allowed to work on gas appliances in the United Kingdom. Only registered businesses and engineers may undertake gas work in domestic and commercial premises.",
     sections: [
       {
-        heading: "What NSI Certifies",
+        heading: "Legal requirement for gas work",
         body:
-          "NSI approval frameworks assess technical competence, process control, quality systems and operational performance. These standards are widely trusted by insurers, consultants, procurement teams and clients because they provide independent assurance of delivery capability.",
+          "Gas work must be carried out by competent Gas Safe registered engineers. Registration confirms that individuals have the qualifications and ongoing competence to work safely on gas appliances, pipework and associated systems.",
       },
       {
-        heading: "Project And Operational Relevance",
+        heading: "Why it matters for MEP projects",
         body:
-          "Security and life-safety systems frequently sit at the centre of risk, compliance and continuity planning. NSI-recognised standards support more consistent outcomes from design through maintenance. They also improve confidence that installed systems will perform as intended in live operation.",
+          "Mechanical packages often include heating plant, hot water distribution and gas-fired equipment. Using Gas Safe registered engineers ensures installations meet safety standards, are properly commissioned, and are documented for compliance and handover.",
       },
       {
-        heading: "Benefits For Multi-Discipline Teams",
+        heading: "Commercial and domestic contexts",
         body:
-          "In MEP contexts, systems often cross package boundaries. NSI-aligned process discipline helps improve interface control, test evidence quality and handover consistency. This supports better coordination between project teams and FM teams after completion.",
+          "Whether work is in plant rooms, risers, tenant areas or residential schemes, gas safety requirements apply throughout. Registration provides assurance that the right people are on the right tasks and that systems are left safe and certifiable.",
       },
       {
-        heading: "APX MEP Delivery Approach",
+        heading: "How APX MEP applies this",
         body:
-          "Our teams focus on structured quality checks, clear technical records and transparent communication at each stage. The result is stronger delivery confidence for clients managing programme, safety and asset performance objectives.",
+          "We ensure gas-related work is carried out under Gas Safe registration, with clear records, commissioning evidence and coordination with electrical, controls and wider building services so systems operate safely after handover.",
       },
     ],
   },
-  constructionline: {
-    name: "Constructionline",
-    title: "About Constructionline",
-    shortLabel: "Constructionline — pre-qualification",
-    icon: "/accreditations%20mono/Coloured/ConstructionOnline-01.svg",
+  "iso-9001": {
+    name: "ISO 9001",
+    title: "About ISO 9001",
+    shortLabel: "ISO 9001 — quality management (UKAS)",
+    icon: `${ACC}/ISO_9001_UKAS_White_On_Black.svg`,
     intro:
-      "Constructionline is a UK pre-qualification and supplier assurance platform that supports better-informed contractor selection and procurement control.",
+      "ISO 9001 sets out requirements for a quality management system. UKAS-accredited certification shows our organisation is audited against internationally recognised standards for consistent delivery and continuous improvement.",
     sections: [
       {
-        heading: "Purpose Of Constructionline",
+        heading: "Quality management focus",
         body:
-          "Constructionline centralises pre-qualification information so buyers can review supplier capability and compliance data efficiently. It streamlines due diligence, reduces duplicated checks and supports more consistent procurement governance across projects and frameworks.",
+          "ISO 9001 centres on customer expectations, risk-based thinking, leadership commitment and documented processes. It helps organisations control how work is planned, delivered, reviewed and improved.",
       },
       {
-        heading: "Why This Helps Delivery",
+        heading: "Why clients care",
         body:
-          "When programme timelines are tight, procurement certainty becomes critical. Using suppliers with robust pre-qualification profiles can accelerate onboarding and reduce risk exposure at mobilisation. It also supports stronger confidence during package award and early-stage delivery planning.",
+          "For construction and building services, a certified quality management system supports predictable outcomes: clearer responsibilities, better control of changes, and fewer gaps between what was specified and what was delivered.",
       },
       {
-        heading: "Commercial And Compliance Value",
+        heading: "Project and programme alignment",
         body:
-          "For clients and principal contractors, pre-validated records improve auditability and reduce ambiguity around supplier readiness. This contributes to stronger decision-making and fewer avoidable delays linked to missing or inconsistent assurance information.",
+          "Structured processes support coordination across trades, clearer interfaces with subcontractors, and more reliable handover documentation — helping teams manage programme, quality and client expectations together.",
       },
       {
-        heading: "APX MEP Perspective",
+        heading: "How APX MEP applies this",
         body:
-          "We view procurement readiness as part of project quality. Maintaining clear and current assurance information helps us support clients from bid stage through delivery and handover with fewer administrative bottlenecks.",
+          "We use our quality management framework to align site delivery, technical records and review cycles with ISO 9001 principles so clients receive consistent, traceable and well-governed MEP services.",
       },
     ],
   },
-  fia: {
-    name: "FIA",
-    title: "About FIA",
-    shortLabel: "FIA — fire industry association",
-    icon: "/accreditations%20mono/Coloured/FIA-01.svg",
+  "iso-14001": {
+    name: "ISO 14001",
+    title: "About ISO 14001",
+    shortLabel: "ISO 14001 — environmental management (UKAS)",
+    icon: `${ACC}/ISO_14001_UKAS_White_On_Black.svg`,
     intro:
-      "The Fire Industry Association (FIA) is a leading UK trade association that supports technical standards, training and best practice in fire safety.",
+      "ISO 14001 specifies requirements for an environmental management system. UKAS-accredited certification demonstrates our commitment to managing environmental impacts and legal compliance in how we deliver projects.",
     sections: [
       {
-        heading: "FIA’s Industry Role",
+        heading: "Environmental management",
         body:
-          "The FIA contributes to technical guidance, competency development and standards engagement across the fire sector. Its work helps members keep pace with evolving requirements and supports more informed technical decision-making in project and service environments.",
+          "The standard helps organisations identify environmental aspects, comply with obligations, and set objectives for improvement. It applies to operations, supply chain influence and lifecycle thinking where relevant.",
       },
       {
-        heading: "Importance For Building Services Projects",
+        heading: "Relevance to building services",
         body:
-          "In MEP-led environments, fire systems must be coordinated with electrical, controls and broader building interfaces. Alignment with high-quality technical guidance helps teams reduce specification gaps and improve commissioning confidence at completion.",
+          "MEP installations affect energy use, emissions, waste and resource use. An environmental management system supports disciplined planning, waste reduction, and alignment with client and regulatory expectations on site.",
       },
       {
-        heading: "Competence And Continuous Learning",
+        heading: "Delivery and handover",
         body:
-          "Association-led development supports stronger engineering capability, better quality control and more reliable delivery consistency. For clients, this improves confidence that systems are not only installed correctly but also documented and handed over effectively.",
+          "Clear environmental controls and records support better commissioning data, operational handover, and ongoing maintenance planning — helping clients run buildings more efficiently after completion.",
       },
       {
-        heading: "How APX MEP Applies This",
+        heading: "How APX MEP applies this",
         body:
-          "We emphasise technical consistency, compliance awareness and disciplined project communication to help clients manage risk through design, installation, commissioning and operational handover.",
+          "We align delivery practices with ISO 14001 expectations so environmental considerations are embedded in how we plan, execute and hand over MEP packages across London and the Home Counties.",
+      },
+    ],
+  },
+  "iso-45001": {
+    name: "ISO 45001",
+    title: "About ISO 45001",
+    shortLabel: "ISO 45001 — occupational health & safety (UKAS)",
+    icon: `${ACC}/ISO_45001_UKAS_White_On_Black.svg`,
+    intro:
+      "ISO 45001 sets requirements for occupational health and safety management systems. UKAS-accredited certification shows our organisation is audited for systematic risk management and worker protection.",
+    sections: [
+      {
+        heading: "Health and safety management",
+        body:
+          "The standard promotes hazard identification, risk assessment, participation of workers, and continual improvement. It helps organisations embed safety into everyday operations rather than treating it as a separate add-on.",
+      },
+      {
+        heading: "Why it matters in construction",
+        body:
+          "Building services sites involve multiple trades, plant, working at height, and live services. A certified OH&S management system supports consistent controls, communication, and learning from incidents and near misses.",
+      },
+      {
+        heading: "Assurance for project teams",
+        body:
+          "Clients and principal contractors expect contractors to demonstrate mature safety systems. ISO 45001 certification provides independent evidence that health and safety is managed in a structured, auditable way.",
+      },
+      {
+        heading: "How APX MEP applies this",
+        body:
+          "We align site leadership, supervision, risk controls and review with ISO 45001 expectations so MEP delivery is carried out safely in line with programme and project requirements.",
       },
     ],
   },
@@ -123,32 +161,68 @@ export const MEP_ACCREDITATIONS = {
 
 export type MepAccreditationSlug = keyof typeof MEP_ACCREDITATIONS
 
-export const MEP_ACCREDITATION_TAB_ORDER: MepAccreditationSlug[] = ["bafe", "nsi", "constructionline", "fia"]
+/** Order of tab pills on detail pages; static generation order. */
+export const MEP_ACCREDITATION_TAB_ORDER: MepAccreditationSlug[] = [
+  "niceic",
+  "gas-safe",
+  "iso-9001",
+  "iso-14001",
+  "iso-45001",
+]
+
+/** Hub: first row — NICEIC + Gas Safe; second row — three ISO marks side by side. */
+export const MEP_ACCREDITATION_HUB_TOP: MepAccreditationSlug[] = ["niceic", "gas-safe"]
+export const MEP_ACCREDITATION_HUB_BOTTOM: MepAccreditationSlug[] = ["iso-9001", "iso-14001", "iso-45001"]
+
+/** Hero strip: NICEIC, then ISO trio (always grouped), then Gas Safe. */
+export const MEP_ACCREDITATION_HERO_STRIP: {
+  slug: MepAccreditationSlug
+  /** When true, render in the middle “ISO” group with siblings always side-by-side on sm+. */
+  isoGroup?: boolean
+}[] = [
+  { slug: "niceic" },
+  { slug: "iso-9001", isoGroup: true },
+  { slug: "iso-14001", isoGroup: true },
+  { slug: "iso-45001", isoGroup: true },
+  { slug: "gas-safe" },
+]
 
 export function getMepAccreditation(slug: string) {
   return MEP_ACCREDITATIONS[slug as MepAccreditationSlug]
 }
 
-/** SEO for `/accreditations/[slug]` */
+/** Logo path: NICEIC uses `NICEIC-02.svg` on dark surfaces; all others use their default `icon`. */
+export function mepAccreditationLogoSrc(slug: MepAccreditationSlug, surface: "light" | "dark"): string {
+  if (slug === "niceic" && surface === "dark") {
+    return MEP_NICEIC_ICON_ON_DARK
+  }
+  return MEP_ACCREDITATIONS[slug].icon
+}
+
 export const MEP_ACCREDITATION_SEO: Record<MepAccreditationSlug, { title: string; description: string }> = {
-  bafe: {
-    title: "BAFE Fire Certification | MEP & Life Safety | London & South East",
+  niceic: {
+    title: "NICEIC Electrical Contractors | APX Mechanical & Electrical | London",
     description:
-      "How BAFE-aligned fire safety expectations support coordinated mechanical and electrical delivery across Greater London, Kent, Essex, Surrey and the Home Counties — APX Mechanical & Electrical.",
+      "NICEIC-registered electrical delivery for MEP projects across London and the Home Counties — APX Mechanical & Electrical.",
   },
-  nsi: {
-    title: "NSI Gold | Certified Building Services | London & Home Counties",
+  "gas-safe": {
+    title: "Gas Safe Registered Engineers | MEP & Heating | APX",
     description:
-      "NSI certification for security and fire interfaces with MEP: quality, compliance and assurance for installations across London boroughs and the South East — APX MEP.",
+      "Gas Safe registered engineers for mechanical and electrical projects — London, Kent, Essex, Surrey and the Home Counties — APX MEP.",
   },
-  constructionline: {
-    title: "Constructionline Registered MEP Contractor | APX",
+  "iso-9001": {
+    title: "ISO 9001 Quality Management | APX Mechanical & Electrical",
     description:
-      "Constructionline pre-qualification for MEP procurement — verified contractor data for principal contractors across London and the Home Counties.",
+      "UKAS-accredited ISO 9001 quality management for building services delivery across Greater London and the South East — APX MEP.",
   },
-  fia: {
-    title: "Fire Industry Association (FIA) | MEP & Fire Interfaces | APX",
+  "iso-14001": {
+    title: "ISO 14001 Environmental Management | APX MEP",
     description:
-      "FIA standards and fire-system coordination with mechanical and electrical services — delivery across London, Kent, Essex and Surrey — APX Mechanical & Electrical.",
+      "UKAS-accredited ISO 14001 environmental management for MEP projects across London and the Home Counties — APX Mechanical & Electrical.",
+  },
+  "iso-45001": {
+    title: "ISO 45001 Health & Safety | APX Mechanical & Electrical",
+    description:
+      "UKAS-accredited ISO 45001 occupational health and safety management for site delivery — APX MEP, London and South East.",
   },
 }

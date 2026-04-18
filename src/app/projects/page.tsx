@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { MEP_PROJECTS } from "@/data/mepProjects"
 
-/** Same hover fill as `.pill-btn`; square corners via `.pill-btn--square` */
+/** Grid card CTAs only — square corners; “Get in touch” uses `CustomPillButton` (TL/BR rounded like hero). */
 const PROJECTS_GRID_CTA_CLASS =
   "pill-btn pill-btn--square relative inline-flex cursor-pointer items-center justify-center overflow-hidden bg-black px-4 py-2.5 text-xs uppercase tracking-[0.12em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
 
@@ -22,9 +22,9 @@ export default function ProjectsPage() {
     ? projects.find((project) => project.slug === activeProjectSlug) ?? null
     : null
   const activeGallery = activeProject
-    ? activeProject.gallery?.length
+    ? activeProject.gallery.length
       ? activeProject.gallery
-      : [activeProject.image]
+      : [activeProject.heroImage]
     : []
 
   const openGallery = (slug: string, imageIndex = 0) => {
@@ -97,7 +97,7 @@ export default function ProjectsPage() {
         <div className="mx-auto w-full max-w-[min(100%,92rem)]">
           <div className="space-y-8 md:space-y-10">
             {projects.map((project) => {
-              const gallery = project.gallery?.length ? project.gallery : [project.image]
+              const gallery = project.gallery.length ? project.gallery : [project.heroImage]
               return (
                 <article key={project.slug} className="grid grid-cols-1 gap-0 border-2 border-white/70 bg-black md:grid-cols-2">
                   <button
@@ -107,7 +107,7 @@ export default function ProjectsPage() {
                     aria-label={`Open gallery for ${project.title}`}
                   >
                     <Image
-                      src={project.image}
+                      src={project.heroImage}
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -129,7 +129,7 @@ export default function ProjectsPage() {
                           {project.title}
                         </Link>
                       </h2>
-                      <p className={`mt-4 text-base leading-relaxed ${mutedClass}`}>{project.description}</p>
+                      <p className={`mt-4 text-base leading-relaxed ${mutedClass}`}>{project.shortDescription}</p>
                       <p className={`mt-3 text-base leading-relaxed ${mutedClass}`}>{project.summary}</p>
                     </div>
 
@@ -161,7 +161,7 @@ export default function ProjectsPage() {
           <p className={`text-lg mb-8 ${mutedClass}`}>
             Discuss your mechanical, electrical or building services requirements with our team. We offer free surveys and tailored MEP solutions.
           </p>
-          <CustomPillButton href="/contact" size="lg" className="pill-btn--square">
+          <CustomPillButton href="/contact" size="lg">
             Get in touch
           </CustomPillButton>
         </div>

@@ -3,12 +3,10 @@
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Home, Shield, Smartphone, CheckCircle } from "lucide-react"
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
 
 export default function DomesticCctvPage() {
   return (
@@ -49,7 +47,7 @@ export default function DomesticCctvPage() {
                 text: "Visible cameras deter intruders; recorded footage supports insurance and police.",
               },
             ].map((item, i) => (
-              <div key={i} className={cardClass}>
+              <div key={i} className={`${MEP_SERVICE_SHIMMER_CARD} p-8`}>
                 <item.icon className="mb-4 h-8 w-8 text-white" strokeWidth={1.75} />
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{item.title}</h3>
                 <p className="text-left text-gray-300">{item.text}</p>

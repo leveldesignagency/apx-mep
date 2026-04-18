@@ -5,6 +5,8 @@ import Image from "next/image"
 import { useRef } from "react"
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, ChevronUp } from "lucide-react"
 import { useTheme } from '@/contexts/ThemeContext'
+import { MepAccreditationFooterStrip } from "@/components/accreditations/MepAccreditationLogoBlocks"
+import { MEP_SHOW_NEWS_AND_ARTICLES } from "@/lib/mepSiteFlags"
 
 export default function Footer() {
   const { theme } = useTheme()
@@ -79,10 +81,21 @@ export default function Footer() {
               <h4 className="text-xl font-semibold">Quick Links</h4>
               <ul className="space-y-3 text-gray-400">
                 <li><Link href="/about" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">About Us<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
+                <li><Link href="/contact" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">Contact<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
                 <li><Link href="/projects" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">Our Projects<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
-                <li><Link href="/certifications" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">Certifications<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
+                <li><Link href="/accreditations" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">Accreditations<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
                 <li><Link href="/careers" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">Careers<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
-                <li><Link href="/news" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">News<span className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100" style={{ backgroundColor: 'white' }}></span></Link></li>
+                {MEP_SHOW_NEWS_AND_ARTICLES ? (
+                  <li>
+                    <Link href="/news" className="relative group hover:text-white transition-colors text-sm cursor-pointer pb-1">
+                      News
+                      <span
+                        className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100"
+                        style={{ backgroundColor: "white" }}
+                      />
+                    </Link>
+                  </li>
+                ) : null}
               </ul>
             </div>
 
@@ -107,12 +120,7 @@ export default function Footer() {
                   </div>
                 </a>
               </div>
-              <div className="mt-4 flex flex-wrap items-center justify-start gap-4">
-                <Image src="/accreditations%20mono/White/NSI-02.svg" alt="NSI Gold" width={96} height={48} className="h-10 w-auto max-w-[95px] opacity-80 hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
-                <Image src="/accreditations%20mono/White/BAFE-02.svg" alt="BAFE" width={96} height={48} className="h-10 w-auto max-w-[95px] opacity-80 hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
-                <Image src="/accreditations%20mono/White/ConstructionOnline-02.svg" alt="Constructionline" width={96} height={48} className="h-10 w-auto max-w-[95px] opacity-80 hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
-                <Image src="/accreditations%20mono/White/FIA-02.svg" alt="FIA" width={96} height={48} className="h-10 w-auto max-w-[95px] opacity-80 hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
-              </div>
+              <MepAccreditationFooterStrip />
             </div>
           </div>
 

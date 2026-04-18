@@ -6,10 +6,8 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { Target, Calendar, Users, CheckCircle, ArrowRight, BarChart3, Layers } from "lucide-react"
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
 
 export default function ProjectManagementPage() {
   return (
@@ -65,7 +63,7 @@ export default function ProjectManagementPage() {
                 description: "O&M structure, training and documentation ready for occupation and operations.",
               },
             ].map((service, index) => (
-              <div key={index} className={`${cardClass} transition-transform duration-300 hover:scale-[1.02]`}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8 transition-transform duration-300 hover:scale-[1.02]`}>
                 <div className="mb-4 text-white">{service.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{service.title}</h3>
                 <p className="text-left text-gray-300">{service.description}</p>
@@ -112,7 +110,7 @@ export default function ProjectManagementPage() {
                 icon: <ArrowRight className="h-8 w-8" strokeWidth={1.75} />,
               },
             ].map((project, index) => (
-              <div key={index} className={cardClass}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8`}>
                 <div className="mb-4 text-white">{project.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{project.title}</h3>
                 <p className="text-left text-gray-300">{project.description}</p>
@@ -121,7 +119,7 @@ export default function ProjectManagementPage() {
           </div>
         </section>
 
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Design & build" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.accessControl}

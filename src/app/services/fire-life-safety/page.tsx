@@ -5,6 +5,7 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import {
@@ -17,14 +18,11 @@ import {
   CheckCircle,
 } from "lucide-react"
 
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
-
 export default function MepFireLifeSafetyPage() {
   return (
     <div className="service-page-root min-h-screen overflow-x-hidden text-white">
       <ServicePageHero
-        title="Security, IRS and fire alarm systems"
+      title="Security, IRS and fire alarm systems"
         imageSrc={serviceHeroImages.fireAlarm}
         imageAlt=""
         intro={
@@ -100,7 +98,7 @@ export default function MepFireLifeSafetyPage() {
                   "Commissioning support, certification evidence, snag management and structured O&M for facilities teams.",
               },
             ].map((item, index) => (
-              <div key={index} className={`${cardClass} transition-transform duration-300 hover:scale-[1.02]`}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8 transition-transform duration-300 hover:scale-[1.02]`}>
                 <div className="mb-4 text-white">{item.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{item.title}</h3>
                 <p className="text-left text-gray-300">{item.description}</p>
@@ -185,7 +183,7 @@ export default function MepFireLifeSafetyPage() {
           </ul>
         </section>
 
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Fire & security" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.intruder}

@@ -26,7 +26,7 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
     title: "Mechanical & electrical design & build",
     bullets: [
       "End-to-end M&E coordination from design intent",
-      "Installation, commissioning and structured handover",
+      "Installation, commissioning & structured handover",
       "Programme alignment with principal contractor packages",
     ],
     href: "/services/project-management",
@@ -45,9 +45,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Commercial & industrial installations",
     bullets: [
-      "Large-scale distribution, plant and containment",
-      "Offices, logistics, manufacturing and public estate",
-      "Coordinated installation and commissioning on site",
+      "Large-scale distribution, plant & containment",
+      "Offices, logistics, manufacturing & public estate",
+      "Coordinated installation & commissioning on site",
     ],
     href: "/services/mechanical-engineering",
     icon: Building2,
@@ -55,9 +55,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Refurbishment & fit-out",
     bullets: [
-      "Phased works in live and occupied buildings",
-      "Coordination with interior packages and programme",
-      "Snagging, testing and handover to operations",
+      "Phased works in live & occupied buildings",
+      "Coordination with interior packages & programme",
+      "Snagging, testing & handover to operations",
     ],
     href: "/services/building-services",
     icon: Paintbrush,
@@ -65,9 +65,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Inspection & testing",
     bullets: [
-      "Electrical inspection, testing and compliance evidence",
-      "Periodic and project-specific certification support",
-      "Clear records for landlords, FM and duty-holders",
+      "Electrical inspection, testing & compliance evidence",
+      "Periodic & project-specific certification support",
+      "Clear records for landlords, FM & duty-holders",
     ],
     href: "/services/electrical-systems",
     icon: ClipboardCheck,
@@ -75,9 +75,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Solar PV installations",
     bullets: [
-      "Commercial and industrial PV integration",
-      "Electrical interfaces and energy strategy alignment",
-      "Commissioning and handover documentation",
+      "Commercial & industrial PV integration",
+      "Electrical interfaces & energy strategy alignment",
+      "Commissioning & handover documentation",
     ],
     href: "/services/energy-efficiency",
     icon: Sun,
@@ -85,9 +85,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Access control & door entry",
     bullets: [
-      "Access, door entry and reader infrastructure",
-      "Power, containment and commissioning with MEP",
-      "Integration with security and building systems",
+      "Access, door entry & reader infrastructure",
+      "Power, containment & commissioning with MEP",
+      "Integration with security & building systems",
     ],
     href: "/services/security-systems",
     icon: DoorOpen,
@@ -95,9 +95,9 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "BMS & control wiring",
     bullets: [
-      "BMS field devices, panels and control cabling",
-      "Coordination with HVAC and plant strategies",
-      "Testing and witness support at handover",
+      "BMS field devices, panels & control cabling",
+      "Coordination with HVAC & plant strategies",
+      "Testing & witness support at handover",
     ],
     href: "/services/bms-control-wiring",
     icon: Cpu,
@@ -105,8 +105,8 @@ export const MEP_CORE_CAPABILITIES: MepCoreCapability[] = [
   {
     title: "Security, IRS & fire alarm systems",
     bullets: [
-      "Fire alarm and life-safety interfaces with MEP",
-      "Intruder alarm (IRS) and security coordinated with wider packages",
+      "Fire alarm & life-safety interfaces with MEP",
+      "Intruder alarm (IRS) & security coordinated with wider packages",
       "Commissioning evidence aligned to specification",
     ],
     href: "/services/fire-life-safety",

@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next"
-import { getMepSiteUrl } from "@/lib/seo"
+import { MEP_CAREER_ROLES } from "@/data/mepCareersRoles"
 import { MEP_PROJECTS } from "@/data/mepProjects"
+import { getMepSiteUrl } from "@/lib/seo"
 
-const ACCREDITOR_SLUGS = ["bafe", "nsi", "constructionline", "fia"] as const
+const ACCREDITOR_SLUGS = ["niceic", "gas-safe", "iso-9001", "iso-14001", "iso-45001"] as const
 
 const STATIC_PATHS = [
   "",
   "about",
+  "careers",
   "accreditations",
   "contact",
   "cookie-policy",
@@ -43,6 +45,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: path === "" ? "weekly" : "monthly",
       priority: path === "" ? 1 : 0.8,
+    })
+  }
+
+  for (const r of MEP_CAREER_ROLES) {
+    urls.push({
+      url: `${base}/careers/apply/${r.id}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.55,
     })
   }
 

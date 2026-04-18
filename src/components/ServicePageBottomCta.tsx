@@ -1,6 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
+import { MepServiceFaqByRoute } from "@/components/MepServiceFaqByRoute"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 
 type ServicePageBottomCtaProps = {
@@ -9,11 +10,15 @@ type ServicePageBottomCtaProps = {
   title: string
   description: string
   children: ReactNode
+  /** When false, the FAQ accordion above this band is omitted (e.g. page already has a long Q&A-style section). Default true. */
+  includeFaq?: boolean
 }
 
-export function ServicePageBottomCta({ imageSrc, title, description, children }: ServicePageBottomCtaProps) {
+export function ServicePageBottomCta({ imageSrc, title, description, children, includeFaq = true }: ServicePageBottomCtaProps) {
   return (
-    <section className="relative isolate mt-12 flex min-h-[50vh] flex-col justify-center border-t border-white sm:mt-14 lg:mt-16">
+    <>
+      {includeFaq ? <MepServiceFaqByRoute /> : null}
+      <section className="relative isolate mt-12 flex min-h-[50vh] flex-col justify-center border-t border-white sm:mt-14 lg:mt-16">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url("${imageSrc}")` }}
@@ -28,5 +33,6 @@ export function ServicePageBottomCta({ imageSrc, title, description, children }:
         </div>
       </div>
     </section>
+    </>
   )
 }

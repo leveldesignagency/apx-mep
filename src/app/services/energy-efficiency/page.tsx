@@ -1,10 +1,10 @@
 "use client"
 
-import Link from "next/link"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Sun, Battery, Gauge, CheckCircle, ArrowRight, Zap } from "lucide-react"
@@ -12,9 +12,6 @@ import { Sun, Battery, Gauge, CheckCircle, ArrowRight, Zap } from "lucide-react"
 const SURVEY_TITLE = "Request a solar PV or energy review"
 const SURVEY_DESCRIPTION =
   "Planning solar PV or wider electrical upgrades on a commercial or industrial site? We can review roof or plant areas, grid connection considerations and how generation fits your MEP strategy. Contact us for a no-obligation conversation."
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
 
 export default function EnergyEfficiencyPage() {
   return (
@@ -70,7 +67,7 @@ export default function EnergyEfficiencyPage() {
                 description: "Sequencing with roofing, scaffolding and other trades to minimise disruption on live sites.",
               },
             ].map((service, index) => (
-              <div key={index} className={`${cardClass} transition-transform duration-300 hover:scale-[1.02]`}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8 transition-transform duration-300 hover:scale-[1.02]`}>
                 <div className="mb-4 text-white">{service.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{service.title}</h3>
                 <p className="text-left text-gray-300">{service.description}</p>
@@ -118,27 +115,7 @@ export default function EnergyEfficiencyPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
-          <div className="max-w-3xl">
-            <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">Add solar or strengthen your electrical strategy</h2>
-            <p className="mb-8 text-left text-lg text-white/75 sm:text-xl">
-              We work with developers, landlords and facilities teams across London and the Home Counties. Share your site constraints and targets — we will outline a proportionate route.
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-              <CustomPillButton href="/contact" size="md">
-                Talk to our team
-              </CustomPillButton>
-              <CustomPillButton href="tel:02045685986" size="md" variant="outline">
-                Call 020 4568 5986
-              </CustomPillButton>
-              <Link href="/contact" className="text-white underline underline-offset-4 hover:text-white/85 sm:ml-2">
-                Question? Get in touch
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Solar PV" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.accessControl}

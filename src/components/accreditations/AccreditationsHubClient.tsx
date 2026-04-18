@@ -16,6 +16,7 @@ export function AccreditationsHubClient() {
 
   return (
     <main className="accreditations-hub min-h-screen bg-white text-black">
+      {/* Extra top padding so titles clear the site header */}
       <section className="bg-black text-white about-section-px page-title-top pb-12 md:pb-16 lg:pb-16">
         <div className="about-section-inner max-w-4xl">
           <Reveal show={mounted} delayMs={0}>
@@ -35,12 +36,12 @@ export function AccreditationsHubClient() {
         </div>
       </section>
 
-      <section className="bg-white about-section-px pb-20 pt-14 md:pb-28 md:pt-16 lg:pt-20">
+      <section className="bg-white about-section-px mt-10 pb-20 pt-20 md:mt-12 md:pb-28 md:pt-28 lg:mt-14 lg:pt-36">
         <div className="about-section-inner">
           <ul className="grid list-none grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
             {MEP_ACCREDITATION_TAB_ORDER.map((slug, i) => {
               const item = MEP_ACCREDITATIONS[slug]
-              const logoTight = slug === "bafe" || slug === "fia"
+              const logoTight = slug.startsWith("iso-") || slug === "niceic"
               return (
                 <li key={slug} className="h-full">
                   <Reveal show={mounted} delayMs={80 + i * 70} className="h-full">
@@ -48,14 +49,14 @@ export function AccreditationsHubClient() {
                       href={`/accreditations/${slug}`}
                       className="group flex h-full flex-col rounded-3xl border border-black/10 bg-white p-8 shadow-[0_4px_40px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 hover:shadow-[0_12px_48px_rgba(0,0,0,0.1)] md:p-9"
                     >
-                      <div className="mb-6 flex min-h-[7rem] items-center justify-center border-b border-black/[0.06] pb-6">
+                      <div className="mb-6 flex min-h-[5.5rem] items-center justify-center border-b border-black/[0.06] pb-6">
                         <Image
                           src={item.icon}
                           alt={item.name}
                           width={400}
                           height={180}
-                          className={`h-auto w-full max-w-[220px] object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[240px] ${
-                            logoTight ? "max-h-24 sm:max-h-28" : "max-h-28 sm:max-h-32"
+                          className={`h-auto w-auto max-w-[168px] object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[188px] ${
+                            logoTight ? "max-h-[5.25rem] sm:max-h-[5.75rem]" : "max-h-[6rem] sm:max-h-[6.5rem]"
                           }`}
                         />
                       </div>

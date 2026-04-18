@@ -1,12 +1,16 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
+import { CheckCircle } from "lucide-react"
+import { MechanicalHomeCountiesSlideshow } from "@/components/MechanicalHomeCountiesSlideshow"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 
 const MEP_SURVEY_TITLE = "Request your free mechanical systems survey"
 const MEP_SURVEY_DESCRIPTION =
@@ -19,29 +23,37 @@ const SYSTEM_TYPES = [
   "Building management systems (BMS) interfaces",
 ]
 
-const MEP_CUSTOMERS = [
-  { name: "The Mayfair Townhouse", tagline: "Luxury lifestyle hotel" },
-  { name: "Hilton DoubleTree", tagline: "Hotel group" },
-  { name: "Firmdale Hotels", tagline: "Hotel group" },
-  { name: "United Living", tagline: "Housing & infrastructure" },
-  { name: "Camden Council", tagline: "Local authority, London" },
-  { name: "University of West London", tagline: "Higher education" },
-  { name: "Scape Bloomsbury", tagline: "Student accommodation" },
+/** Hero photography matches APX Fire & Security case studies (`apx-fs-website/src/data/projects.ts`). */
+const MEP_INSTALLATIONS: { title: string; org: string; heroImage: string }[] = [
+  {
+    title: "University of West London",
+    org: "Higher education, London",
+    heroImage:
+      "/projects/case-studies/university-of-west-london/fire-alarm-installation-university-of-west-london-exterior.jpg",
+  },
+  {
+    title: "Sancroft Building, Paternoster Square",
+    org: "Commercial offices, City of London",
+    heroImage:
+      "/projects/case-studies/sancroft-building/case-study-sancroft-building-fire-alarm-installation-exterior.jpg",
+  },
+  {
+    title: "Scape Bloomsbury",
+    org: "Student accommodation, Central London",
+    heroImage:
+      "/projects/case-studies/scape-bloomsbury/fire-alarm-system-installation-scape-bloomsbury-exterior.jpg",
+  },
 ]
 
-const MEP_INSTALLATIONS = [
-  { title: "HVAC installation Dimco Exhibition Building, Westfield", org: "Dimco Exhibition Building, Westfield, Stratford" },
-  { title: "Mechanical systems University of West London", org: "University of West London" },
-  { title: "HVAC Sancroft Building", org: "Sancroft Building, office space, London" },
-  { title: "Heating & ventilation Oaklands House", org: "Oaklands House, London, apartment blocks" },
-  { title: "Mechanical systems Hilton DoubleTree Kingston", org: "Hilton DoubleTree Kingston" },
-  { title: "HVAC John Keats Primary School", org: "John Keats Primary School, Rotherhithe, London" },
-  { title: "Mechanical systems Mayfair Townhouse", org: "Mayfair Townhouse, luxury lifestyle hotel" },
-  { title: "HVAC Scape Bloomsbury", org: "Scape Bloomsbury, student accommodation" },
-  { title: "Mechanical systems Wembley French School", org: "Wembley French School" },
+/** Files in `images/HVAC Equipment Logos/` → `public/images/` via `npm run sync-public-images`. */
+const HVAC_EQUIPMENT_LOGOS: { file: string; alt: string }[] = [
+  { file: "DAIKIN_logo.svg.png", alt: "Daikin" },
+  { file: "Mitsubishi-Electric-base-white-640w.webp", alt: "Mitsubishi Electric" },
+  { file: "Vaillant+Logo.webp", alt: "Vaillant" },
+  { file: "worcester.webp", alt: "Worcester" },
+  { file: "Viessmann-logo.svg.png", alt: "Viessmann" },
+  { file: "Ideal-Boilers-Logo-trans.png", alt: "Ideal Boilers" },
 ]
-
-const MEP_BRANDS = ["Daikin", "Mitsubishi", "Vaillant", "Worcester", "Viessmann", "Ideal"]
 
 const SPECIALIST_QUESTIONS = [
   "Is the building use or occupancy changing (e.g. office to lab or residential)?",
@@ -51,8 +63,6 @@ const SPECIALIST_QUESTIONS = [
   "Is ventilation or overheating risk a concern for compliance or comfort?",
   "Are acoustic, space or structural constraints limiting plant location?",
 ]
-
-const cardBorder = "rounded-tl-[1.5rem] rounded-br-[1.5rem] border border-white/20 bg-black p-8 text-white"
 
 export default function MechanicalEngineeringPage() {
   return (
@@ -85,24 +95,35 @@ export default function MechanicalEngineeringPage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
-          <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical & HVAC in London & the Home Counties</h2>
-          <h3 className="mb-6 text-left font-title text-2xl font-semibold text-white">Tailored mechanical packages</h3>
-          <div className="space-y-4 text-left text-gray-300">
-            <p>
-              We work throughout London and the Home Counties to design and install mechanical systems that combine robust equipment with clear communication and site
-              discipline. We support commercial, education, healthcare and industrial clients from early coordination through commissioning.
-            </p>
-            <p>We routinely deliver:</p>
+        <section className="relative z-[1]">
+          <div className={MEP_SERVICE_CONTENT_OUTER_CLASS}>
+            <div className="grid grid-cols-1 items-start gap-10 pt-8 pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:gap-x-12 lg:pt-10 lg:pb-16">
+              <div className="min-w-0 max-w-xl lg:max-w-2xl">
+                <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical & HVAC in London & the Home Counties</h2>
+                <h3 className="mb-6 text-left font-title text-2xl font-semibold text-white">Tailored mechanical packages</h3>
+                <div className="space-y-4 text-left text-gray-300">
+                  <p>
+                    We work throughout London and the Home Counties to design and install mechanical systems that combine robust equipment with clear communication and site
+                    discipline. We support commercial, education, healthcare and industrial clients from early coordination through commissioning.
+                  </p>
+                  <p>We routinely deliver:</p>
+                </div>
+                <ul className="mb-6 list-inside list-disc space-y-2 text-left text-gray-300">
+                  {SYSTEM_TYPES.map((name, i) => (
+                    <li key={i}>{name}</li>
+                  ))}
+                </ul>
+                <p className="text-left text-gray-300">
+                  A structured survey or design review helps confirm scope, interfaces and programme before we commit to installation — contact us to arrange a conversation.
+                </p>
+              </div>
+
+              {/* Map column — negate row top padding on large screens so the map sits flush with the section top */}
+              <div className="relative w-full min-w-0 lg:-mt-10">
+                <MechanicalHomeCountiesSlideshow />
+              </div>
+            </div>
           </div>
-          <ul className="mb-6 list-inside list-disc space-y-2 text-left text-gray-300">
-            {SYSTEM_TYPES.map((name, i) => (
-              <li key={i}>{name}</li>
-            ))}
-          </ul>
-          <p className="text-left text-gray-300">
-            A structured survey or design review helps confirm scope, interfaces and programme before we commit to installation — contact us to arrange a conversation.
-          </p>
         </section>
 
         <div className="border-t border-white/15" />
@@ -119,31 +140,31 @@ export default function MechanicalEngineeringPage() {
           </div>
         </section>
 
-        <div className="border-t border-white/15" />
-
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
-          <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical systems customers</h2>
-          <p className="mb-12 text-left text-gray-300">A selection of organisations we have supported:</p>
-          <div className="flex flex-wrap justify-start gap-6 sm:gap-8">
-            {MEP_CUSTOMERS.map((c, i) => (
-              <div key={i} className={`min-w-[180px] ${cardBorder} text-center`}>
-                <p className="font-semibold text-white">{c.name}</p>
-                <p className="mt-1 text-sm text-gray-400">{c.tagline}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <OurCustomers serviceTitleShort="Mechanical systems" />
 
         <div className="border-t border-white/15" />
 
         <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical installations</h2>
-          <p className="mb-12 text-left text-gray-300">Examples of mechanical and HVAC projects we have delivered:</p>
+          <p className="mb-12 text-left text-gray-300">
+            Three sites with photography from verified APX Group case studies.
+          </p>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {MEP_INSTALLATIONS.map((item, index) => (
-              <div key={index} className={`${cardBorder} transition-colors hover:border-white/45`}>
-                <h3 className="mb-2 text-left text-lg font-semibold text-white">{item.title}</h3>
-                <p className="text-left text-gray-300">{item.org}</p>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} overflow-hidden p-0`}>
+                <div className="relative aspect-[16/10] w-full bg-white/[0.06]">
+                  <Image
+                    src={item.heroImage}
+                    alt={`Project photograph: ${item.title}`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-8">
+                  <h3 className="mb-2 text-left text-lg font-semibold text-white">{item.title}</h3>
+                  <p className="text-left text-gray-300">{item.org}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -154,11 +175,17 @@ export default function MechanicalEngineeringPage() {
         <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
           <h2 className="mb-2 text-left font-title text-3xl font-bold text-white">HVAC & mechanical equipment</h2>
           <p className="mb-12 text-left text-gray-300">We install equipment from leading manufacturers where the specification requires.</p>
-          <div className="flex flex-wrap items-center justify-start gap-8 sm:gap-12">
-            {MEP_BRANDS.map((name, i) => (
-              <div key={i} className="rounded-lg bg-white/10 px-6 py-3 font-semibold text-white">
-                {name}
-              </div>
+          <div className="flex flex-wrap items-center justify-start gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
+            {HVAC_EQUIPMENT_LOGOS.map((logo) => (
+              <Image
+                key={logo.file}
+                src={`/images/${encodeURIComponent("HVAC Equipment Logos")}/${encodeURIComponent(logo.file)}`}
+                alt={logo.alt}
+                width={140}
+                height={50}
+                className="h-auto max-h-11 w-auto max-w-[140px] object-contain object-left sm:max-h-12 sm:max-w-[160px]"
+                sizes="(min-width: 640px) 160px, 36vw"
+              />
             ))}
           </div>
         </section>
@@ -166,33 +193,45 @@ export default function MechanicalEngineeringPage() {
         <div className="border-t border-white/15" />
 
         <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
-          <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">When to involve a mechanical specialist</h2>
-          <div className="space-y-4 text-left text-gray-300">
-            <p>
-              Early mechanical input reduces rework on plant space, risers, acoustics and electrical load. If any of the following apply, it is worth a structured review before you fix the design or programme.
-            </p>
-          </div>
-          <ul className="my-6 list-inside list-disc space-y-2 text-left text-gray-300">
-            {SPECIALIST_QUESTIONS.map((q, i) => (
-              <li key={i}>{q}</li>
-            ))}
-          </ul>
-          <p className="text-gray-300">We can help translate your brief into a proportionate scope and installation plan — start with a call or site visit.</p>
-          <div className="mt-8">
-            <CustomPillButton href="/contact" size="md">
-              Arrange a discussion
-            </CustomPillButton>
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-12">
+            <div className="min-w-0 max-w-xl lg:max-w-none">
+              <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">When to involve a mechanical specialist</h2>
+              <div className="space-y-4 text-left text-gray-300">
+                <p>
+                  Early mechanical input reduces rework on plant space, risers, acoustics and electrical load. If any of the following apply, it is worth a structured review before you fix the design or programme.
+                </p>
+              </div>
+              <ul className="my-6 space-y-3 text-left text-gray-300">
+                {SPECIALIST_QUESTIONS.map((q, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-white/60" strokeWidth={2} aria-hidden />
+                    <span>{q}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative w-full min-w-0">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.03]">
+                <Image
+                  src={serviceHeroImages.accessControl}
+                  alt="Engineer reviewing documentation at a mechanical or electrical services installation"
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover object-center"
+                />
+              </div>
+            </div>
           </div>
         </section>
 
         <div className="border-t border-white/15" />
 
-        <OurCustomers />
-
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.intruder}
           title={MEP_SURVEY_TITLE}
           description={MEP_SURVEY_DESCRIPTION}
+          includeFaq={false}
         >
           <CustomPillButton href="/contact" size="md">
             Get a free quote

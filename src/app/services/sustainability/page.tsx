@@ -4,6 +4,7 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Leaf, Droplets, Wind, Recycle, CheckCircle, Building2, Zap } from "lucide-react"
@@ -11,9 +12,6 @@ import { Leaf, Droplets, Wind, Recycle, CheckCircle, Building2, Zap } from "luci
 const SURVEY_TITLE = "Sustainable MEP on your project"
 const SURVEY_DESCRIPTION =
   "Targeting lower carbon operation, better water efficiency or improved indoor environmental quality? We can align mechanical, electrical and plumbing delivery with your sustainability goals and handover requirements. Contact us to discuss your brief."
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-6 text-white transition-colors hover:border-white/45"
 
 export default function SustainabilityPage() {
   return (
@@ -82,7 +80,7 @@ export default function SustainabilityPage() {
                 text: "O&M structure and records that support operation, maintenance and future retrofit.",
               },
             ].map(({ icon: Icon, title, text }, i) => (
-              <div key={i} className={cardClass}>
+              <div key={i} className={`${MEP_SERVICE_SHIMMER_CARD} p-6`}>
                 <Icon className="mb-4 h-10 w-10 text-white/85" strokeWidth={1.5} />
                 <h3 className="mb-2 text-left text-xl font-semibold text-white">{title}</h3>
                 <p className="text-left text-gray-300">{text}</p>
@@ -110,7 +108,7 @@ export default function SustainabilityPage() {
           </ul>
         </section>
 
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Sustainable building" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.intruder}

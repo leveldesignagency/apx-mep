@@ -19,7 +19,7 @@ const CLIENT_LOGO_PATHS = [
   "/Clients/_-11.png",
 ]
 
-function OurCustomersMarquee() {
+export function OurCustomersMarquee() {
   return (
     <div className="logo-marquee-section our-customers-marquee w-full overflow-hidden py-2">
       <div className="logo-marquee-wrapper max-w-none">
@@ -42,7 +42,7 @@ function OurCustomersMarquee() {
   )
 }
 
-export function OurCustomers() {
+export function OurCustomers({ serviceTitleShort }: { serviceTitleShort: string }) {
   const pathname = usePathname()
   const { theme } = useTheme()
   const isDark = (pathname?.startsWith("/services") ?? false) || theme === "dark"
@@ -53,8 +53,10 @@ export function OurCustomers() {
     <>
       <div className="w-full h-[0.75px] bg-black dark:bg-white" />
       <section className="pt-12 pb-20 sm:pb-24 lg:pt-16 lg:pb-32" style={{ backgroundColor: bgColor }}>
-        <div className={MEP_SERVICE_CONTENT_OUTER_CLASS}>
-          <h2 className={`mb-10 text-center font-title text-4xl font-bold ${textClass}`}>Our Customers</h2>
+        <div className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} mb-10`}>
+          <h2 className={`text-left font-title text-4xl font-bold ${textClass}`}>
+            Our {serviceTitleShort} customers
+          </h2>
         </div>
         <OurCustomersMarquee />
       </section>

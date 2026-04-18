@@ -1,16 +1,13 @@
 "use client"
 
-import Link from "next/link"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import { Zap, Shield, Monitor, CheckCircle, ArrowRight, Smartphone } from "lucide-react"
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
 
 export default function ElectricalSystemsPage() {
   return (
@@ -65,7 +62,7 @@ export default function ElectricalSystemsPage() {
                 description: "Full electrical design, specification and installation from concept through to handover.",
               },
             ].map((service, index) => (
-              <div key={index} className={`${cardClass} transition-transform duration-300 hover:scale-[1.02]`}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8 transition-transform duration-300 hover:scale-[1.02]`}>
                 <div className="mb-4 text-white">{service.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{service.title}</h3>
                 <p className="text-left text-gray-300">{service.description}</p>
@@ -116,29 +113,7 @@ export default function ElectricalSystemsPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
-          <div className="max-w-3xl">
-            <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">
-              Need inspection, testing or electrical installation?
-            </h2>
-            <p className="mb-8 text-left text-lg text-white/75 sm:text-xl">
-              Our engineers can review your site and programme, then recommend the right scope for verification, upgrades or new work.
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-              <CustomPillButton href="/contact" size="md">
-                Get free consultation
-              </CustomPillButton>
-              <CustomPillButton href="tel:02045685986" size="md" variant="outline">
-                Call 020 4568 5986
-              </CustomPillButton>
-              <Link href="/contact" className="text-white underline underline-offset-4 hover:text-white/85 sm:ml-2">
-                Question? Get in touch
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Inspection & testing" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.cctv}

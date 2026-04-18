@@ -13,11 +13,14 @@ export function DeliveryMethodologyPageContent() {
             <div className="min-w-0 max-w-4xl">
               <span className="section-label mb-3 block text-white/75">Delivery methodology</span>
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left text-white tracking-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-left text-white tracking-tight"
                 style={{ fontFamily: "var(--font-menu)" }}
               >
-                MEP delivery that stays coordinated — from design alignment to commissioning
+                MEP delivery that stays coordinated
               </h1>
+              <p className="mt-3 max-w-3xl text-left text-base font-normal leading-snug text-white/75 sm:mt-4 sm:text-lg md:text-xl lg:text-2xl">
+                from design alignment to commissioning
+              </p>
             </div>
           </div>
         </div>

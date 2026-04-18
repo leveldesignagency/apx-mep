@@ -1,6 +1,7 @@
 /**
- * Next.js only serves static files from `public/`. Hero photos live in the project-root
- * `images/` folder — copy them into `public/images` before dev/build so `/images/*.jpg` URLs work.
+ * Next.js only serves static files from `public/`. Source assets live in the project-root
+ * `images/` folder — mirror them into `public/images` before dev/build so `/images/...` URLs work.
+ * Copies recursively (e.g. `images/HVAC Equipment Logos/*.png`).
  */
 import fs from "node:fs"
 import path from "node:path"
@@ -15,9 +16,22 @@ if (!fs.existsSync(srcDir)) {
   process.exit(0)
 }
 
+function copyRecursive(from, to) {
+  const stat = fs.statSync(from)
+  if (stat.isDirectory()) {
+    fs.mkdirSync(to, { recursive: true })
+    for (const name of fs.readdirSync(from)) {
+      copyRecursive(path.join(from, name), path.join(to, name))
+    }
+    return
+  }
+  if (!/\.(jpe?g|png|webp|gif|svg)$/i.test(from)) return
+  fs.mkdirSync(path.dirname(to), { recursive: true })
+  fs.copyFileSync(from, to)
+}
+
 fs.mkdirSync(destDir, { recursive: true })
 for (const name of fs.readdirSync(srcDir)) {
-  if (!/\.(jpe?g|png|webp|gif|svg)$/i.test(name)) continue
-  fs.copyFileSync(path.join(srcDir, name), path.join(destDir, name))
+  copyRecursive(path.join(srcDir, name), path.join(destDir, name))
 }
-console.log(`[sync-public-images] Copied images/ → public/images/`)
+console.log(`[sync-public-images] Copied images/ → public/images/ (recursive)`)

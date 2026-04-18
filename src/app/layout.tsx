@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { TitleFontProvider } from "@/contexts/TitleFontContext";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import CustomCursor from "@/components/CustomCursor";
+import { PremiumScroll } from "@/components/PremiumScroll";
 import { RootJsonLd } from "@/components/RootJsonLd";
 import { MEP_SITE_NAME, getMepSiteUrl, mepDefaultDescription, mepKeywordsMetaString } from "@/lib/seo";
 
@@ -67,25 +68,27 @@ export default function RootLayout({
     <html lang="en-GB" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="font-sans antialiased">
         <RootJsonLd />
-        <ThemeProvider>
-          <TitleFontProvider>
-            <ThemeWrapper>
-              {/*
-                site-shell: header is position:absolute at top so hero can sit underneath (no gap);
-                it is NOT position:fixed — it scrolls away with the page because its containing block is this shell.
-              */}
-              <div className="site-shell relative">
-                <Header />
-                <div className="relative z-10">
-                  <CustomCursor />
-                  <main>{children}</main>
-                  <Footer />
-                  <CookieConsent />
+        <PremiumScroll>
+          <ThemeProvider>
+            <TitleFontProvider>
+              <ThemeWrapper>
+                {/*
+                  site-shell: header is position:absolute at top so hero can sit underneath (no gap);
+                  it is NOT position:fixed — it scrolls away with the page because its containing block is this shell.
+                */}
+                <div className="site-shell relative">
+                  <Header />
+                  <div className="relative z-10">
+                    <CustomCursor />
+                    <main>{children}</main>
+                    <Footer />
+                    <CookieConsent />
+                  </div>
                 </div>
-              </div>
-            </ThemeWrapper>
-          </TitleFontProvider>
-        </ThemeProvider>
+              </ThemeWrapper>
+            </TitleFontProvider>
+          </ThemeProvider>
+        </PremiumScroll>
       </body>
     </html>
   );

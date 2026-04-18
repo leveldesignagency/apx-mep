@@ -15,20 +15,23 @@ export default function Header() {
   const { theme } = useTheme()
   /** Normalise so `/services` and `/services/` are the hub; only `/services/...` subpaths use transparent overlay bar */
   const path = pathname.replace(/\/$/, "") || "/"
+  const isCareersPage = path === "/careers"
   const isHomePage = path === "/"
+  const isAboutPage = path === "/about"
   const isServicesHub = path === "/services"
   const isMepCapabilityPage = isMepCapabilityPath(path)
   const isServiceSubpage = path.startsWith("/services/")
-  const isProjectsRoute = path === "/projects" || path.startsWith("/projects/")
-  /** Service-line pages only — capability pillars use solid black header like the hub */
-  const isTransparentHeaderPage = isServiceSubpage && !isMepCapabilityPage
+  /** Case study hero — same idea as FS: transparent bar over full-bleed image, not solid black */
+  const isProjectDetailPage = path.startsWith("/projects/")
+  /** Service-line pages + project detail — capability hub & projects index use solid black */
+  const isTransparentHeaderPage = (isServiceSubpage && !isMepCapabilityPage) || isProjectDetailPage
   /**
    * Absolute top of .site-shell (see layout) — hero/main start at y=0 so imagery sits behind the bar.
    * Not `fixed`: the bar scrolls away with the page because the shell is the positioning context.
    */
   const headerLayoutClass =
     "absolute top-0 left-0 right-0 z-[100] w-full max-w-[100vw] pointer-events-auto"
-  const headerSolidBlack = isServicesHub || isMepCapabilityPage || isProjectsRoute
+  const headerSolidBlack = isServicesHub || isMepCapabilityPage || path === "/projects"
   const isServicesPage = pathname.startsWith("/services") || pathname.startsWith("/projects")
   const isDark = theme === 'dark'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -72,9 +75,13 @@ export default function Header() {
     }
   }
 
+  if (isCareersPage) {
+    return null
+  }
+
   return (
     <header
-      className={`site-header ${headerLayoutClass} ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isHomePage || isTransparentHeaderPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
+      className={`site-header ${headerLayoutClass} ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isHomePage || isTransparentHeaderPage || isAboutPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
       style={{ backgroundColor: headerSolidBlack ? "#000000" : "transparent" }}
     >
       {/* ========== SAVED VERSION (original header – not rendered) ========== */}
@@ -289,10 +296,10 @@ export default function Header() {
               className="header-bar-expand h-full w-full rounded-br-[30px] border-2"
               style={{
                 /* Dark tint + blur — transparent + blur alone reads white over html:not(.dark) body */
-                backgroundColor: isHomePage || isTransparentHeaderPage ? "rgba(0,0,0,0.42)" : "#000",
+                backgroundColor: isHomePage || isTransparentHeaderPage || isAboutPage ? "rgba(0,0,0,0.42)" : "#000",
                 boxSizing: "border-box",
                 borderColor: "#fff",
-                ...(isHomePage || isTransparentHeaderPage
+                ...(isHomePage || isTransparentHeaderPage || isAboutPage
                   ? { backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" as const }
                   : {}),
               }}
@@ -457,40 +464,50 @@ export default function Header() {
         )}
       </nav>
 
-      {/* Contact Tab + toast wrapper – toast shows directly under the tab */}
+      {/* Contact Tab + toast: pill sits tight under the tab */}
       <div className={`absolute top-full right-[54px] ${contactTabReady ? 'z-20' : 'z-0'}`}>
-        <div
-          className="header-contact-tab--dark header-contact-tab-drop-in rounded-t-none rounded-b-xl border-2 border-t-0 px-4 py-2 flex items-center space-x-3"
-          style={{
-            borderColor: "#fff",
-            backgroundColor: "#000",
-          }}
-          onAnimationEnd={(e) => {
-            if (e.animationName === 'header-contact-tab-drop-in') setContactTabReady(true)
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => handleContactClick('phone', '020 4568 5986')}
-            className="header-contact-btn relative flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full cursor-pointer"
+        <div className="relative">
+          <div
+            className="header-contact-tab--dark header-contact-tab-drop-in rounded-t-none rounded-b-xl border-2 border-t-0 px-4 py-2 flex items-center space-x-3"
+            style={{
+              borderColor: "#fff",
+              backgroundColor: "#000",
+            }}
+            onAnimationEnd={(e) => {
+              if (e.animationName === 'header-contact-tab-drop-in') setContactTabReady(true)
+            }}
           >
-            <Phone className="h-3.5 w-3.5" />
-            <span className="text-xs">020 4568 5986</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleContactClick('email', 'enquiries@apx-mep.co.uk')}
-            className="header-contact-btn relative flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full cursor-pointer"
-          >
-            <Mail className="h-3.5 w-3.5" />
-            <span className="text-xs">enquiries@apx-mep.co.uk</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => handleContactClick('phone', '020 4568 5986')}
+              className="header-contact-btn relative flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full cursor-pointer"
+            >
+              <Phone className="h-3.5 w-3.5" />
+              <span className="text-xs">020 4568 5986</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContactClick('email', 'enquiries@apx-mep.co.uk')}
+              className="header-contact-btn relative flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full cursor-pointer"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              <span className="text-xs">enquiries@apx-mep.co.uk</span>
+            </button>
+          </div>
+          {toast && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="absolute left-1/2 z-[110] -translate-x-1/2 whitespace-nowrap rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold text-black shadow-md"
+              style={{
+                /* Tab uses translateY(-36px); layout box is still full height — anchor toast to visual bottom + ~5px */
+                top: "calc(100% - 36px + 0.3125rem)",
+              }}
+            >
+              {toast.message}
+            </div>
+          )}
         </div>
-        {toast && (
-          <span className="absolute top-full left-0 mt-1.5 w-full text-center text-sm text-white whitespace-nowrap z-50">
-            {toast.message}
-          </span>
-        )}
       </div>
     </header>
   )

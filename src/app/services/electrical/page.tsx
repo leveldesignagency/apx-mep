@@ -5,6 +5,7 @@ import { CustomPillButton } from "@/components/ui/CustomPillButton"
 import { ServicePageBottomCta } from "@/components/ServicePageBottomCta"
 import { OurCustomers } from "@/components/ServicePageSharedSections"
 import { ServicePageHero } from "@/components/ServicePageHero"
+import { MEP_SERVICE_SHIMMER_CARD } from "@/lib/mepServicePageCards"
 import { serviceHeroImages } from "@/lib/serviceHeroImages"
 import { MEP_SERVICE_CONTENT_OUTER_CLASS } from "@/lib/mep-service-layout"
 import {
@@ -16,9 +17,6 @@ import {
   Users,
   CheckCircle,
 } from "lucide-react"
-
-const cardClass =
-  "rounded-tl-[1.5rem] rounded-br-[1.5rem] border-2 border-white/20 bg-black p-8 text-white transition-colors hover:border-white/45"
 
 export default function ElectricalDomesticNewBuildPage() {
   return (
@@ -105,7 +103,7 @@ export default function ElectricalDomesticNewBuildPage() {
                   "Interfaces with kitchen, bathroom, smart home and specialist packages — one coordinated delivery team.",
               },
             ].map((item, index) => (
-              <div key={index} className={`${cardClass} transition-transform duration-300 hover:scale-[1.02]`}>
+              <div key={index} className={`${MEP_SERVICE_SHIMMER_CARD} p-8 transition-transform duration-300 hover:scale-[1.02]`}>
                 <div className="mb-4 text-white">{item.icon}</div>
                 <h3 className="mb-3 text-left text-xl font-semibold text-white">{item.title}</h3>
                 <p className="text-left text-gray-300">{item.description}</p>
@@ -173,10 +171,7 @@ export default function ElectricalDomesticNewBuildPage() {
               "Garage, annex and outbuilding supplies",
               "Smart-ready and EV-ready containment",
             ].map((line, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 rounded-xl border border-white/15 bg-white/[0.03] px-4 py-3 text-left text-gray-200"
-              >
+              <li key={i} className="flex items-start gap-3 text-left text-gray-200">
                 <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-white/60" strokeWidth={2} />
                 <span>{line}</span>
               </li>
@@ -184,7 +179,7 @@ export default function ElectricalDomesticNewBuildPage() {
           </ul>
         </section>
 
-        <OurCustomers />
+        <OurCustomers serviceTitleShort="Domestic & new build" />
 
         <ServicePageBottomCta
           imageSrc={serviceHeroImages.videoDoor}

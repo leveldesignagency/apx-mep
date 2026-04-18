@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { Building2, DraftingCompass, HardHat, Wrench, type LucideIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Reveal } from "@/components/Reveal";
 import { CustomPillButton } from "@/components/ui/CustomPillButton";
-import { FS_SERVICE_SHIMMER_CARD } from "@/lib/fsServicePageCards";
+import { MepAccreditationLogosAboutGrid } from "@/components/accreditations/MepAccreditationLogoBlocks";
 
 /** Commitment icons: public/__quality assurance.svg, __health and safety.svg, __environmental.svg */
 const ABOUT_COMMITMENTS = [
@@ -15,26 +13,21 @@ const ABOUT_COMMITMENTS = [
   { line1: "ENVIRONMENTAL", line2: "COMMITMENT", iconSrc: "/__environmental.svg", iconAlt: "Environmental commitment" },
 ] as const;
 
-/**
- * Parallax multipliers (px translate per px of “scroll through” distance).
- * Uses scroll position through the hero so text/image drift vs the page while you scroll.
- */
-const PARALLAX = { bg: 0.38, text: 0.42, image: 0.22 } as const;
+/** Full-bleed About hero (MEP) */
+const ABOUT_HERO_BG_SRC = "/images/electrician-inspecting-electrical-panel-industrial-facility-with-blue-lighting.jpg";
 
-/** Public folder uses a space in "accreditations mono" — literal paths load reliably in <img> */
-const ACC_MONO = "/accreditations mono";
-const EXPERTISE_ACCRED_LOGOS = [
-  { href: "/accreditations/bafe", src: `${ACC_MONO}/Coloured/BAFE-01.svg`, alt: "BAFE" },
-  { href: "/accreditations/nsi", src: `${ACC_MONO}/NSI-01.svg`, alt: "NSI" },
-  { href: "/accreditations/constructionline", src: `${ACC_MONO}/Coloured/ConstructionOnline-01.svg`, alt: "Constructionline" },
-  { href: "/accreditations/fia", src: `${ACC_MONO}/Coloured/FIA-01.svg`, alt: "FIA" },
-] as const;
+/** `public/Who we support/` — filenames must match on disk (spaces / & encoded for URLs). */
+const WHO_SUPPORT_DIR = "/Who%20we%20support" as const
+
+function whoSupportImage(filename: string): string {
+  return `${WHO_SUPPORT_DIR}/${encodeURIComponent(filename)}`
+}
 
 type WhoWeSupportItem = {
   title: string;
   description: string;
   highlights: string;
-  Icon: LucideIcon;
+  imageSrc: string;
 };
 
 const WHO_WE_SUPPORT: WhoWeSupportItem[] = [
@@ -43,47 +36,34 @@ const WHO_WE_SUPPORT: WhoWeSupportItem[] = [
     description:
       "We integrate mechanical, electrical and plumbing packages with clear interfaces, coordinated drawings, and commissioning that lines up with your wider MEP strategy — from containment and plant rooms through to testing, balancing and handover.",
     highlights: "Coordinated delivery · Testing & commissioning",
-    Icon: Wrench,
+    imageSrc: whoSupportImage("M&E contractors.jpg"),
   },
   {
     title: "Facility management teams",
     description:
       "Planned maintenance, reactive callouts and lifecycle upgrades for building services across estates and portfolios. We help keep plant and distribution systems reliable, efficient and documented for compliance and insurance.",
     highlights: "PPM & reactive · Lifecycle planning",
-    Icon: Building2,
+    imageSrc: whoSupportImage("Facility management teams.jpg"),
   },
   {
     title: "Consultants and architects",
     description:
       "Early engagement on loads, routes, plant space and energy strategy so specifications are deliverable on site. We support design reviews, RIBA stages and value engineering without losing performance or compliance intent.",
     highlights: "Design stages · Technical workshops",
-    Icon: DraftingCompass,
+    imageSrc: whoSupportImage("Consultants and architects.jpg"),
   },
   {
     title: "Main contractors",
     description:
       "Programme-led site delivery with disciplined coordination with other trades, clear lookahead and snag-free interfaces — plus the O&M and record documentation your package needs to close out and hand over.",
     highlights: "Site logistics · Handover documentation",
-    Icon: HardHat,
+    imageSrc: whoSupportImage("Main contractors.jpg"),
   },
 ];
 
-function readDocumentScrollY(): number {
-  if (typeof window === "undefined") return 0;
-  return (
-    window.pageYOffset ||
-    document.documentElement.scrollTop ||
-    document.body.scrollTop ||
-    0
-  );
-}
-
 export default function AboutPage() {
-  const [parallaxY, setParallaxY] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [heroReveal, setHeroReveal] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-  const rafRef = useRef(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -103,136 +83,62 @@ export default function AboutPage() {
   }, [reduceMotion]);
 
   useEffect(() => {
-    const update = () => {
-      rafRef.current = 0;
-      if (reduceMotion) {
-        setParallaxY(0);
-        return;
-      }
-      const scrollY = readDocumentScrollY();
-      const hero = heroRef.current;
-      if (!hero) {
-        setParallaxY(scrollY);
-        return;
-      }
-      const rect = hero.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const h = Math.max(rect.height, 1);
-      // Distance the hero block has moved up past the viewport top (0 while hero top is still below/at top edge)
-      const scrolledPastHeroTop = Math.max(0, -rect.top);
-      // While hero is still entering (top below viewport top), blend in movement from document scroll
-      const leadIn = rect.top > 0 ? scrollY * 0.45 : 0;
-      const t = Math.min(scrolledPastHeroTop + leadIn, h + vh * 0.35);
-      setParallaxY(t);
-    };
-
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    document.addEventListener("scroll", onScroll, { passive: true, capture: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    const vv = window.visualViewport;
-    vv?.addEventListener("scroll", onScroll, { passive: true });
-    vv?.addEventListener("resize", onScroll, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("scroll", onScroll);
-      document.removeEventListener("scroll", onScroll, { capture: true });
-      window.removeEventListener("resize", onScroll);
-      vv?.removeEventListener("scroll", onScroll);
-      vv?.removeEventListener("resize", onScroll);
-    };
-  }, [reduceMotion]);
-
-  const py = reduceMotion ? 0 : parallaxY;
-
-  useEffect(() => {
     document.documentElement.classList.add("about-page-active");
     return () => document.documentElement.classList.remove("about-page-active");
   }, []);
 
   return (
     <div className="about-parallax-page about-page-shell mep-about-page overflow-x-hidden">
-      {/* Hero – same vertical rhythm/structure as homepage hero */}
-      {/* overflow-visible on the section keeps angled splice + margin behaviour with the next block; parallax is clipped inside inner layers only */}
-      <section
-        ref={heroRef}
-        className="about-block about-block--black about-block--angle-bottom about-hero-parallax relative h-screen overflow-visible flex flex-col"
-      >
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+      {/* Hero — full-viewport background (no angled clip: clip-path left transparent gaps above white sections) */}
+      <section className="about-block about-block--black about-hero-parallax relative flex min-h-[100dvh] flex-col overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+          <div className="about-parallax-bg about-hero-parallax__bg about-hero-parallax__bg--photo relative">
+            <Image
+              src={ABOUT_HERO_BG_SRC}
+              alt=""
+              fill
+              priority
+              className="about-hero-parallax__photo object-cover object-center"
+              sizes="100vw"
+            />
+          </div>
           <div
-            className="about-parallax-bg about-hero-parallax__bg will-change-transform"
-            style={{ transform: `translate3d(0, ${py * PARALLAX.bg}px, 0)` }}
+            className="absolute inset-0 z-[1] bg-gradient-to-b from-black/80 via-black/50 to-black/88"
+            aria-hidden
           />
         </div>
-        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-6 pb-6 sm:pt-8 lg:pt-10 lg:pb-10 relative z-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 xl:gap-16 items-start w-full">
-            <div
-              className="mt-6 space-y-4 max-w-2xl sm:mt-8 lg:mt-12 xl:mt-16 lg:max-w-none will-change-transform"
-              style={reduceMotion ? undefined : { transform: `translate3d(0, ${py * PARALLAX.text}px, 0)` }}
+        <div className="container relative z-20 mx-auto flex w-full min-h-0 flex-1 flex-col justify-start px-6 pt-44 pb-16 sm:pt-48 sm:pb-20 lg:pt-52 lg:pb-24">
+          <div className="max-w-3xl space-y-5">
+            <h1
+              className="mb-3 text-left leading-[0.95] text-white drop-shadow-sm md:mb-4"
+              style={{ fontFamily: "var(--font-menu)" }}
             >
-              <h1
-                className="mb-2 md:mb-3 text-left text-white leading-[0.95]"
-                style={{ fontFamily: "var(--font-menu)" }}
-              >
-                <Reveal show={heroReveal} delayMs={0}>
-                  <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal italic text-white/75">
-                    everything you
-                  </span>
-                </Reveal>
-                <Reveal show={heroReveal} delayMs={75}>
-                  <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal italic text-white/75">
-                    need to know
-                  </span>
-                </Reveal>
-                <Reveal show={heroReveal} delayMs={150}>
-                  <span className="mt-1 block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold not-italic">
-                    ABOUT APX
-                  </span>
-                </Reveal>
-                <Reveal show={heroReveal} delayMs={225}>
-                  <span className="block whitespace-nowrap text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold not-italic">
-                    MECHANICAL &amp; ELECTRICAL
-                  </span>
-                </Reveal>
-              </h1>
-              <Reveal show={heroReveal} delayMs={300}>
-                <div className="space-y-4 text-lg sm:text-xl md:text-xl font-normal text-left tracking-tight max-w-xl text-white/90">
-                  <p>
-                    APX is a go-to contractor for major commercial and industrial projects in London and the Southeast. With established divisions for mechanical,
-                    electrical and security services, we can now offer a comprehensive range of expert services for your project.
-                  </p>
-                  <p>
-                    With over 8 successful years as an independent company, we have the robust and trusted experience to deliver exceptional, efficient and safe
-                    workmanship from start to finish on any type or scale of project.
-                  </p>
-                  <p>
-                    We&apos;re known on site for our innovation and for bringing good ideas to the table. Our experience and reliability means projects are delivered on
-                    time, every time &ndash; within programme parameters and to specification.
-                  </p>
-                  <p>At APX, we have the strength, capability, expertise and resources to power your next project.</p>
-                </div>
+              <Reveal show={heroReveal} delayMs={0}>
+                <span className="block text-4xl font-normal italic text-white/95 sm:text-5xl md:text-6xl lg:text-7xl">
+                  everything you
+                </span>
               </Reveal>
-            </div>
-            <Reveal show={heroReveal} delayMs={200} className="self-start">
-              <div
-                className="relative w-full max-w-md mx-auto lg:max-w-none aspect-[3/4] sm:aspect-[4/5] lg:aspect-[5/6] overflow-hidden rounded-2xl shadow-[0_20px_48px_rgba(0,0,0,0.35)] will-change-transform"
-                style={reduceMotion ? undefined : { transform: `translate3d(0, ${py * PARALLAX.image}px, 0)` }}
-              >
-                <Image
-                  src="/access%20control%20systems.jpg"
-                  alt="MEP building services"
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 90vw, 44vw"
-                  priority
-                />
-              </div>
+              <Reveal show={heroReveal} delayMs={75}>
+                <span className="block text-4xl font-normal italic text-white/95 sm:text-5xl md:text-6xl lg:text-7xl">
+                  need to know
+                </span>
+              </Reveal>
+              <Reveal show={heroReveal} delayMs={150}>
+                <span className="mt-1 block text-4xl font-bold not-italic sm:text-5xl md:text-6xl lg:text-7xl">
+                  About APX
+                </span>
+              </Reveal>
+              <Reveal show={heroReveal} delayMs={225}>
+                <span className="block text-4xl font-bold not-italic sm:text-5xl md:text-6xl lg:text-7xl">
+                  Mechanical &amp; Electrical
+                </span>
+              </Reveal>
+            </h1>
+            <Reveal show={heroReveal} delayMs={300}>
+              <p className="max-w-xl text-left text-lg font-normal tracking-tight text-white/95 drop-shadow-sm sm:text-xl md:text-xl">
+                APX Mechanical &amp; Electrical delivers integrated mechanical, electrical and building services for commercial and industrial projects across London
+                and the Southeast. We work with main contractors, consultants and facility teams — programme-led, safety-first delivery from first fix to handover.
+              </p>
             </Reveal>
           </div>
         </div>
@@ -253,33 +159,14 @@ export default function AboutPage() {
               </p>
               <ul className="space-y-2.5 text-black/90">
                 <li>• Qualified mechanical, electrical and plumbing engineers</li>
-                <li>• Industry accreditations and ongoing compliance training</li>
+                <li>• NICEIC, Gas Safe and UKAS ISO–aligned governance</li>
                 <li>• Coordinated delivery alongside fire, security and controls where required</li>
               </ul>
             </div>
           </Reveal>
-          <div className="grid w-full min-w-0 max-w-md grid-cols-2 justify-items-center gap-2 lg:max-w-none">
-            {EXPERTISE_ACCRED_LOGOS.map((item, i) => (
-              <Reveal key={item.alt} delayMs={i * 70}>
-                <Link
-                  href={item.href}
-                  className="group flex w-full max-w-[210px] items-center justify-center px-4 py-5 transition-opacity hover:opacity-90"
-                  aria-label={`Learn more about ${item.alt}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    width={280}
-                    height={180}
-                    loading="eager"
-                    decoding="async"
-                    className="h-auto max-h-24 w-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:max-h-28 lg:max-h-32"
-                  />
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delayMs={120}>
+            <MepAccreditationLogosAboutGrid />
+          </Reveal>
         </div>
       </section>
 
@@ -294,28 +181,51 @@ export default function AboutPage() {
               </h2>
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 gap-y-12 gap-x-6 pt-6 md:grid-cols-2 md:gap-x-7 md:gap-y-14 xl:grid-cols-4 xl:gap-x-8">
-            {WHO_WE_SUPPORT.map(({ title, description, highlights, Icon }, i) => (
-              <Reveal key={title} delayMs={i * 55}>
-                <div className="flex h-full flex-col items-center">
+          <div className="grid grid-cols-1 gap-6 pt-6 sm:gap-7 md:grid-cols-2 md:gap-x-8 md:gap-y-8 lg:gap-x-10 lg:gap-y-10">
+            {WHO_WE_SUPPORT.map(({ title, description, highlights, imageSrc }, i) => (
+              <Reveal key={title} delayMs={i * 55} className="h-full min-h-0">
+                <article
+                  className="relative flex min-h-[21rem] flex-col overflow-hidden rounded-[1.85rem] border border-white/[0.1] bg-[#0a0a0a] shadow-[0_18px_50px_rgba(0,0,0,0.45)] sm:min-h-[22rem] md:grid md:min-h-[23rem] md:grid-cols-[minmax(0,1fr)_11.25rem] md:grid-rows-[auto_auto] md:gap-x-5 md:gap-y-4 md:p-6 lg:min-h-[24rem] lg:grid-cols-[minmax(0,1fr)_14.25rem] lg:gap-x-6 lg:gap-y-5 lg:p-7"
+                >
                   <div
-                    className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-black shadow-[0_8px_28px_rgba(0,0,0,0.55)]"
+                    className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-overlay"
+                    style={{
+                      backgroundImage: [
+                        "radial-gradient(circle at 0 0, rgba(255,255,255,0.35) 0.8px, transparent 1px)",
+                        "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.12) 0.9px, transparent 1.2px)",
+                      ].join(", "),
+                      backgroundSize: "3px 3px, 4px 4px",
+                      backgroundPosition: "0 0, 1px 1px",
+                    }}
                     aria-hidden
-                  >
-                    <Icon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
-                  </div>
-                  <article
-                    className={`${FS_SERVICE_SHIMMER_CARD} -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:px-7 md:pb-7 md:pt-12`}
-                  >
-                    <h3 className="text-lg font-semibold leading-snug text-white md:text-xl">{title}</h3>
-                    <p className="mb-5 mt-3 flex-1 text-left text-sm leading-relaxed text-white/80 md:mt-4 md:text-[0.9375rem]">
+                  />
+
+                  <div className="relative z-10 order-1 min-w-0 px-6 pb-2 pt-8 sm:px-8 sm:pt-10 md:col-start-1 md:row-start-1 md:px-0 md:pb-0 md:pt-1">
+                    <h3
+                      className="text-left text-2xl font-bold leading-[1.12] tracking-tight text-white drop-shadow-[0_1px_12px_rgba(0,0,0,0.18)] sm:text-3xl"
+                      style={{ fontFamily: "var(--font-menu)" }}
+                    >
+                      {title}
+                    </h3>
+                    <p className="mt-4 min-w-0 max-w-full text-left text-sm leading-relaxed text-white/95 drop-shadow-sm sm:text-[0.9375rem]">
                       {description}
                     </p>
-                    <p className="border-t border-white/10 pt-4 text-center text-xs font-medium uppercase tracking-[0.14em] text-white/55">
-                      {highlights}
-                    </p>
-                  </article>
-                </div>
+                  </div>
+
+                  <div className="relative z-[5] order-2 mx-6 mt-3 h-48 min-h-0 shrink-0 overflow-hidden rounded-2xl shadow-[0_14px_44px_rgba(0,0,0,0.22)] sm:mt-4 sm:h-52 md:col-start-2 md:row-span-2 md:row-start-1 md:mx-0 md:mt-0 md:min-h-[20rem] md:h-full md:self-stretch md:shadow-[0_20px_55px_rgba(0,0,0,0.28)] lg:min-h-[21rem]">
+                    <Image src={imageSrc} alt="" fill className="object-cover object-center" sizes="(min-width: 768px) 28vw, 100vw" />
+                  </div>
+
+                  <div className="relative z-20 order-3 mx-6 mb-7 mt-2 min-w-0 sm:mb-8 md:col-start-1 md:row-start-2 md:mx-0 md:mb-1 md:mt-0 md:self-start">
+                    <div className="max-w-full overflow-x-auto pb-0.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                      <div className="inline-block w-max max-w-none rounded-2xl bg-white px-3.5 py-2.5 text-left shadow-[0_12px_36px_rgba(0,0,0,0.14)] sm:px-4 sm:py-3 md:px-3.5 md:py-2.5">
+                        <p className="whitespace-nowrap text-[0.62rem] font-semibold uppercase leading-snug tracking-[0.08em] text-black/88 sm:text-[0.68rem] md:text-[0.62rem] lg:text-[0.7rem]">
+                          {highlights}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
               </Reveal>
             ))}
           </div>
@@ -350,7 +260,7 @@ export default function AboutPage() {
               </h2>
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 md:items-stretch">
             {(
               [
                 {
@@ -363,7 +273,7 @@ export default function AboutPage() {
                 },
                 {
                   title: "Safety",
-                  body: "Underpinning every aspect of our work, safety is our most important value.",
+                  body: "Underpinning every aspect of our work, safety is our most important value. On site, in design, and at handover, we protect people, plant, and programme without compromise.",
                 },
                 {
                   title: "Customer care",
@@ -371,10 +281,10 @@ export default function AboutPage() {
                 },
               ] as const
             ).map((v, i) => (
-              <Reveal key={v.title} delayMs={i * 60}>
-                <div className="rounded-2xl border border-white/25 bg-white/[0.06] p-6 text-white backdrop-blur-md md:p-7">
+              <Reveal key={v.title} delayMs={i * 60} className="h-full min-h-0">
+                <div className="flex h-full flex-col rounded-2xl border border-white/25 bg-white/[0.06] p-6 text-white backdrop-blur-md md:p-7">
                   <p className="text-lg font-semibold text-white md:text-xl">{v.title}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-white/80 md:text-base">{v.body}</p>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-white/80 md:text-base">{v.body}</p>
                 </div>
               </Reveal>
             ))}
@@ -415,30 +325,30 @@ export default function AboutPage() {
               Quality, safety &amp; environment
             </h2>
           </Reveal>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
+          <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-16 md:flex-row md:flex-wrap md:justify-center md:gap-x-16 md:gap-y-12 lg:max-w-7xl lg:gap-x-28 xl:gap-x-32">
             {ABOUT_COMMITMENTS.map((item, i) => (
               <Reveal key={item.line1} delayMs={i * 85}>
-                <div className="text-center">
-                  <div className="mx-auto mb-3 flex justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- local SVG commitment artwork */}
-                    <img
-                      src={item.iconSrc}
-                      alt={item.iconAlt}
-                      className="h-20 w-auto max-w-[5.75rem] object-contain object-center sm:h-24 sm:max-w-[6.5rem] md:max-w-[7rem]"
-                    />
+                <div className="group flex w-full max-w-[12.5rem] flex-col items-center gap-3 text-center sm:max-w-[13rem] md:w-auto md:max-w-none md:shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- local SVG commitment artwork */}
+                  <img
+                    src={item.iconSrc}
+                    alt={item.iconAlt}
+                    className="h-28 w-auto max-w-[7.5rem] origin-center object-contain object-center transition-transform duration-300 ease-out motion-reduce:transition-none sm:h-32 sm:max-w-[8.75rem] md:h-36 md:max-w-[10rem] motion-safe:group-hover:scale-[1.07]"
+                  />
+                  <div className="flex flex-col items-center gap-1.5">
+                    <p
+                      className="text-base font-bold uppercase leading-none tracking-[0.12em] text-white"
+                      style={{ fontFamily: "var(--font-menu)" }}
+                    >
+                      {item.line1}
+                    </p>
+                    <p
+                      className="text-base uppercase leading-none tracking-[0.12em] text-white/85"
+                      style={{ fontFamily: "var(--font-menu)" }}
+                    >
+                      {item.line2}
+                    </p>
                   </div>
-                  <p
-                    className="text-base font-bold uppercase tracking-[0.12em] text-white"
-                    style={{ fontFamily: "var(--font-menu)" }}
-                  >
-                    {item.line1}
-                  </p>
-                  <p
-                    className="mt-1 text-base uppercase tracking-[0.12em] text-white/85"
-                    style={{ fontFamily: "var(--font-menu)" }}
-                  >
-                    {item.line2}
-                  </p>
                 </div>
               </Reveal>
             ))}
@@ -467,33 +377,6 @@ export default function AboutPage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="about-block about-block--black about-section-y about-section-px">
-        <div className="about-section-inner">
-          <Reveal>
-            <span className="section-label mb-3 block text-white/70">Assurance</span>
-            <h2 className="mb-8 text-4xl font-bold text-white lg:mb-10 lg:text-5xl" style={{ fontFamily: "var(--font-menu)" }}>
-              Quality &amp; Compliance
-            </h2>
-          </Reveal>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-10">
-            {["/cctv%20systems.jpg", "/access%20control%20systems.jpg", "/video%20door%20entry%20systems.jpg"].map((src, i) => (
-              <Reveal key={src} delayMs={i * 75}>
-                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/20">
-                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${src})` }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal>
-            <p className="mt-10 max-w-2xl text-base leading-relaxed text-white/80 md:mt-12 md:text-lg">
-              Robust QA processes, clear documentation and standards-led delivery — so your mechanical, electrical and building services meet specification and
-              regulation.
-            </p>
-          </Reveal>
         </div>
       </section>
 
