@@ -803,7 +803,7 @@ export default function Home() {
       <section id="hero" className="relative h-screen overflow-visible bg-transparent flex flex-col" style={{ background: 'transparent' }}>
         <HeroVideoBackground />
         {/* Content */}
-        <div className="container mx-auto px-6 flex-1 flex flex-col justify-start pt-52 pb-40 relative z-20">
+        <div className="container mx-auto flex flex-1 flex-col justify-start px-4 pb-24 pt-28 relative z-20 sm:px-6 sm:pb-28 sm:pt-32 md:pb-32 md:pt-40 lg:pb-40 lg:pt-52">
           <div className="space-y-4">
             {/* Title + paragraph: white text on hero image */}
             <div className="max-w-2xl">
@@ -838,7 +838,7 @@ export default function Home() {
 
         {/* Hero accreditations — NICEIC, ISO trio, Gas Safe */}
         <div
-          className={`container mx-auto px-6 pb-10 sm:pb-12 mb-24 sm:mb-32 relative z-10 transition-all duration-700 ease-out ${
+          className={`container mx-auto mb-24 px-4 pb-10 relative z-10 transition-all duration-700 ease-out sm:mb-32 sm:px-6 sm:pb-12 ${
             heroAnimation.clientsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >

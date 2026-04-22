@@ -5,7 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 import { Phone, Mail, Menu, X, ArrowRight, Check, Facebook, Instagram, Linkedin, ChevronDown } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useTheme } from '@/contexts/ThemeContext'
 import { isMepCapabilityPath } from "@/lib/mepCapabilityPaths"
 import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
@@ -51,6 +51,24 @@ export default function Header() {
     servicesCloseTimeoutRef.current = setTimeout(() => setIsServicesOpen(false), 280)
   }
 
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMenuOpen(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [isMenuOpen])
+
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [isMenuOpen])
+
   const copyToClipboard = async (text: string, type: 'phone' | 'email') => {
     try {
       await navigator.clipboard.writeText(text)
@@ -62,8 +80,8 @@ export default function Header() {
   }
 
   const handleContactClick = (type: 'phone' | 'email', value: string) => {
-    // Check if mobile (screen width < 768px)
-    if (window.innerWidth < 768) {
+    // Below lg breakpoint: open tel/mailto instead of copy
+    if (window.innerWidth < 1024) {
       if (type === 'phone') {
         window.open(`tel:${value}`, '_self')
       } else {
@@ -289,9 +307,10 @@ export default function Header() {
         </>
       )}
 
-      <nav className="relative z-10 w-full px-6 pt-5 pb-4">
-        <div className="relative w-full flex items-center min-h-[6.5rem]">
-          <div className="absolute left-[8rem] right-0 h-16 overflow-hidden z-0 top-1/2 -translate-y-1/2">
+      <nav className="relative z-10 w-full px-4 pt-4 pb-3 sm:px-6 lg:px-6 lg:pt-5 lg:pb-4">
+        <div className="relative flex w-full min-h-[4.75rem] items-center lg:min-h-[6.5rem]">
+          {/* Expanding nav bar — desktop (lg+) only; tablet/phone use compact header + hamburger */}
+          <div className="pointer-events-none absolute left-[8rem] right-0 top-1/2 z-0 hidden h-16 -translate-y-1/2 overflow-hidden lg:block">
             <div
               className="header-bar-expand h-full w-full rounded-br-[30px] border-2"
               style={{
@@ -305,22 +324,26 @@ export default function Header() {
               }}
             />
           </div>
-          <div className="relative z-10 w-full flex items-center justify-between px-6 h-16">
-            <Link href="/" className="header-logo-drop-in flex items-center shrink-0 cursor-pointer relative z-10">
+          <div className="relative z-10 flex h-14 min-h-[3.5rem] w-full items-center justify-center px-2 sm:h-16 sm:px-4 lg:h-16 lg:min-h-0 lg:justify-between lg:px-6">
+            <Link
+              href="/"
+              className="header-logo-drop-in absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 cursor-pointer lg:static lg:translate-x-0 lg:translate-y-0"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <span className="header-logo-hover-wrap inline-block relative overflow-hidden">
                 <Image
                   src="/__APX Web Logo MEP.svg"
                   alt="APX Mechanical & Electrical Logo"
                   width={334}
                   height={112}
-                  className="h-28 w-auto relative z-10"
+                  className="relative z-10 h-20 w-auto sm:h-24 lg:h-28"
                 />
               </span>
             </Link>
             {/* FIRE & SECURITY: absolute, same as MEP – own stack so alignment isn’t affected by switch button */}
             {/* Same as MEP: top-1/2 with NO transform – tagline top edge at row center, box hangs down */}
             <div
-              className="hidden md:flex absolute left-[12.25rem] top-1/2 z-0 w-fit items-center rounded-br-2xl header-mech-security-in pl-7 pr-3.5 py-1"
+              className="header-mech-security-in absolute left-[12.25rem] top-1/2 z-0 hidden w-fit items-center rounded-br-2xl py-1 pl-7 pr-3.5 lg:flex"
               style={{
                 backgroundColor: "black",
                 border: "2px solid white",
@@ -330,7 +353,7 @@ export default function Header() {
                 MECHANICAL & ELECTRICAL
               </span>
             </div>
-            <div className="hidden md:flex items-center space-x-8 text-white [&_a]:!text-white [&_.nav-menu-item]:!text-white [&_svg]:stroke-white flex-shrink-0 relative z-10">
+            <div className="relative z-10 hidden flex-shrink-0 items-center space-x-8 text-white lg:flex [&_.nav-menu-item]:!text-white [&_a]:!text-white [&_svg]:stroke-white">
               <div className="relative header-nav-item-in flex items-center" style={{ animationDelay: '2.9s' }}>
                 <Link
                   href="/services"
@@ -431,24 +454,37 @@ export default function Header() {
               </div>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 sm:right-4 lg:hidden"
+            style={{ color: 'white' }}
+            aria-expanded={isMenuOpen}
+            aria-controls="mep-mobile-nav"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden p-2 absolute right-6 top-10"
-          style={{ color: 'white' }}
-        >
-          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
         {isMenuOpen && (
-          <div className="md:hidden mt-6 pb-6 border-t border-t-white/20 pt-6" style={{ backgroundColor: 'black' }}>
-            <div className="flex flex-col space-y-4">
-              <Link href="/services" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Services</Link>
-              <Link href="/about" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>About</Link>
-              <Link href="/methodology" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Methodology</Link>
-              <Link href="/projects" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Projects</Link>
-              <Link href="/contact" className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Contact</Link>
-              <div className="pt-4">
-                <a href={process.env.NEXT_PUBLIC_APX_FS_URL || 'http://localhost:3003'} className="group relative">
+          <div
+            id="mep-mobile-nav"
+            className="mt-4 border-t border-t-white/20 pb-6 pt-6 lg:hidden"
+            style={{ backgroundColor: 'black' }}
+          >
+            <div className="flex flex-col space-y-4 px-1">
+              <Link href="/services" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Services</Link>
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>About</Link>
+              <Link href="/methodology" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Methodology</Link>
+              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Projects</Link>
+              <Link href="/accreditations" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Accreditations</Link>
+              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Contact</Link>
+              <div className="flex flex-col gap-3 border-t border-white/15 pt-4">
+                <a href="tel:02045685986" className="text-sm font-medium text-white/90" onClick={() => setIsMenuOpen(false)}>020 4568 5986</a>
+                <a href="mailto:enquiries@apx-mep.co.uk" className="text-sm font-medium text-white/90" onClick={() => setIsMenuOpen(false)}>enquiries@apx-mep.co.uk</a>
+              </div>
+              <div className="pt-2">
+                <a href={process.env.NEXT_PUBLIC_APX_FS_URL || 'http://localhost:3003'} className="group relative" onClick={() => setIsMenuOpen(false)}>
                   <div className="flex items-center overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:w-52 w-10 group-hover:backdrop-blur-sm rounded-full border border-white pulse-glow">
                     <div className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] flex-shrink-0">
                       <ArrowRight className="h-4 w-4 transition-all duration-500 group-hover:opacity-0 group-hover:rotate-180" />
@@ -464,8 +500,8 @@ export default function Header() {
         )}
       </nav>
 
-      {/* Contact Tab + toast: pill sits tight under the tab */}
-      <div className={`absolute top-full right-[54px] ${contactTabReady ? 'z-20' : 'z-0'}`}>
+      {/* Contact tab: desktop only — phone/tablet use hamburger contact links */}
+      <div className={`absolute top-full right-[54px] hidden lg:block ${contactTabReady ? 'z-20' : 'z-0'}`}>
         <div className="relative">
           <div
             className="header-contact-tab--dark header-contact-tab-drop-in rounded-t-none rounded-b-xl border-2 border-t-0 px-4 py-2 flex items-center space-x-3"
