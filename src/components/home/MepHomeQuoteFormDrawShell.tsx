@@ -58,12 +58,12 @@ export function MepHomeQuoteFormDrawShell({ active, children }: MepHomeQuoteForm
 
   return (
     <div
-      className="quote-form-draw-shell relative overflow-hidden rounded-tl-[1.5rem] rounded-br-[1.5rem] max-lg:border max-lg:border-white/45 lg:border-0"
+      className="quote-form-draw-shell relative overflow-hidden max-lg:rounded-tl-[1.5rem] max-lg:rounded-br-[1.5rem] max-lg:outline max-lg:outline-1 max-lg:outline-white/45 max-lg:outline-offset-0 rounded-tr-none rounded-bl-none lg:rounded-tl-[8%] lg:rounded-br-[8%] lg:outline-none"
       style={shellStyle}
     >
       {/*
         preserveAspectRatio="none" skews corner radii on tall narrow viewports.
-        Below lg: hide SVG; GlassFormPanel + shell overflow provide clean fixed-radius corners.
+        Below lg: hide SVG; 1.5rem corners match the CSS border. lg+: 8% radii match the SVG path (r=8 in 0–100 viewBox).
       */}
       <svg
         className="pointer-events-none absolute inset-0 z-[2] hidden h-full w-full overflow-visible lg:block"
