@@ -6,6 +6,13 @@ const ACC = "/Accreditations"
 /** NICEIC mark for dark backgrounds (hero, footer). Use `NICEIC.svg` on light sections via {@link mepAccreditationLogoSrc}. */
 export const MEP_NICEIC_ICON_ON_DARK = `${ACC}/NICEIC-02.svg`
 
+/** ISO UKAS marks on dark surfaces: flat white line work (source SVGs use grey “stencil” fills that disappear on black). */
+const MEP_ISO_UKAS_ON_DARK: Record<"iso-9001" | "iso-14001" | "iso-45001", string> = {
+  "iso-9001": `${ACC}/ISO_9001_UKAS_Hero_On_Dark.svg`,
+  "iso-14001": `${ACC}/ISO_14001_UKAS_Hero_On_Dark.svg`,
+  "iso-45001": `${ACC}/ISO_45001_UKAS_Hero_On_Dark.svg`,
+}
+
 export const MEP_ACCREDITATIONS = {
   niceic: {
     name: "NICEIC",
@@ -191,10 +198,13 @@ export function getMepAccreditation(slug: string) {
   return MEP_ACCREDITATIONS[slug as MepAccreditationSlug]
 }
 
-/** Logo path: NICEIC uses `NICEIC-02.svg` on dark surfaces; all others use their default `icon`. */
+/** Logo path: NICEIC uses `NICEIC-02.svg` on dark surfaces; ISO UKAS uses hero monochrome SVGs on dark; others use `icon`. */
 export function mepAccreditationLogoSrc(slug: MepAccreditationSlug, surface: "light" | "dark"): string {
   if (slug === "niceic" && surface === "dark") {
     return MEP_NICEIC_ICON_ON_DARK
+  }
+  if (surface === "dark" && slug in MEP_ISO_UKAS_ON_DARK) {
+    return MEP_ISO_UKAS_ON_DARK[slug as keyof typeof MEP_ISO_UKAS_ON_DARK]
   }
   return MEP_ACCREDITATIONS[slug].icon
 }

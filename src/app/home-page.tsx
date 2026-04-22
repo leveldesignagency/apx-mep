@@ -1130,11 +1130,11 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex w-full min-w-0 flex-col gap-y-7 self-stretch sm:gap-y-8">
+              <div className="grid w-full min-w-0 grid-cols-1 gap-y-7 self-stretch lg:grid-cols-2 lg:gap-x-7 lg:gap-y-8">
                 {WHY_CHOOSE_CARDS.map(({ Icon, title, bullets }, idx) => (
                   <div
                     key={title}
-                    className="why-choose-card-shell about-reveal flex min-h-0 w-full min-w-0 flex-col items-center"
+                    className="why-choose-card-shell about-reveal flex h-full min-h-0 min-w-0 flex-col items-center self-stretch"
                     style={{ transitionDelay: `${360 + idx * 90}ms` }}
                   >
                     <div

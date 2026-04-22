@@ -55,7 +55,8 @@ function toThreeFeatures(description: string): [string, string, string] {
 export function MepWhatWeOfferSection() {
   const [active, setActive] = useState(0)
   const tablistRef = useRef<HTMLDivElement>(null)
-  const skipScrollFocusOnMount = useRef(true)
+  /** null = first commit only; avoids Strict Mode double-effect + scrollIntoView jumping the page to #services */
+  const prevActiveRef = useRef<number | null>(null)
 
   const items = useMemo(
     () =>
@@ -75,11 +76,22 @@ export function MepWhatWeOfferSection() {
     if (!root) return
     const tab = root.querySelector<HTMLButtonElement>(`#mep-offer-tab-${active}`)
     if (!tab) return
-    if (skipScrollFocusOnMount.current) {
-      skipScrollFocusOnMount.current = false
+
+    const prev = prevActiveRef.current
+    if (prev === null) {
+      prevActiveRef.current = active
       return
     }
-    tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+    if (prev === active) return
+
+    prevActiveRef.current = active
+
+    // Scroll only the tab strip horizontally — never tab.scrollIntoView (can move the whole page to #services).
+    const tabLeft = tab.offsetLeft
+    const tabW = tab.offsetWidth
+    const viewW = root.clientWidth
+    const target = tabLeft - viewW / 2 + tabW / 2
+    root.scrollTo({ left: Math.max(0, target), behavior: "smooth" })
     tab.focus({ preventScroll: true })
   }, [active])
 
