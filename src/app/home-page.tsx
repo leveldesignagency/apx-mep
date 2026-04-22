@@ -572,21 +572,22 @@ export default function Home() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: any) => {
-          label.style.color = '#ffffff';
+        labels.forEach((label) => {
+          (label as HTMLLabelElement).style.color = '#ffffff';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: any) => {
-          input.style.backgroundColor = '#000000';
-          input.style.border = '1px solid #ffffff';
-          input.style.color = '#ffffff';
-          input.style.fontSize = '1.0625rem';
-          input.style.fontWeight = '600';
-          input.style.outline = 'none';
-          input.style.boxShadow = 'none';
-          input.style.setProperty('--tw-ring-color', 'transparent', 'important');
+        textInputs.forEach((input) => {
+          const el = input as HTMLInputElement | HTMLTextAreaElement;
+          el.style.backgroundColor = '#000000';
+          el.style.border = '1px solid #ffffff';
+          el.style.color = '#ffffff';
+          el.style.fontSize = '1.0625rem';
+          el.style.fontWeight = '600';
+          el.style.outline = 'none';
+          el.style.boxShadow = 'none';
+          el.style.setProperty('--tw-ring-color', 'transparent', 'important');
         });
 
         const serviceDropdown = form.querySelector('.quote-form-dropdown') as HTMLElement | null;
@@ -634,20 +635,21 @@ export default function Home() {
         
         // Labels
         const labels = form.querySelectorAll('label');
-        labels.forEach((label: any) => {
-          label.style.color = '#000000';
+        labels.forEach((label) => {
+          (label as HTMLLabelElement).style.color = '#000000';
         });
         
         // Text inputs and textarea
         const textInputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
-        textInputs.forEach((input: any) => {
-          input.style.backgroundColor = '#ffffff';
-          input.style.border = '1px solid #000000';
-          input.style.color = '#000000';
-          input.style.fontSize = '';
-          input.style.fontWeight = '';
-          input.style.outline = 'none';
-          input.style.boxShadow = 'none';
+        textInputs.forEach((input) => {
+          const el = input as HTMLInputElement | HTMLTextAreaElement;
+          el.style.backgroundColor = '#ffffff';
+          el.style.border = '1px solid #000000';
+          el.style.color = '#000000';
+          el.style.fontSize = '';
+          el.style.fontWeight = '';
+          el.style.outline = 'none';
+          el.style.boxShadow = 'none';
         });
 
         const serviceDropdownLight = form.querySelector('.quote-form-dropdown') as HTMLElement | null;
@@ -674,16 +676,17 @@ export default function Home() {
         
         // Radio buttons - reset to default browser styling
         const radios = form.querySelectorAll('input[type="radio"]');
-        radios.forEach((radio: any) => {
-          radio.style.appearance = 'auto'; // Reset to browser default
-          radio.style.width = 'initial';
-          radio.style.height = 'initial';
-          radio.style.border = 'initial';
-          radio.style.borderRadius = 'initial';
-          radio.style.backgroundColor = 'initial';
-          radio.style.outline = 'initial';
-          radio.style.boxShadow = 'initial';
-          radio.style.cursor = 'initial';
+        radios.forEach((radio) => {
+          const el = radio as HTMLInputElement;
+          el.style.appearance = 'auto'; // Reset to browser default
+          el.style.width = 'initial';
+          el.style.height = 'initial';
+          el.style.border = 'initial';
+          el.style.borderRadius = 'initial';
+          el.style.backgroundColor = 'initial';
+          el.style.outline = 'initial';
+          el.style.boxShadow = 'initial';
+          el.style.cursor = 'initial';
         });
         
         // Submit button
@@ -853,7 +856,7 @@ export default function Home() {
       {/* Core capabilities – black section blended from hero before Our Story */}
       <section
         id="core-capabilities"
-        className="relative bg-black py-20 lg:py-24 overflow-hidden"
+        className="relative bg-black pt-20 pb-10 lg:pt-24 lg:pb-12 overflow-hidden"
       >
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 h-28 sm:h-36"
@@ -884,7 +887,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-y-14 gap-x-6 md:grid-cols-3 md:gap-x-7 md:gap-y-16 lg:gap-x-8">
+          <div className="mt-16 grid grid-cols-1 gap-y-14 gap-x-6 md:mt-20 md:grid-cols-3 md:gap-x-7 md:gap-y-16 lg:mt-24 lg:gap-x-8">
             {MEP_CORE_CAPABILITIES.map((cap, cardIndex) => {
               const CapIcon = cap.icon
               return (
@@ -902,7 +905,7 @@ export default function Home() {
                     <CapIcon className="h-7 w-7 shrink-0 text-white/90" strokeWidth={1.5} />
                   </div>
                   <article
-                    className={`${FS_SERVICE_SHIMMER_CARD} apx-home-card-light-edge -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:min-h-[24rem] md:px-7 md:pb-7 md:pt-12`}
+                    className={`${FS_SERVICE_SHIMMER_CARD} apx-home-card-light-edge -mt-7 flex w-full min-w-0 flex-1 flex-col px-6 pb-6 pt-11 text-center md:px-7 md:pb-7 md:pt-12`}
                   >
                     <h3
                       className="core-capabilities-card-title shrink-0 text-lg font-semibold leading-[1.35] text-white md:text-xl"
@@ -910,7 +913,7 @@ export default function Home() {
                     >
                       {cap.title}
                     </h3>
-                    <ul className="apx-capability-list mt-16 shrink-0 text-center sm:mt-20 md:mt-24">
+                    <ul className="apx-capability-list mt-20 shrink-0 text-center sm:mt-24 md:mt-28">
                       {cap.bullets.map((line) => (
                         <li key={line} className="apx-capability-list__item core-capabilities-bullet">
                           {line}

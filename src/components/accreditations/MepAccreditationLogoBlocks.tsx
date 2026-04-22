@@ -26,40 +26,44 @@ export function MepAccreditationHeroStrip() {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-5 sm:gap-7 md:gap-9">
-      <div
+      <Link
+        href={`/accreditations/${lead.slug}`}
         className="flex h-16 w-auto max-w-[170px] items-center justify-center sm:h-[4.75rem] sm:max-w-[200px] md:h-20 md:max-w-[220px]"
-        aria-hidden
+        aria-label={`${MEP_ACCREDITATIONS[lead.slug].name} — view dedicated accreditation page`}
       >
         <img
           src={mepAccreditationLogoSrc(lead.slug as MepAccreditationSlug, "dark")}
           alt={MEP_ACCREDITATIONS[lead.slug].name}
           className="h-full w-auto object-contain opacity-90"
         />
-      </div>
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4" aria-hidden>
+      </Link>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
         {isoItems.map(({ slug }) => (
-          <div
+          <Link
             key={slug}
+            href={`/accreditations/${slug}`}
             className="flex h-[5.25rem] w-auto max-w-[200px] items-center justify-center sm:h-[6.25rem] sm:max-w-[240px] md:h-[7rem] md:max-w-[260px]"
+            aria-label={`${MEP_ACCREDITATIONS[slug].name} — view dedicated accreditation page`}
           >
             <img
               src={mepAccreditationLogoSrc(slug, "dark")}
-              alt=""
+              alt={MEP_ACCREDITATIONS[slug].name}
               className="h-full w-auto max-h-full object-contain opacity-90"
             />
-          </div>
+          </Link>
         ))}
       </div>
-      <div
+      <Link
+        href={`/accreditations/${tail.slug}`}
         className="flex h-16 w-auto max-w-[170px] items-center justify-center sm:h-[4.75rem] sm:max-w-[200px] md:h-20 md:max-w-[220px]"
-        aria-hidden
+        aria-label={`${MEP_ACCREDITATIONS[tail.slug].name} — view dedicated accreditation page`}
       >
         <img
           src={mepAccreditationLogoSrc(tail.slug as MepAccreditationSlug, "dark")}
           alt={MEP_ACCREDITATIONS[tail.slug].name}
           className="h-full w-auto object-contain opacity-90"
         />
-      </div>
+      </Link>
     </div>
   )
 }

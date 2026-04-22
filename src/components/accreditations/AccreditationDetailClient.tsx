@@ -26,6 +26,7 @@ export function AccreditationDetailClient({
   accred: AccredBody
 }) {
   const [mounted, setMounted] = useState(false)
+  const isGasSafe = activeSlug === "gas-safe"
 
   useEffect(() => {
     setMounted(true)
@@ -83,7 +84,11 @@ export function AccreditationDetailClient({
                   alt={accred.name}
                   width={280}
                   height={120}
-                  className="h-auto w-auto max-h-[104px] max-w-[240px] object-contain sm:max-h-[112px] sm:max-w-[260px] md:max-h-[120px] md:max-w-[280px] lg:max-h-[128px] lg:max-w-[300px]"
+                  className={`h-auto w-auto object-contain ${
+                    isGasSafe
+                      ? "max-h-[126px] max-w-[300px] sm:max-h-[134px] sm:max-w-[320px] md:max-h-[142px] md:max-w-[340px] lg:max-h-[150px] lg:max-w-[360px]"
+                      : "max-h-[104px] max-w-[240px] sm:max-h-[112px] sm:max-w-[260px] md:max-h-[120px] md:max-w-[280px] lg:max-h-[128px] lg:max-w-[300px]"
+                  }`}
                   sizes="(min-width: 1024px) 300px, 260px"
                   priority
                 />
