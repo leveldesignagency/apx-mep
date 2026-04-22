@@ -32,7 +32,7 @@ export function MobileHomeContactFab({ logoSrc, logoAlt, phoneDisplay, phoneHref
         type="button"
         className="md:hidden fixed right-6 z-[9990] flex h-14 w-14 items-center justify-center rounded-full border-2 border-white bg-black shadow-[0_4px_12px_rgba(0,0,0,0.35)] transition-[transform,background-color] hover:bg-[#111] active:scale-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/60"
         style={{ bottom: "calc(6rem + env(safe-area-inset-bottom, 0px))" }}
-        aria-label="Open quick contact"
+        aria-label="Open contact"
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
@@ -46,43 +46,34 @@ export function MobileHomeContactFab({ logoSrc, logoAlt, phoneDisplay, phoneHref
             aria-hidden
             onClick={close}
           />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mobile-home-contact-title"
-            className="md:hidden fixed left-1/2 top-1/2 z-[9996] w-[min(calc(100vw-2rem),20rem)] -translate-x-1/2 -translate-y-1/2 rounded-tl-2xl rounded-br-2xl border-2 border-white bg-black p-6 text-white shadow-xl"
-          >
-            <div className="mb-5 flex items-start justify-between gap-3">
-              <h2 id="mobile-home-contact-title" className="text-lg font-bold leading-tight">
-                Quick contact
-              </h2>
-              <button
-                type="button"
-                onClick={close}
-                className="shrink-0 rounded-full border border-white p-2 hover:bg-white/10"
-                aria-label="Close"
-              >
-                <X className="h-4 w-4" strokeWidth={2} />
-              </button>
-            </div>
-            <div className="flex flex-col gap-3">
+          <div className="fixed left-1/2 top-1/2 z-[9996] md:hidden -translate-x-1/2 -translate-y-1/2">
+            <button
+              type="button"
+              onClick={close}
+              className="absolute -right-1 -top-[3.25rem] z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-black text-white shadow-lg transition-colors hover:bg-[#111] focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/60"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" strokeWidth={2} />
+            </button>
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Contact"
+              className="flex items-center justify-center gap-5 rounded-tl-2xl rounded-br-2xl border-2 border-white bg-black px-8 py-6 text-white shadow-xl"
+            >
               <a
                 href={phoneHref}
-                className="flex items-center gap-3 rounded-xl border border-white/25 bg-white/5 px-4 py-3.5 transition-colors hover:bg-white/10 active:bg-white/15"
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/35 bg-black transition-colors hover:bg-white/10 active:bg-white/15"
+                aria-label={`Call ${phoneDisplay}`}
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/35 bg-black">
-                  <Phone className="h-5 w-5 text-white" strokeWidth={1.5} />
-                </span>
-                <span className="text-sm font-semibold">{phoneDisplay}</span>
+                <Phone className="h-6 w-6 text-white" strokeWidth={1.5} />
               </a>
               <a
                 href={`mailto:${email}`}
-                className="flex items-center gap-3 rounded-xl border border-white/25 bg-white/5 px-4 py-3.5 transition-colors hover:bg-white/10 active:bg-white/15"
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/35 bg-black transition-colors hover:bg-white/10 active:bg-white/15"
+                aria-label={`Email ${email}`}
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/35 bg-black">
-                  <Mail className="h-5 w-5 text-white" strokeWidth={1.5} />
-                </span>
-                <span className="break-all text-sm font-semibold">{email}</span>
+                <Mail className="h-6 w-6 text-white" strokeWidth={1.5} />
               </a>
             </div>
           </div>

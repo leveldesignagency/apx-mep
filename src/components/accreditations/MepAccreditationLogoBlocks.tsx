@@ -25,43 +25,43 @@ export function MepAccreditationHeroStrip() {
   if (!lead || !tail) return null
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-5 sm:gap-7 md:gap-9">
+    <div className="mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-center gap-1 px-0.5 sm:gap-7 sm:px-0 md:gap-9">
       <Link
         href={`/accreditations/${lead.slug}`}
-        className="flex h-16 w-auto max-w-[170px] items-center justify-center sm:h-[4.75rem] sm:max-w-[200px] md:h-20 md:max-w-[220px]"
+        className="flex h-8 max-h-8 w-auto min-w-0 max-w-full basis-[20%] items-center justify-center sm:h-[4.75rem] sm:max-h-none sm:basis-auto sm:max-w-[200px] md:h-20 md:max-w-[220px]"
         aria-label={`${MEP_ACCREDITATIONS[lead.slug].name} — view dedicated accreditation page`}
       >
         <img
           src={mepAccreditationLogoSrc(lead.slug as MepAccreditationSlug, "dark")}
           alt={MEP_ACCREDITATIONS[lead.slug].name}
-          className="h-full w-auto object-contain opacity-90"
+          className="h-full w-auto max-w-full object-contain opacity-90"
         />
       </Link>
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
+      <div className="flex min-h-0 min-w-0 basis-[60%] flex-nowrap items-center justify-center gap-0.5 sm:basis-auto sm:gap-3 md:gap-4">
         {isoItems.map(({ slug }) => (
           <Link
             key={slug}
             href={`/accreditations/${slug}`}
-            className="flex h-[5.25rem] w-auto max-w-[200px] items-center justify-center sm:h-[6.25rem] sm:max-w-[240px] md:h-[7rem] md:max-w-[260px]"
+            className="flex h-8 max-h-8 min-h-0 min-w-0 w-auto max-w-full flex-1 basis-0 items-center justify-center sm:h-[6.25rem] sm:max-h-none sm:flex-none sm:basis-auto sm:max-w-[240px] md:h-[7rem] md:max-w-[260px]"
             aria-label={`${MEP_ACCREDITATIONS[slug].name} — view dedicated accreditation page`}
           >
             <img
               src={mepAccreditationLogoSrc(slug, "dark")}
               alt={MEP_ACCREDITATIONS[slug].name}
-              className="h-full w-auto max-h-full object-contain opacity-90"
+              className="h-full w-auto max-h-full max-w-full object-contain opacity-90"
             />
           </Link>
         ))}
       </div>
       <Link
         href={`/accreditations/${tail.slug}`}
-        className="flex h-16 w-auto max-w-[170px] items-center justify-center sm:h-[4.75rem] sm:max-w-[200px] md:h-20 md:max-w-[220px]"
+        className="flex h-8 max-h-8 w-auto min-w-0 max-w-full basis-[20%] items-center justify-center sm:h-[4.75rem] sm:max-h-none sm:basis-auto sm:max-w-[200px] md:h-20 md:max-w-[220px]"
         aria-label={`${MEP_ACCREDITATIONS[tail.slug].name} — view dedicated accreditation page`}
       >
         <img
           src={mepAccreditationLogoSrc(tail.slug as MepAccreditationSlug, "dark")}
           alt={MEP_ACCREDITATIONS[tail.slug].name}
-          className="h-full w-auto object-contain opacity-90"
+          className="h-full w-auto max-w-full object-contain opacity-90"
         />
       </Link>
     </div>

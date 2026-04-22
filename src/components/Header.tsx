@@ -325,19 +325,22 @@ export default function Header() {
             />
           </div>
           <div className="relative z-10 flex h-14 min-h-[3.5rem] w-full items-center justify-center px-2 sm:h-16 sm:px-4 lg:h-16 lg:min-h-0 lg:justify-between lg:px-6">
+            {/* Logo: drop-in animation lives on inner span so transform does not override mobile centre (-translate-x-1/2) on the link */}
             <Link
               href="/"
-              className="header-logo-drop-in absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 cursor-pointer lg:static lg:translate-x-0 lg:translate-y-0"
+              className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 cursor-pointer items-center lg:static lg:translate-x-0 lg:translate-y-0"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="header-logo-hover-wrap inline-block relative overflow-hidden">
-                <Image
-                  src="/__APX Web Logo MEP.svg"
-                  alt="APX Mechanical & Electrical Logo"
-                  width={334}
-                  height={112}
-                  className="relative z-10 h-20 w-auto sm:h-24 lg:h-28"
-                />
+              <span className="header-logo-drop-in inline-block">
+                <span className="header-logo-hover-wrap relative inline-block overflow-hidden">
+                  <Image
+                    src="/__APX Web Logo MEP.svg"
+                    alt="APX Mechanical & Electrical Logo"
+                    width={334}
+                    height={112}
+                    className="relative z-10 h-20 w-auto sm:h-24 lg:h-28"
+                  />
+                </span>
               </span>
             </Link>
             {/* FIRE & SECURITY: absolute, same as MEP – own stack so alignment isn’t affected by switch button */}

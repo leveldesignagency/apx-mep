@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
-/** Matches `MepHomeQuoteFormDrawShell` path: TL + BR arcs r=8 in 0–100 viewBox → 8% per axis. */
-const R = "rounded-tl-[8%] rounded-br-[8%] rounded-tr-none rounded-bl-none"
+/** Fixed radii (not %) so tall mobile layouts don’t get elliptical / skewed corners. */
+const R = "rounded-tl-[1.5rem] rounded-br-[1.5rem] rounded-tr-none rounded-bl-none"
 
 /** Same surface language as contact page detail cards: light tint, no grey frosted blur. */
 export function GlassFormPanel({ children }: { children: ReactNode }) {

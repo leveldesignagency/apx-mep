@@ -799,58 +799,57 @@ export default function Home() {
       <GlobalStyles theme={themeMode} />
       <div className="min-h-screen overflow-x-clip relative z-10">
 
-      {/* Hero Section – background image scrolls with this section (not viewport-fixed) */}
-      <section id="hero" className="relative h-screen overflow-visible bg-transparent flex flex-col" style={{ background: 'transparent' }}>
+      {/* Hero Section – background image scrolls with this section (not viewport-fixed).
+          min-h fills first screen for imagery; avoid flex-1 on copy or it grows a huge empty band above accreditations. */}
+      <section
+        id="hero"
+        className="relative flex min-h-[100dvh] flex-col overflow-visible bg-transparent"
+        style={{ background: "transparent" }}
+      >
         <HeroVideoBackground />
-        {/* Content */}
-        <div className="container mx-auto flex flex-1 flex-col justify-start px-4 pb-24 pt-28 relative z-20 sm:px-6 sm:pb-28 sm:pt-32 md:pb-32 md:pt-40 lg:pb-40 lg:pt-52">
-          <div className="space-y-4">
-            {/* Title + paragraph: white text on hero image */}
-            <div className="max-w-2xl">
-              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left transition-opacity duration-1000 font-title text-white ${
-                heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
-              }`}>
-                APX MEP delivers mechanical, electrical and building services.
-              </h1>
-              <p className={`text-base sm:text-lg md:text-xl font-normal mb-4 md:mb-5 text-left tracking-tight transition-opacity duration-1000 max-w-lg text-white ${
-                heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
-              }`}>
-                We specialise in the design, installation and maintenance of HVAC, electrical systems and plumbing across London and the Home Counties.
-              </p>
+        <div className="relative z-20 container mx-auto flex flex-col px-4 pt-28 pb-10 sm:px-6 sm:pt-32 sm:pb-12 md:pt-40 lg:pt-52 lg:pb-14">
+          <div className="mx-auto flex w-full max-w-2xl flex-col items-center space-y-4 text-center lg:mx-0 lg:items-start lg:text-left">
+            <h1 className={`text-3xl font-bold mb-2 font-title text-white transition-opacity duration-1000 sm:text-4xl md:mb-3 md:text-5xl lg:text-6xl ${
+              heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
+              APX MEP delivers mechanical, electrical and building services.
+            </h1>
+            <p className={`mx-auto max-w-lg text-base font-normal tracking-tight text-white transition-opacity duration-1000 sm:text-lg md:mb-5 md:text-xl mb-4 lg:mx-0 ${
+              heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
+              We specialise in the design, installation and maintenance of HVAC, electrical systems and plumbing across London and the Home Counties.
+            </p>
 
-              {/* Hero CTAs – side by side */}
-              <div className={`flex flex-wrap items-center gap-4 sm:gap-6 pt-2 transition-opacity duration-1000 ${
-                heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
-              }`}>
-                <CustomPillButton href="/contact" size="md">
-                  Get a free quote
-                </CustomPillButton>
-                <Link
-                  href="/contact"
-                  className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
-                >
-                  Question? get in touch
-                </Link>
-              </div>
+            <div className={`flex flex-wrap items-center justify-center gap-4 pt-2 transition-opacity duration-1000 sm:gap-6 lg:justify-start ${
+              heroAnimation.subtitleVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
+              <CustomPillButton href="/contact" size="md">
+                Get a free quote
+              </CustomPillButton>
+              <Link
+                href="/contact"
+                className="text-white font-normal text-base underline underline-offset-4 hover:text-white/90 transition-colors"
+              >
+                Question? get in touch
+              </Link>
             </div>
           </div>
-        </div>
 
-        {/* Hero accreditations — NICEIC, ISO trio, Gas Safe */}
-        <div
-          className={`container mx-auto mb-24 px-4 pb-10 relative z-10 transition-all duration-700 ease-out sm:mb-32 sm:px-6 sm:pb-12 ${
-            heroAnimation.clientsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+          {/* Accreditations — stacked under copy with modest gap (no flex-1 void) */}
           <div
-            className={`w-1/2 mx-auto h-px bg-white/25 mb-6 transition-all duration-500 ${
-              heroAnimation.clientsVisible ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+            className={`mt-10 transition-all duration-700 ease-out sm:mt-12 md:mt-14 ${
+              heroAnimation.clientsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
-            aria-hidden
-          />
-          <MepAccreditationHeroStrip />
+          >
+            <div
+              className={`mx-auto mb-6 h-px w-1/2 bg-white/25 transition-all duration-500 ${
+                heroAnimation.clientsVisible ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+              }`}
+              aria-hidden
+            />
+            <MepAccreditationHeroStrip />
+          </div>
         </div>
-        
       </section>
 
       {/* Core capabilities – black section blended from hero before Our Story */}
@@ -1131,11 +1130,11 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="grid w-full min-w-0 grid-cols-2 items-stretch gap-x-5 gap-y-7 self-stretch sm:gap-x-6 sm:gap-y-8 lg:gap-x-7">
+              <div className="flex w-full min-w-0 flex-col gap-y-7 self-stretch sm:gap-y-8">
                 {WHY_CHOOSE_CARDS.map(({ Icon, title, bullets }, idx) => (
                   <div
                     key={title}
-                    className="why-choose-card-shell about-reveal flex h-full min-h-0 min-w-0 flex-col items-center self-stretch"
+                    className="why-choose-card-shell about-reveal flex min-h-0 w-full min-w-0 flex-col items-center"
                     style={{ transitionDelay: `${360 + idx * 90}ms` }}
                   >
                     <div
@@ -1156,7 +1155,7 @@ export default function Home() {
                     </article>
                   </div>
                 ))}
-                <div className="about-reveal" style={{ transitionDelay: "760ms" }}>
+                <div className="about-reveal w-full" style={{ transitionDelay: "760ms" }}>
                   <GoogleBusinessReviewsSlot />
                 </div>
               </div>

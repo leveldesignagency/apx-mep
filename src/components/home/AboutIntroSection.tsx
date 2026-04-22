@@ -71,9 +71,15 @@ export function AboutIntroSection({ bodyLines = DEFAULT_BODY_LINES }: AboutIntro
     if (!el) return
     const obs = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setActive(true)
+        if (!entry.isIntersecting) return
+        setActive(true)
+        obs.unobserve(el)
       },
-      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+      {
+        /* Start slightly before the block fully enters; one-shot */
+        threshold: 0.06,
+        rootMargin: "0px 0px 12% 0px",
+      }
     )
     obs.observe(el)
     return () => obs.disconnect()
@@ -123,7 +129,11 @@ export function AboutIntroSection({ bodyLines = DEFAULT_BODY_LINES }: AboutIntro
           </div>
 
           {/* White plate scales 55%–75% (loop); mask + photo on top. */}
-          <div className="relative isolate h-full min-h-[min(55vw,22rem)] w-full min-w-0 overflow-hidden rounded-bl-[1.75rem] lg:min-h-0 lg:rounded-bl-[2rem]">
+          <div
+            className={`about-intro-media relative isolate h-full min-h-[min(55vw,22rem)] w-full min-w-0 overflow-hidden rounded-bl-[1.75rem] lg:min-h-0 lg:rounded-bl-[2rem] ${
+              on ? "about-intro-media--visible" : "about-intro-media--hidden"
+            }`}
+          >
             <div
               className="about-intro-white-pulse pointer-events-none absolute z-0 bg-white"
               style={{ inset: "-22px" }}
