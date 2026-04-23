@@ -60,7 +60,7 @@ export default function RefurbishmentFitOutPage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">
             How we support refurbishment & fit-out
           </h2>
@@ -114,7 +114,7 @@ export default function RefurbishmentFitOutPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">
             Compliance & documentation
           </h2>
@@ -156,7 +156,7 @@ export default function RefurbishmentFitOutPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">
             Typical schemes
           </h2>

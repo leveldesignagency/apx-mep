@@ -68,7 +68,7 @@ export function ContactPageClient() {
       <div className="relative z-10">
         <section
           id="contact"
-          className="about-section-px page-title-top pb-16 md:pb-24 lg:pb-28"
+          className="about-section-px page-title-top pb-20 sm:pb-20 md:pb-24 lg:pb-28"
         >
           <div className="about-section-inner mx-auto max-w-6xl">
             <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-16 items-start">

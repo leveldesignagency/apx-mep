@@ -126,13 +126,14 @@ export function MepWhatWeOfferSection() {
       </div>
 
       {/* Full-width horizontal scroll of tab pills; negative margin aligns with section container padding */}
-      <div className="-mx-4 sm:-mx-6 lg:mx-0">
+      <div className="-mx-4 w-full min-w-0 max-w-full sm:-mx-6 lg:mx-0">
         <div
           ref={tablistRef}
+          data-lenis-prevent=""
           role="tablist"
           aria-label="Service categories"
           onKeyDown={onTablistKeyDown}
-          className="flex snap-x snap-mandatory flex-nowrap gap-2 overflow-x-auto overflow-y-visible scroll-smooth px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:thin] sm:gap-3 sm:px-6 lg:px-0 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/25 [&::-webkit-scrollbar-track]:bg-transparent"
+          className="mep-offer-tablist flex max-w-full min-w-0 touch-pan-x snap-x snap-mandatory flex-nowrap gap-2 overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain px-4 pb-2 scrollbar-hide sm:gap-3 sm:px-6 lg:px-0"
         >
           {items.map((o, i) => {
             const isSelected = i === active
@@ -146,11 +147,13 @@ export function MepWhatWeOfferSection() {
                 aria-controls={`mep-offer-panel-${i}`}
                 tabIndex={isSelected ? 0 : -1}
                 onClick={() => setActive(i)}
-                className={`fs-offer-tab flex min-h-[44px] shrink-0 snap-start items-center justify-center rounded-full border-2 px-3 py-2.5 text-center text-[11px] font-semibold uppercase leading-tight tracking-wide transition-colors sm:min-w-[9.5rem] sm:px-4 sm:text-xs md:text-sm ${
+                className={`fs-offer-tab flex h-[3.25rem] min-h-[44px] w-[10.5rem] min-w-[10.5rem] max-w-[10.5rem] flex-none snap-start items-center justify-center rounded-full border-2 px-2.5 py-2 text-center text-[10px] font-semibold uppercase leading-tight tracking-wide transition-colors sm:h-auto sm:min-h-[44px] sm:min-w-[9.5rem] sm:max-w-none sm:w-auto sm:shrink-0 sm:px-4 sm:text-xs md:text-sm ${
                   isSelected ? "fs-offer-tab--active" : "fs-offer-tab--inactive"
                 }`}
               >
-                <span className="fs-offer-tab__label whitespace-nowrap">{o.tabLabel}</span>
+                <span className="fs-offer-tab__label line-clamp-2 text-balance sm:line-clamp-none sm:whitespace-nowrap">
+                  {o.tabLabel}
+                </span>
               </button>
             )
           })}

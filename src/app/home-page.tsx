@@ -803,11 +803,11 @@ export default function Home() {
           min-h fills first screen for imagery; avoid flex-1 on copy or it grows a huge empty band above accreditations. */}
       <section
         id="hero"
-        className="relative flex min-h-[100dvh] flex-col overflow-visible bg-transparent"
+        className="relative flex min-h-0 flex-col overflow-visible bg-transparent md:min-h-[100dvh]"
         style={{ background: "transparent" }}
       >
         <HeroVideoBackground />
-        <div className="relative z-20 container mx-auto flex flex-col px-4 pt-28 pb-10 sm:px-6 sm:pt-32 sm:pb-12 md:pt-40 lg:pt-52 lg:pb-14">
+        <div className="relative z-20 container mx-auto flex flex-col px-4 pt-36 pb-10 min-[400px]:pt-40 sm:px-6 sm:pb-12 sm:pt-40 md:pt-44 lg:pt-52 lg:pb-14">
           <div className="mx-auto flex w-full max-w-2xl flex-col items-center space-y-4 text-center lg:mx-0 lg:items-start lg:text-left">
             <h1 className={`text-3xl font-bold mb-2 font-title text-white transition-opacity duration-1000 sm:text-4xl md:mb-3 md:text-5xl lg:text-6xl ${
               heroAnimation.titleVisible ? 'opacity-100' : 'opacity-0'
@@ -855,7 +855,7 @@ export default function Home() {
       {/* Core capabilities – black section blended from hero before Our Story */}
       <section
         id="core-capabilities"
-        className="relative bg-black pt-20 pb-10 lg:pt-24 lg:pb-12 overflow-hidden"
+        className="relative bg-black pt-12 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-12 lg:pt-24 lg:pb-12 overflow-hidden"
       >
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 h-28 sm:h-36"
@@ -996,7 +996,7 @@ export default function Home() {
       </section>
 
       {/* Projects – scroll view with glass blur cards; strip bleeds full viewport, offset start; scroll lock: vertical scroll drives horizontal until end */}
-      <section ref={projectsSectionRef} id="projects" className="bg-black overflow-x-hidden pt-20 pb-32 lg:pt-28 lg:pb-44">
+      <section ref={projectsSectionRef} id="projects" className="bg-black overflow-x-hidden pt-24 pb-36 sm:pt-24 sm:pb-36 lg:pt-28 lg:pb-44">
         <div className="container mx-auto px-6 lg:px-8">
           <div
             className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-14 lg:mb-20 transition-all duration-[900ms] ease-out ${
@@ -1037,7 +1037,8 @@ export default function Home() {
         >
           <div
             ref={projectsScrollRef}
-            className="flex min-h-[300px] gap-6 overflow-x-auto overflow-y-hidden pb-6 pl-6 lg:pl-8 pr-6 lg:pr-8 scrollbar-hide"
+            data-lenis-prevent=""
+            className="flex min-h-[300px] min-w-0 touch-pan-x gap-6 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-6 pl-6 lg:pl-8 pr-6 lg:pr-8 scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
           {projects.map((p, i) => (
@@ -1231,7 +1232,7 @@ export default function Home() {
       )}
 
       {/* Logo marquee — above testimonials */}
-      <section id="logo-marquee" className="logo-marquee-section py-12 overflow-hidden" aria-label="Trusted by leading brands">
+      <section id="logo-marquee" className="logo-marquee-section py-16 overflow-hidden lg:py-12" aria-label="Trusted by leading brands">
         <div
           className={`logo-marquee-wrapper transition-all duration-[900ms] ease-out ${
             sectionMotion.marquee ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
@@ -1267,7 +1268,7 @@ export default function Home() {
       {/* Testimonials — full-bleed black, large display type, arrows + fade */}
       <section
         id="testimonials"
-        className="relative overflow-hidden bg-black py-20 sm:py-24 lg:py-32"
+        className="relative overflow-hidden bg-black py-24 sm:py-24 lg:py-32"
         onMouseEnter={() => setTestimonialsPaused(true)}
         onMouseLeave={() => setTestimonialsPaused(false)}
       >
@@ -1390,7 +1391,7 @@ export default function Home() {
       <section id="contact" className="section-spacing relative bg-black">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
-            {/* Left side - Title and Button */}
+            {/* Left side - intro copy */}
             <div
               className={`contact-section-head space-y-8 pt-16 lg:pt-24 transition-all duration-[600ms] ease-out ${
                 sectionMotion.contact ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -1411,17 +1412,9 @@ export default function Home() {
                 
                 <p className="text-base leading-relaxed text-gray-300">
                   Whether you need a fee proposal, technical input on a tender, or a coordinated MEP package on site, contact us for a straightforward conversation. We respond promptly and can provide competitive quotes aligned to your scope and programme.
-              </p>
+                </p>
+              </div>
             </div>
-            
-              <button
-                className="bg-white text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-3"
-                onClick={() => document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <ArrowRight className="h-6 w-6" />
-                GET A QUOTE
-              </button>
-                </div>
             
             {/* Right side - Contact Form (glassmorphic) — animated SVG border + delayed inner fade */}
             <MepHomeQuoteFormDrawShell active={sectionMotion.contact}>

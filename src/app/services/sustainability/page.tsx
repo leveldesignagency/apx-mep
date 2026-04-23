@@ -31,7 +31,7 @@ export default function SustainabilityPage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-16 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">How we support sustainable MEP</h2>
           <div className="space-y-6 text-left text-lg leading-relaxed text-gray-300">
             <p>
@@ -45,7 +45,7 @@ export default function SustainabilityPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Focus areas</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -91,7 +91,7 @@ export default function SustainabilityPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-8 text-left font-title text-3xl font-bold text-white sm:text-4xl">Frameworks & evidence</h2>
           <ul className="space-y-4">
             {[

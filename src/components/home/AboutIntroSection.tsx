@@ -91,7 +91,7 @@ export function AboutIntroSection({ bodyLines = DEFAULT_BODY_LINES }: AboutIntro
     <section ref={sectionRef} id="about-intro" className="relative bg-black" aria-label="Our story">
       {/* Same horizontal rhythm as #services and other homepage strips */}
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 py-16 lg:grid-cols-2 lg:min-h-[min(90vh,52rem)] lg:items-stretch lg:gap-12 lg:py-20 xl:gap-14">
+        <div className="grid grid-cols-1 gap-10 py-20 lg:grid-cols-2 lg:min-h-[min(90vh,52rem)] lg:items-stretch lg:gap-12 lg:py-20 xl:gap-14">
           <div className="flex flex-col justify-center text-left">
             <div className="max-w-xl">
               <Line

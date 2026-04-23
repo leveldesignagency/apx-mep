@@ -314,7 +314,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-block about-block--black about-section-y about-section-px">
+      <section className="about-block about-block--black about-section-y about-section-px about-mep-commitments-spacing">
         <div className="about-section-inner w-full">
           <Reveal>
             <span className="section-label mb-3 block text-white/70">Our commitments</span>
@@ -356,7 +356,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-block about-block--black about-section-y about-section-px">
+      <section className="about-block about-block--black about-section-y about-section-px about-mep-proof-quote-spacing">
         <div className="about-section-inner rounded-3xl border border-white/20 bg-white/[0.04] p-7 text-center sm:p-9 lg:p-12 backdrop-blur-md">
           <Reveal>
             <p className="mx-auto max-w-4xl text-2xl font-medium leading-relaxed text-white/90 md:text-3xl lg:text-[2.45rem]">

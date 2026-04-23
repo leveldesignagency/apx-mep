@@ -27,7 +27,7 @@ export default function CommercialCctvPage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Commercial CCTV solutions</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
@@ -50,7 +50,7 @@ export default function CommercialCctvPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">What we offer</h2>
           <ul className="space-y-3">
             {[

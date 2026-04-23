@@ -13,7 +13,7 @@ export default function MepServicesHubPage() {
     <div className="min-h-screen overflow-x-hidden bg-black text-white">
       <div className="h-[0.75px] w-full bg-white" aria-hidden />
 
-      <main className="pb-20">
+      <main className="pb-24 lg:pb-20">
         <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} page-title-top`}>
           <h1 className="font-title text-4xl font-bold tracking-tight text-white md:text-5xl">
             APX Mechanical & Electrical Services

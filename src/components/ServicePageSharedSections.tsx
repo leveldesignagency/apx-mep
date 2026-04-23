@@ -83,7 +83,7 @@ export function RequestFreeSurvey({ title = DEFAULT_SURVEY_TITLE, description = 
   return (
     <>
       <div className="w-full h-[0.75px] bg-black dark:bg-white" />
-      <section className="py-12 lg:py-16" style={{ backgroundColor: bgColor }}>
+      <section className="py-16 lg:py-16" style={{ backgroundColor: bgColor }}>
         <div className={MEP_SERVICE_CONTENT_OUTER_CLASS}>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className={`text-4xl font-bold mb-6 font-title ${textClass}`}>

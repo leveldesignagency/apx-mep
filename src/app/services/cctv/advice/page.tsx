@@ -27,7 +27,7 @@ export default function UsefulCctvAdvicePage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">CCTV advice & guidance</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
@@ -58,7 +58,7 @@ export default function UsefulCctvAdvicePage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white">Free survey & expert advice</h2>
           <p className="mb-8 text-left text-lg text-gray-300">
             The best way to get advice tailored to your property is a free, no-obligation survey. We&apos;ll assess your site, discuss your requirements, and recommend the right CCTV solution.

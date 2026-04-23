@@ -10,6 +10,8 @@ const lenisOptions = {
   touchMultiplier: 1.05,
   smoothWheel: true,
   autoRaf: true,
+  /** Let horizontal strips (Services tabs, Projects) receive native scroll under Lenis */
+  allowNestedScroll: true,
 } as const
 
 export function PremiumScroll({ children }: { children: React.ReactNode }) {

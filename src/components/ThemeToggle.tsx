@@ -138,6 +138,60 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     border-color: white !important;
   }
 
+  /*
+   * MEP header hamburger + mobile menu close: global button rule is white fill / black text (!important).
+   * Override: black fill, white border, white icon (matches brand; Lucide uses currentColor / stroke).
+   */
+  .mep-header-menu-trigger {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    border-color: #ffffff !important;
+    box-shadow: none !important;
+  }
+  .mep-header-menu-trigger:hover {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  .mep-header-menu-trigger:focus,
+  .mep-header-menu-trigger:focus-visible {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    outline: 2px solid rgba(255, 255, 255, 0.45) !important;
+    outline-offset: 2px !important;
+  }
+  .mep-header-menu-trigger svg {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  .apx-mobile-contact-fab {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    border-color: #ffffff !important;
+    border-radius: 0 !important;
+  }
+  .apx-mobile-contact-fab:hover {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  .apx-mobile-contact-fab:focus,
+  .apx-mobile-contact-fab:focus-visible {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    outline: 2px solid rgba(255, 255, 255, 0.45) !important;
+    outline-offset: 2px !important;
+  }
+
   /* Form inputs: theme background and text */
   input, textarea, select {
     background: ${({ theme }) => theme.cardBg} !important;

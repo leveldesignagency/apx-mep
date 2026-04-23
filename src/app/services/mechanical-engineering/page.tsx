@@ -128,7 +128,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-8 text-left font-title text-3xl font-bold text-white">Design standards & compliance</h2>
           <div className="space-y-4 text-left text-gray-300">
             <p>
@@ -144,7 +144,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">Mechanical installations</h2>
           <p className="mb-12 text-left text-gray-300">
             Three sites with photography from verified APX Group case studies.
@@ -172,7 +172,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-2 text-left font-title text-3xl font-bold text-white">HVAC & mechanical equipment</h2>
           <p className="mb-12 text-left text-gray-300">We install equipment from leading manufacturers where the specification requires.</p>
           <div className="flex flex-wrap items-center justify-start gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
@@ -192,7 +192,7 @@ export default function MechanicalEngineeringPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-12">
             <div className="min-w-0 max-w-xl lg:max-w-none">
               <h2 className="mb-4 text-left font-title text-3xl font-bold text-white">When to involve a mechanical specialist</h2>

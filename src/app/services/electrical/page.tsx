@@ -60,7 +60,7 @@ export default function ElectricalDomesticNewBuildPage() {
           aria-hidden
         />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} relative z-[1] py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">
             What we deliver on site
           </h2>
@@ -114,7 +114,7 @@ export default function ElectricalDomesticNewBuildPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-10 text-left font-title text-3xl font-bold text-white sm:text-4xl">Standards & compliance</h2>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <div>
@@ -154,7 +154,7 @@ export default function ElectricalDomesticNewBuildPage() {
 
         <div className="border-t border-white/15" />
 
-        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-12 lg:py-16`}>
+        <section className={`${MEP_SERVICE_CONTENT_OUTER_CLASS} py-16 lg:py-16`}>
           <h2 className="mb-6 text-left font-title text-3xl font-bold text-white sm:text-4xl">
             Typical domestic & new-build projects
           </h2>

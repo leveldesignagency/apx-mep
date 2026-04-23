@@ -5,16 +5,29 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 import { Phone, Mail, Menu, X, ArrowRight, Check, Facebook, Instagram, Linkedin, ChevronDown } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, type TransitionEvent } from "react"
+import { createPortal } from "react-dom"
 import { useTheme } from '@/contexts/ThemeContext'
 import { isMepCapabilityPath } from "@/lib/mepCapabilityPaths"
 import { MEP_SERVICE_HUB_ITEMS } from "@/lib/mep-service-hub"
+import { cn } from "@/lib/utils"
+
+/** Mobile drawer only (no Accreditations — linked from homepage/elsewhere) */
+const MEP_MOBILE_PRIMARY_LINKS = [
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
+  { href: "/methodology", label: "Methodology" },
+  { href: "/projects", label: "Projects" },
+  { href: "/contact", label: "Contact" },
+] as const
 
 export default function Header() {
   const pathname = usePathname()
   const { theme } = useTheme()
   /** Normalise so `/services` and `/services/` are the hub; only `/services/...` subpaths use transparent overlay bar */
   const path = pathname.replace(/\/$/, "") || "/"
+  const isMepNavActive = (href: string) =>
+    href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`)
   const isCareersPage = path === "/careers"
   const isHomePage = path === "/"
   const isAboutPage = path === "/about"
@@ -35,10 +48,24 @@ export default function Header() {
   const isServicesPage = pathname.startsWith("/services") || pathname.startsWith("/projects")
   const isDark = theme === 'dark'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  /** MEP full-screen mobile drawer: controls slide-in; close animation finishes before unmount. */
+  const [mepMenuPanelIn, setMepMenuPanelIn] = useState(false)
+  const mepMenuPanelInRef = useRef(false)
+  mepMenuPanelInRef.current = mepMenuPanelIn
+  const [mepMenuPortalReady, setMepMenuPortalReady] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'phone' | 'email' } | null>(null)
   const [contactTabReady, setContactTabReady] = useState(false)
   const servicesCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  /** Fallback if panel `transform` `transitionend` is not delivered. */
+  const mepMenuCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearMepMenuCloseTimer = useCallback(() => {
+    if (mepMenuCloseTimerRef.current) {
+      clearTimeout(mepMenuCloseTimerRef.current)
+      mepMenuCloseTimerRef.current = null
+    }
+  }, [])
 
   const openServices = () => {
     if (servicesCloseTimeoutRef.current) {
@@ -51,14 +78,53 @@ export default function Header() {
     servicesCloseTimeoutRef.current = setTimeout(() => setIsServicesOpen(false), 280)
   }
 
+  const closeMepMenu = useCallback(() => {
+    clearMepMenuCloseTimer()
+    if (!isMenuOpen) return
+    if (!mepMenuPanelInRef.current) {
+      setIsMenuOpen(false)
+      return
+    }
+    setMepMenuPanelIn(false)
+    mepMenuCloseTimerRef.current = setTimeout(() => {
+      mepMenuCloseTimerRef.current = null
+      setIsMenuOpen(false)
+    }, 340)
+  }, [isMenuOpen, clearMepMenuCloseTimer])
+
+  useEffect(() => {
+    setMepMenuPortalReady(true)
+  }, [])
+
+  useLayoutEffect(() => {
+    if (!isMenuOpen) return
+    clearMepMenuCloseTimer()
+    setMepMenuPanelIn(false)
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setMepMenuPanelIn(true))
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [isMenuOpen, clearMepMenuCloseTimer])
+
+  const handleMepMenuPanelTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return
+    if (e.propertyName !== "transform") return
+    if (mepMenuPanelInRef.current) return
+    clearMepMenuCloseTimer()
+    setIsMenuOpen(false)
+  }
+
   useEffect(() => {
     if (!isMenuOpen) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMenuOpen(false)
+      if (e.key === "Escape") {
+        e.preventDefault()
+        closeMepMenu()
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [isMenuOpen])
+  }, [isMenuOpen, closeMepMenu])
 
   useEffect(() => {
     if (!isMenuOpen) return
@@ -68,6 +134,13 @@ export default function Header() {
       document.body.style.overflow = prev
     }
   }, [isMenuOpen])
+
+  /** Client-side nav leaves menu open; reset so the trigger shows hamburger, not X */
+  useEffect(() => {
+    clearMepMenuCloseTimer()
+    setMepMenuPanelIn(false)
+    setIsMenuOpen(false)
+  }, [pathname, clearMepMenuCloseTimer])
 
   const copyToClipboard = async (text: string, type: 'phone' | 'email') => {
     try {
@@ -98,6 +171,7 @@ export default function Header() {
   }
 
   return (
+    <>
     <header
       className={`site-header ${headerLayoutClass} ${headerSolidBlack ? "bg-black header--solid-black" : "bg-transparent"} ${isHomePage || isTransparentHeaderPage || isAboutPage ? "header-bg-transparent-page" : ""} ${isServicesPage ? "header--no-animate" : ""}`}
       style={{ backgroundColor: headerSolidBlack ? "#000000" : "transparent" }}
@@ -329,7 +403,9 @@ export default function Header() {
             <Link
               href="/"
               className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 cursor-pointer items-center lg:static lg:translate-x-0 lg:translate-y-0"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => {
+                if (isMenuOpen) closeMepMenu()
+              }}
             >
               <span className="header-logo-drop-in inline-block">
                 <span className="header-logo-hover-wrap relative inline-block overflow-hidden">
@@ -459,48 +535,23 @@ export default function Header() {
           </div>
           <button
             type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 sm:right-4 lg:hidden"
-            style={{ color: 'white' }}
+            onClick={() => (isMenuOpen ? closeMepMenu() : setIsMenuOpen(true))}
+            className={cn(
+              "mep-header-menu-trigger absolute right-2 top-1/2 z-20 -translate-y-1/2 flex h-10 w-10 items-center justify-center sm:right-4 lg:hidden",
+              "rounded-lg border-2 border-white bg-black text-white",
+              "transition-transform duration-200 active:scale-[0.97]"
+            )}
             aria-expanded={isMenuOpen}
             aria-controls="mep-mobile-nav"
-            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+            ) : (
+              <Menu className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+            )}
           </button>
         </div>
-        {isMenuOpen && (
-          <div
-            id="mep-mobile-nav"
-            className="mt-4 border-t border-t-white/20 pb-6 pt-6 lg:hidden"
-            style={{ backgroundColor: 'black' }}
-          >
-            <div className="flex flex-col space-y-4 px-1">
-              <Link href="/services" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Services</Link>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>About</Link>
-              <Link href="/methodology" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Methodology</Link>
-              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Projects</Link>
-              <Link href="/accreditations" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Accreditations</Link>
-              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="nav-menu-item relative text-lg font-medium group uppercase opacity-100 hover:opacity-100" style={{ color: 'white' }}>Contact</Link>
-              <div className="flex flex-col gap-3 border-t border-white/15 pt-4">
-                <a href="tel:02045685986" className="text-sm font-medium text-white/90" onClick={() => setIsMenuOpen(false)}>020 4568 5986</a>
-                <a href="mailto:enquiries@apx-mep.co.uk" className="text-sm font-medium text-white/90" onClick={() => setIsMenuOpen(false)}>enquiries@apx-mep.co.uk</a>
-              </div>
-              <div className="pt-2">
-                <a href={process.env.NEXT_PUBLIC_APX_FS_URL || 'http://localhost:3003'} className="group relative" onClick={() => setIsMenuOpen(false)}>
-                  <div className="flex items-center overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:w-52 w-10 group-hover:backdrop-blur-sm rounded-full border border-white pulse-glow">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] flex-shrink-0">
-                      <ArrowRight className="h-4 w-4 transition-all duration-500 group-hover:opacity-0 group-hover:rotate-180" />
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-                      <span className="apx-switch-label text-xs font-bold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-300 group-hover:delay-300 text-disappear relative z-10 text-white">SWITCH TO APX FS</span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
       </nav>
 
       {/* Contact tab: desktop only — phone/tablet use hamburger contact links */}
@@ -549,5 +600,75 @@ export default function Header() {
         </div>
       </div>
     </header>
+    {isMenuOpen && mepMenuPortalReady
+      ? createPortal(
+          <div className="fixed inset-0 z-[200] lg:hidden" id="mep-mobile-nav" role="dialog" aria-modal="true" aria-label="Site navigation">
+            <div
+              className={cn(
+                "absolute inset-0 z-0 transition-opacity duration-300 ease-out",
+                mepMenuPanelIn ? "bg-black/60 opacity-100 backdrop-blur-[2px]" : "bg-black/0 opacity-0"
+              )}
+              onClick={closeMepMenu}
+              aria-hidden
+            />
+            <div
+              className={cn(
+                "absolute z-10 flex min-h-0 min-w-0 flex-col overflow-hidden",
+                "left-3 right-3 sm:left-4 sm:right-4",
+                "top-[max(0.75rem,env(safe-area-inset-top,0px))] bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))]",
+                "rounded-2xl border border-white/15 bg-[#0a0a0a]/96 shadow-[0_24px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl",
+                "transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
+                mepMenuPanelIn ? "translate-x-0" : "translate-x-full"
+              )}
+              onTransitionEnd={handleMepMenuPanelTransitionEnd}
+            >
+              <div className="flex shrink-0 items-center justify-end border-b border-white/10 px-4 py-3 sm:px-5">
+                <button
+                  type="button"
+                  onClick={closeMepMenu}
+                  className="mep-header-menu-trigger flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border-2 border-white bg-black text-white transition active:scale-[0.98]"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-2 pb-2 sm:px-3 sm:pb-3">
+                <nav className="flex flex-col" aria-label="Main">
+                  {MEP_MOBILE_PRIMARY_LINKS.map(({ href, label }, i) => {
+                    const active = isMepNavActive(href)
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={closeMepMenu}
+                        className={cn(
+                          "relative block border-b border-white/10 py-3.5 pl-3 pr-5 text-right text-sm font-semibold uppercase tracking-wide !text-white transition-[background-color,opacity] duration-150",
+                          "hover:bg-white/5",
+                          "last:border-b-0",
+                          i === 0 && "pt-3",
+                          active && "bg-white/[0.06]"
+                        )}
+                        style={{ fontFamily: "var(--font-menu), sans-serif" }}
+                        aria-current={active ? "page" : undefined}
+                      >
+                        {active && (
+                          <span
+                            className="absolute top-0 bottom-0 left-0 w-0.5"
+                            style={{ backgroundColor: "#fff" }}
+                            aria-hidden
+                          />
+                        )}
+                        {label}
+                      </Link>
+                    )
+                  })}
+                </nav>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )
+      : null}
+    </>
   )
 }

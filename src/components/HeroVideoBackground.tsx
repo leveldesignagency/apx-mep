@@ -32,7 +32,7 @@ export default function HeroVideoBackground() {
         <img
           src="/male-electrician-overalls-focused-work-switchboard-with-fuses-using-tablet.jpg"
           alt=""
-          className="absolute inset-0 h-full w-full object-cover origin-center"
+          className="absolute inset-0 h-full w-full object-cover object-center"
           style={{ transform: "scaleX(-1)" }}
           fetchPriority="high"
         />
