@@ -3,17 +3,14 @@ import {
   MEP_ACCREDITATION_HERO_STRIP,
   MEP_ACCREDITATION_HUB_BOTTOM,
   MEP_ACCREDITATION_HUB_TOP,
+  MEP_ACCREDITATION_SINGLE_ROW,
   MEP_ACCREDITATIONS,
   mepAccreditationLogoSrc,
   type MepAccreditationSlug,
 } from "@/data/mepAccreditations"
 
-/** Homepage light strip: single row — NICEIC, ISO trio, Gas Safe (matches hero order). */
-const MEP_ACCREDITATION_HOME_ROW: MepAccreditationSlug[] = [
-  MEP_ACCREDITATION_HUB_TOP[0],
-  ...MEP_ACCREDITATION_HUB_BOTTOM,
-  MEP_ACCREDITATION_HUB_TOP[1],
-]
+/** Homepage light strip: single row — NICEIC, ISO trio, Gas Safe (same order as {@link MEP_ACCREDITATION_SINGLE_ROW}). */
+const MEP_ACCREDITATION_HOME_ROW: MepAccreditationSlug[] = [...MEP_ACCREDITATION_SINGLE_ROW]
 
 /** Hero (dark): NICEIC — ISO 9001 / 14001 / 45001 (grouped) — Gas Safe. */
 export function MepAccreditationHeroStrip() {
@@ -155,36 +152,21 @@ export function MepAccreditationLogosAboutGrid() {
   )
 }
 
-/** Footer: NICEIC + Gas Safe row, then three ISO marks. */
+/** Footer: one row, same order as hero — 5-up grid so marks never wrap in the contact column. */
 export function MepAccreditationFooterStrip() {
   return (
-    <div className="mt-4 flex flex-col gap-3 sm:gap-4">
-      <div className="flex flex-wrap items-center gap-4 sm:gap-5">
-        {MEP_ACCREDITATION_HUB_TOP.map((slug) => {
-          const a = MEP_ACCREDITATIONS[slug]
-          return (
-            <img
-              key={slug}
-              src={mepAccreditationLogoSrc(slug, "dark")}
-              alt={a.name}
-              className="h-10 w-auto max-w-[100px] flex-shrink-0 opacity-80 transition-opacity duration-300 hover:opacity-100 sm:max-w-[110px]"
-            />
-          )
-        })}
-      </div>
-      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        {MEP_ACCREDITATION_HUB_BOTTOM.map((slug) => {
-          const a = MEP_ACCREDITATIONS[slug]
-          return (
-            <img
-              key={slug}
-              src={mepAccreditationLogoSrc(slug, "dark")}
-              alt={a.name}
-              className="h-9 w-auto max-w-[72px] flex-shrink-0 opacity-80 transition-opacity duration-300 hover:opacity-100 sm:h-10 sm:max-w-[80px]"
-            />
-          )
-        })}
-      </div>
+    <div className="mt-4 grid w-full min-w-0 grid-cols-5 items-center justify-items-center gap-x-1.5 gap-y-0 sm:gap-x-2">
+      {MEP_ACCREDITATION_SINGLE_ROW.map((slug) => {
+        const a = MEP_ACCREDITATIONS[slug]
+        return (
+          <img
+            key={slug}
+            src={mepAccreditationLogoSrc(slug, "dark")}
+            alt={a.name}
+            className="h-8 w-full max-h-10 max-w-full min-w-0 object-contain opacity-80 transition-opacity duration-300 hover:opacity-100 sm:h-9"
+          />
+        )
+      })}
     </div>
   )
 }

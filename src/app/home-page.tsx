@@ -116,8 +116,11 @@ export default function Home() {
   const newsIndexRef = useRef(0)
   const mepListRef = useRef<HTMLUListElement>(null)
   const projectsScrollRef = useRef<HTMLDivElement>(null)
+  const projectsViewportRef = useRef<HTMLDivElement>(null)
+  /** Top edge of the horizontal card strip — wheel uses this as the lock anchor */
+  const projectsStripAnchorRef = useRef<HTMLDivElement>(null)
   const projectsSectionRef = useRef<HTMLElement>(null)
-  const projectsLabelRef = useRef<HTMLSpanElement>(null)
+  const projectsHorizontalPxRef = useRef(0)
   const testimonialQuoteStackRef = useRef<HTMLDivElement>(null)
   const [testimonialsQuoteMinPx, setTestimonialsQuoteMinPx] = useState<number | null>(null)
 
@@ -201,57 +204,114 @@ export default function Home() {
     []
   )
 
-  const scrollProjects = useCallback((dir: 'left' | 'right') => {
-    const el = projectsScrollRef.current
-    if (!el || !el.firstElementChild) return
-    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth
-    const gap = 24
-    const step = cardWidth + gap
-    el.scrollBy({ left: dir === 'left' ? -step : step, behavior: 'smooth' })
+  const scrollProjects = useCallback((dir: "left" | "right") => {
+    const strip = projectsScrollRef.current
+    const view = projectsViewportRef.current
+    if (!strip || !view) return
+    const maxX = Math.max(0, strip.scrollWidth - view.clientWidth)
+    const card = strip.querySelector("a.projects-card") as HTMLElement | null
+    const step = (card?.offsetWidth ?? 360) + 24
+    const cur = projectsHorizontalPxRef.current
+    const next = dir === "left" ? Math.max(0, cur - step) : Math.min(maxX, cur + step)
+    projectsHorizontalPxRef.current = next
+    strip.style.transform = `translate3d(${-next}px,0,0)`
   }, [])
 
-  // Projects scroll lock: when section is in view, vertical wheel moves horizontal strip (deltaY → scrollLeft). No internal state; boundary checks each time. Responsive and stable.
-  useEffect(() => {
-    const section = projectsSectionRef.current
+  useLayoutEffect(() => {
     const strip = projectsScrollRef.current
-    if (!section || !strip) return
+    const view = projectsViewportRef.current
+    const section = projectsSectionRef.current
+    if (!strip || !view || !section) return
 
-    // Zone: lock when "Projects" label is near viewport top (~80px). Fallback to section top if label ref missing.
-    const inZone = () => {
-      const label = projectsLabelRef.current
-      if (label) {
-        const r = label.getBoundingClientRect()
-        return r.top <= 80 && r.bottom > 0
+    const applyTransform = () => {
+      strip.style.transform = `translate3d(${-projectsHorizontalPxRef.current}px,0,0)`
+    }
+
+    const clampToMax = () => {
+      const maxX = Math.max(0, strip.scrollWidth - view.clientWidth)
+      projectsHorizontalPxRef.current = Math.min(projectsHorizontalPxRef.current, maxX)
+      applyTransform()
+    }
+
+    const onScrollReset = () => {
+      const r = section.getBoundingClientRect()
+      if (r.bottom < -80 || r.top > window.innerHeight + 80) {
+        if (projectsHorizontalPxRef.current !== 0) {
+          projectsHorizontalPxRef.current = 0
+          applyTransform()
+        }
       }
-      const rect = section.getBoundingClientRect()
-      return rect.top <= 80 && rect.bottom > 200
+    }
+
+    clampToMax()
+    const ro = new ResizeObserver(clampToMax)
+    ro.observe(strip)
+    window.addEventListener("resize", clampToMax)
+    window.addEventListener("scroll", onScrollReset, { passive: true })
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", clampToMax)
+      window.removeEventListener("scroll", onScrollReset)
+    }
+  }, [projects.length])
+
+  // Projects: strip anchor crosses LOCK_LINE; cards viewport bottom > -72 keeps pan through subpixel / fast frames.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const strip = projectsScrollRef.current
+    const view = projectsViewportRef.current
+    if (!strip || !view) return
+
+    /** Higher = horizontal wheel starts sooner (strip anchor can be lower on screen). Tune vs fixed header. */
+    const LOCK_LINE_PX = 252
+
+    const anchorAllowsStripPan = () => {
+      const anchor = projectsStripAnchorRef.current
+      const v = projectsViewportRef.current
+      if (!anchor || !v) return false
+      const ar = anchor.getBoundingClientRect()
+      const vr = v.getBoundingClientRect()
+      return ar.top <= LOCK_LINE_PX && vr.bottom > -72
+    }
+
+    const maxX = () => {
+      const v = projectsViewportRef.current
+      const s = projectsScrollRef.current
+      if (!v || !s) return 0
+      return Math.max(0, s.scrollWidth - v.clientWidth)
     }
 
     const onWheel = (e: WheelEvent) => {
-      if (!inZone()) return
+      const v = projectsViewportRef.current
+      const s = projectsScrollRef.current
+      if (!v || !s) return
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+      if (!anchorAllowsStripPan()) return
+      const mx = maxX()
+      if (mx <= 0) return
 
-      const maxScroll = strip.scrollWidth - strip.clientWidth
-      const atStart = strip.scrollLeft <= 5
-      const atEnd = maxScroll <= 0 || strip.scrollLeft >= maxScroll - 5
+      const x = projectsHorizontalPxRef.current
+      const atStart = x <= 0
+      const atEnd = x >= mx - 1
 
-      // Convert vertical scroll to horizontal: use deltaY, scale up so it feels responsive, cap per event to avoid one-flick overshoot
-      const scale = 2.2
-      let amount = e.deltaY * scale
-      amount = Math.sign(amount) * Math.min(400, Math.abs(amount))
+      if (e.deltaY > 0 && atEnd) return
+      if (e.deltaY < 0 && atStart) return
 
-      if (e.deltaY > 0) {
-        if (atEnd) return // let page scroll down
-        e.preventDefault()
-        strip.scrollLeft = Math.min(strip.scrollLeft + amount, maxScroll)
-      } else {
-        if (atStart) return // let page scroll up
-        e.preventDefault()
-        strip.scrollLeft = Math.max(strip.scrollLeft + amount, 0)
-      }
+      e.preventDefault()
+      e.stopPropagation()
+
+      const scale = 1.35
+      let delta = e.deltaY * scale
+      delta = Math.sign(delta) * Math.min(380, Math.abs(delta))
+      projectsHorizontalPxRef.current = Math.min(mx, Math.max(0, x + delta))
+      s.style.transform = `translate3d(${-projectsHorizontalPxRef.current}px,0,0)`
     }
 
-    window.addEventListener("wheel", onWheel, { passive: false })
-    return () => window.removeEventListener("wheel", onWheel)
+    const opts: AddEventListenerOptions = { passive: false, capture: true }
+    window.addEventListener("wheel", onWheel, opts)
+    return () => window.removeEventListener("wheel", onWheel, opts)
   }, [])
 
   const testimonials = [
@@ -995,87 +1055,110 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projects – scroll view with glass blur cards; strip bleeds full viewport, offset start; scroll lock: vertical scroll drives horizontal until end */}
-      <section ref={projectsSectionRef} id="projects" className="bg-black overflow-x-hidden pt-24 pb-36 sm:pt-24 sm:pb-36 lg:pt-28 lg:pb-44">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div
-            className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-14 lg:mb-20 transition-all duration-[900ms] ease-out ${
-              sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
-            <div>
-              <span ref={projectsLabelRef} className="section-label text-white/80">Projects</span>
-              <h2 className="home-section-title text-white font-title">
-                Built to last — delivered with care.
-              </h2>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={() => scrollProjects('left')}
-                className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
-                aria-label="Previous projects"
+      {/* Projects: sticky block; wheel pans strip when anchor crosses LOCK_LINE */}
+      <section ref={projectsSectionRef} id="projects" className="bg-black overflow-x-hidden pb-40 sm:pb-48 lg:pb-64">
+        <div className="sticky top-0 z-20 flex min-h-[100dvh] max-h-[100dvh] flex-col bg-black">
+            <div className="container mx-auto shrink-0 px-6 pt-24 lg:px-8 lg:pt-28">
+              <div
+                className={`flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 transition-all duration-[900ms] ease-out ${
+                  sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
               >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollProjects('right')}
-                className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
-                aria-label="Next projects"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* Full viewport width scroll strip – bleeds off both sides; content offset from left via padding */}
-        <div
-          className={`w-screen relative left-1/2 -translate-x-1/2 transition-all delay-100 duration-[1000ms] ease-out ${
-            sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-          }`}
-        >
-          <div
-            ref={projectsScrollRef}
-            data-lenis-prevent=""
-            className="flex min-h-[300px] min-w-0 touch-pan-x gap-6 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-6 pl-6 lg:pl-8 pr-6 lg:pr-8 scrollbar-hide"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-          {projects.map((p, i) => (
-            <Link
-              key={i}
-              href="/projects"
-              className="projects-card group flex-shrink-0 flex flex-col rounded-xl overflow-hidden bg-black"
-            >
-              <div className="relative aspect-[3/4] min-h-[480px] projects-card__inner">
-                {/* Project number – top centre, text only */}
-                {/* Project number – top right, same font as titles */}
-                {/* Project number – top right, same font as titles */}
-                <span className="projects-card-number absolute top-6 right-6 z-10 text-5xl sm:text-6xl font-bold text-white tabular-nums drop-shadow-md" style={{ fontFamily: 'var(--font-title, "Outfit", sans-serif)' }} aria-hidden>{(i + 1).toString().padStart(2, '0')}</span>
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${p.image})` }}
-                />
-                <div className="projects-card-glass absolute inset-x-0 bottom-0 top-1/2 overflow-hidden p-6 pt-20 pb-5 pr-16 flex flex-col justify-end">
-                  {/* Blurred image layer (same as card) – guarantees glass displacement without relying on backdrop-filter */}
-                  <div
-                    className="projects-card-glass-blur absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${p.image})` }}
-                    aria-hidden
-                  />
-                  <div className="projects-card-glass-overlay absolute inset-0" aria-hidden />
-                  <p className="text-xl sm:text-2xl font-bold leading-snug text-white mb-2 relative z-10">{p.title}</p>
-                  <p className="text-white/90 text-base leading-relaxed mb-3 relative z-10">{p.description}</p>
-                  <p className="text-white/80 text-base italic leading-relaxed mb-4 line-clamp-2 relative z-10">&ldquo;{p.quote}&rdquo;</p>
-                  <span className="projects-card-arrow absolute bottom-5 right-6 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white transition-transform duration-200 group-hover:rotate-12" aria-hidden>
-                    <ChevronRight className="w-5 h-5" />
-                  </span>
+                <div>
+                  <span className="section-label text-white/80">Projects</span>
+                  <h2 className="home-section-title text-white font-title">
+                    Built to last — delivered with care.
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => scrollProjects("left")}
+                    className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                    aria-label="Previous projects"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollProjects("right")}
+                    className="projects-nav-btn w-12 h-12 rounded-full border border-white bg-transparent text-white flex items-center justify-center transition-colors hover:bg-white hover:text-black focus:bg-white focus:text-black"
+                    aria-label="Next projects"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
                 </div>
               </div>
-            </Link>
-          ))}
+            </div>
+
+            <div
+              className={`relative flex min-h-0 flex-1 flex-col transition-all delay-100 duration-[1000ms] ease-out ${
+                sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              }`}
+            >
+              <div
+                ref={projectsViewportRef}
+                className="relative w-full min-h-0 flex-1 overflow-hidden pt-6 sm:pt-8 lg:pt-10"
+              >
+                <div className="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
+                  <div
+                    ref={projectsStripAnchorRef}
+                    className="pointer-events-none h-px w-full shrink-0 overflow-hidden opacity-0"
+                    aria-hidden
+                  />
+                  <div
+                    ref={projectsScrollRef}
+                    className="projects-strip flex h-full w-max min-h-[300px] items-stretch gap-6 px-6 pb-10 pl-6 lg:pl-8 pr-6 lg:pr-8 will-change-transform"
+                  >
+                  {projects.map((p, i) => (
+                    <div key={i} className="projects-card-shelf flex shrink-0 self-stretch pt-4 sm:pt-5">
+                      <Link
+                        href="/projects"
+                        className="projects-card group flex h-full min-h-0 flex-col rounded-xl bg-black transition-transform duration-300 ease-out hover:-translate-y-2"
+                      >
+                        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl">
+                          <div className="relative aspect-[3/4] min-h-[480px] flex-1 projects-card__inner">
+                            <span
+                              className="projects-card-number absolute top-6 right-6 z-10 text-5xl font-bold text-white tabular-nums drop-shadow-md sm:text-6xl"
+                              style={{ fontFamily: 'var(--font-title, "Outfit", sans-serif)' }}
+                              aria-hidden
+                            >
+                              {(i + 1).toString().padStart(2, "0")}
+                            </span>
+                            <div
+                              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                              style={{ backgroundImage: `url(${p.image})` }}
+                            />
+                            <div className="projects-card-glass absolute inset-x-0 bottom-0 top-1/2 flex flex-col justify-end overflow-hidden p-6 pb-5 pr-16 pt-20">
+                              <div className="projects-card-glass-backdrop pointer-events-none absolute inset-0" aria-hidden>
+                                <div
+                                  className="projects-card-glass-blur absolute inset-0 bg-cover bg-center"
+                                  style={{ backgroundImage: `url(${p.image})` }}
+                                />
+                                <div className="projects-card-glass-overlay absolute inset-0" />
+                              </div>
+                              <p className="relative z-20 mb-2 text-xl font-bold leading-snug text-white sm:text-2xl">{p.title}</p>
+                              <p className="relative z-20 mb-3 text-base leading-relaxed text-white/90">{p.description}</p>
+                              <p className="relative z-20 mb-4 line-clamp-2 text-base italic leading-relaxed text-white/80">
+                                &ldquo;{p.quote}&rdquo;
+                              </p>
+                              <span
+                                className="projects-card-arrow absolute bottom-5 right-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white transition-transform duration-200 group-hover:rotate-12"
+                                aria-hidden
+                              >
+                                <ChevronRight className="h-5 w-5" />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
       </section>
 
       {/* Why Choose Us – canted top and bottom */}

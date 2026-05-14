@@ -181,6 +181,15 @@ export const MEP_ACCREDITATION_TAB_ORDER: MepAccreditationSlug[] = [
 export const MEP_ACCREDITATION_HUB_TOP: MepAccreditationSlug[] = ["niceic", "gas-safe"]
 export const MEP_ACCREDITATION_HUB_BOTTOM: MepAccreditationSlug[] = ["iso-9001", "iso-14001", "iso-45001"]
 
+/** Footer + hero light strip: one row, NICEIC — ISOs — Gas Safe. */
+export const MEP_ACCREDITATION_SINGLE_ROW: MepAccreditationSlug[] = [
+  "niceic",
+  "iso-9001",
+  "iso-14001",
+  "iso-45001",
+  "gas-safe",
+]
+
 /** Hero strip: NICEIC, then ISO trio (always grouped), then Gas Safe. */
 export const MEP_ACCREDITATION_HERO_STRIP: {
   slug: MepAccreditationSlug

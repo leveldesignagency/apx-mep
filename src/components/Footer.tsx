@@ -26,7 +26,7 @@ export default function Footer() {
         onMouseEnter={scrollFooterIntoView}
       >
       {/* Top strip: logo (over junction) + hover hint */}
-      <div className="footer-head flex items-end justify-center px-6 relative overflow-visible min-h-[6rem]">
+      <div className="footer-head relative flex min-h-[6rem] items-end justify-center overflow-visible px-6 lg:px-8">
         <div className="footer-logo-bridge absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-0">
           <Link href="/" className="flex items-center cursor-pointer block">
             <Image
@@ -46,7 +46,7 @@ export default function Footer() {
 
       {/* Expandable content: visible on footer hover */}
       <div className="footer-expand">
-        <div className="container mx-auto w-full max-w-7xl px-6 py-12 pt-16">
+        <div className="container mx-auto w-full max-w-7xl px-6 py-12 pt-16 lg:px-8">
           <div className="grid w-full min-w-0 grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-10 md:gap-y-12 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-12">
             {/* Company Info */}
             <div className="min-w-0 space-y-6">
@@ -125,7 +125,45 @@ export default function Footer() {
           <div className="mt-16 border-t border-t-white/10 pt-8 text-gray-500">
             <div className="flex w-full flex-col items-center justify-center gap-4 text-center sm:gap-5 md:flex-row md:items-center md:justify-between md:gap-6 md:text-left">
               <p className="w-full min-w-0 text-balance text-sm md:max-w-[min(100%,40rem)] md:text-left">
-                &copy; 2026 APX. All rights reserved. | Privacy Policy | Terms of Service
+                <span className="text-inherit">&copy; 2026 APX. All rights reserved.</span>
+                <span className="text-inherit" aria-hidden>
+                  {" "}|{" "}
+                </span>
+                <Link
+                  href="/privacy"
+                  className="relative group inline hover:text-white transition-colors cursor-pointer pb-1"
+                >
+                  Privacy Policy
+                  <span
+                    className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100"
+                    style={{ backgroundColor: "white" }}
+                    aria-hidden
+                  />
+                  <span
+                    className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100"
+                    style={{ backgroundColor: "white" }}
+                    aria-hidden
+                  />
+                </Link>
+                <span className="text-inherit" aria-hidden>
+                  {" "}|{" "}
+                </span>
+                <Link
+                  href="/terms"
+                  className="relative group inline hover:text-white transition-colors cursor-pointer pb-1"
+                >
+                  Terms of Service
+                  <span
+                    className="absolute top-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100"
+                    style={{ backgroundColor: "white" }}
+                    aria-hidden
+                  />
+                  <span
+                    className="absolute bottom-0 left-1/2 w-full h-0.5 transform -translate-x-1/2 scale-x-0 origin-center transition-transform duration-500 group-hover:scale-x-100"
+                    style={{ backgroundColor: "white" }}
+                    aria-hidden
+                  />
+                </Link>
               </p>
               <span className="w-full shrink-0 text-center text-xs opacity-80 md:w-auto md:self-center md:text-right">
                 <span className="hover:opacity-100 transition-opacity duration-200">Designed by </span>

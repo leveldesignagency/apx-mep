@@ -399,7 +399,6 @@ export default function Header() {
             />
           </div>
           <div className="relative z-10 flex h-14 min-h-[3.5rem] w-full items-center justify-center px-2 sm:h-16 sm:px-4 lg:h-16 lg:min-h-0 lg:justify-between lg:px-6">
-            {/* Logo: drop-in animation lives on inner span so transform does not override mobile centre (-translate-x-1/2) on the link */}
             <Link
               href="/"
               className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 cursor-pointer items-center lg:static lg:translate-x-0 lg:translate-y-0"
@@ -419,18 +418,21 @@ export default function Header() {
                 </span>
               </span>
             </Link>
-            {/* FIRE & SECURITY: absolute, same as MEP – own stack so alignment isn’t affected by switch button */}
-            {/* Same as MEP: top-1/2 with NO transform – tagline top edge at row center, box hangs down */}
+            {/* M&E tagline: match apx-fs-website (natural pill height; no h-16 — longer copy needs wider mask than FS w-[17rem]) */}
             <div
-              className="header-mech-security-in absolute left-[12.25rem] top-1/2 z-0 hidden w-fit items-center rounded-br-2xl py-1 pl-7 pr-3.5 lg:flex"
-              style={{
-                backgroundColor: "black",
-                border: "2px solid white",
-              }}
+              className="pointer-events-none hidden lg:block absolute left-[12.25rem] top-1/2 z-0 w-[min(2000px,calc(100vw-12rem))] -translate-y-1/2 overflow-hidden"
             >
-              <span className="inline-block text-base font-semibold tracking-wide uppercase whitespace-nowrap !text-white" style={{ fontFamily: 'var(--font-menu)', color: '#ffffff' }}>
-                MECHANICAL & ELECTRICAL
-              </span>
+              <div
+                className="flex w-fit items-center rounded-br-2xl header-mech-security-in pl-7 pr-3.5 py-1"
+                style={{
+                  backgroundColor: "black",
+                  border: "2px solid white",
+                }}
+              >
+                <span className="inline-block text-base font-semibold tracking-wide uppercase whitespace-nowrap !text-white" style={{ fontFamily: 'var(--font-menu)', color: "#ffffff" }}>
+                  MECHANICAL & ELECTRICAL
+                </span>
+              </div>
             </div>
             <div className="relative z-10 hidden flex-shrink-0 items-center space-x-8 text-white lg:flex [&_.nav-menu-item]:!text-white [&_a]:!text-white [&_svg]:stroke-white">
               <div className="relative header-nav-item-in flex items-center" style={{ animationDelay: '2.9s' }}>

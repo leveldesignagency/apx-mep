@@ -8,8 +8,8 @@ const pillClass =
   "quick-nav-pill-shimmer inline-flex min-h-[44px] w-full max-w-full items-center justify-center rounded-tl-xl rounded-br-xl border border-white/40 bg-black/45 px-2 py-1.5 text-center text-[10px] font-semibold leading-snug tracking-tight text-white/95 backdrop-blur-sm transition-[border-color,color] duration-300 hover:border-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:min-h-0 sm:min-w-0 sm:px-4 sm:py-2 sm:text-sm"
 
 /**
- * Bottom-of-hero “Quick navigation” — horizontal scroll on narrow viewports (matches homepage services tab strip;
- * `data-lenis-prevent` so Lenis does not capture horizontal swipes). Pills use a fixed min width on small screens.
+ * Bottom-of-hero “Quick navigation” — horizontal scroll on narrow viewports only; `sm+` wraps, no scroll container.
+ * `data-lenis-prevent` so Lenis does not capture horizontal swipes on touch.
  */
 export function MepServiceHeroQuickNav() {
   const path = normalizeMepPath(usePathname())
@@ -21,7 +21,7 @@ export function MepServiceHeroQuickNav() {
       <div className="-mx-4 w-full min-w-0 max-w-full sm:-mx-0">
         <ul
           data-lenis-prevent=""
-          className="flex max-w-full min-w-0 touch-pan-x flex-nowrap items-stretch gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-0.5 scrollbar-hide sm:gap-2.5 sm:px-0"
+          className="flex max-w-full min-w-0 flex-nowrap items-stretch gap-2 touch-pan-x overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-4 pb-0.5 scrollbar-hide sm:flex-wrap sm:overflow-visible sm:overscroll-auto sm:scroll-auto sm:touch-auto sm:gap-2.5 sm:px-0"
         >
           {items.map(({ href, label }) => (
             <li
@@ -34,6 +34,14 @@ export function MepServiceHeroQuickNav() {
             </li>
           ))}
         </ul>
+        {items.length > 1 ? (
+          <p
+            className="mt-2 px-4 text-center text-[9px] font-medium uppercase tracking-[0.18em] text-white/35 sm:hidden"
+            aria-hidden
+          >
+            Scroll for more
+          </p>
+        ) : null}
       </div>
     </nav>
   )
