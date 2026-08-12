@@ -897,8 +897,8 @@ export default function Home() {
 
           {/* Accreditations — stacked under copy with modest gap (no flex-1 void) */}
           <div
-            className={`mt-10 transition-all duration-700 ease-out sm:mt-12 md:mt-14 ${
-              heroAnimation.clientsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            className={`mt-10 home-scroll-rise sm:mt-12 md:mt-14 ${
+              heroAnimation.clientsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
             }`}
           >
             <div
@@ -928,8 +928,8 @@ export default function Home() {
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <div
-            className={`max-w-3xl transition-all duration-[900ms] ease-out ${
-              sectionMotion.core ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            className={`max-w-3xl home-scroll-rise ${
+              sectionMotion.core ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
             }`}
           >
             <span
@@ -952,8 +952,8 @@ export default function Home() {
               return (
                 <div
                   key={cap.title}
-                  className={`flex h-full flex-col items-center transition-all duration-700 ease-out ${
-                    sectionMotion.core ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                  className={`flex h-full flex-col items-center home-scroll-rise ${
+                    sectionMotion.core ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
                   }`}
                   style={{ transitionDelay: sectionMotion.core ? `${cardIndex * 100}ms` : "0ms" }}
                 >
@@ -1004,8 +1004,8 @@ export default function Home() {
         <section id="services" className="home-services-band section-spacing relative overflow-visible bg-black">
         <div className="container mx-auto px-6 lg:px-8">
             <div
-              className={`section-content-gap space-y-16 text-white transition-all duration-[900ms] ease-out ${
-                sectionMotion.services ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`section-content-gap space-y-16 text-white home-scroll-rise ${
+                sectionMotion.services ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
               }`}
             >
             <MepWhatWeOfferSection />
@@ -1029,8 +1029,8 @@ export default function Home() {
                 style={{ animationDelay }}
               >
                 <div
-                  className={`flex w-full flex-col items-center transition-all duration-700 ease-out ${
-                    sectionMotion.benefits ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  className={`flex w-full flex-col items-center home-scroll-rise ${
+                    sectionMotion.benefits ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
                   }`}
                   style={{ transitionDelay: sectionMotion.benefits ? `${benefitIndex * 110}ms` : "0ms" }}
                 >
@@ -1060,8 +1060,8 @@ export default function Home() {
         <div className="sticky top-0 z-20 flex min-h-[100dvh] max-h-[100dvh] flex-col bg-black">
             <div className="container mx-auto shrink-0 px-6 pt-24 lg:px-8 lg:pt-28">
               <div
-                className={`flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 transition-all duration-[900ms] ease-out ${
-                  sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                className={`flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 home-scroll-rise ${
+                  sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
                 }`}
               >
                 <div>
@@ -1092,8 +1092,8 @@ export default function Home() {
             </div>
 
             <div
-              className={`relative flex min-h-0 flex-1 flex-col transition-all delay-100 duration-[1000ms] ease-out ${
-                sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              className={`relative flex min-h-0 flex-1 flex-col home-scroll-rise delay-100 ${
+                sectionMotion.projects ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
               }`}
             >
               <div
@@ -1275,8 +1275,8 @@ export default function Home() {
           <div className="container mx-auto px-6 lg:px-8">
             <div className="news-section__grid">
               <div
-                className={`news-section__left transition-all duration-[900ms] ease-out ${
-                  sectionMotion.news ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                className={`news-section__left home-scroll-rise ${
+                  sectionMotion.news ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
                 }`}
               >
                 <header className="news-section__header">
@@ -1298,8 +1298,8 @@ export default function Home() {
               </div>
 
               <div
-                className={`news-section__right transition-all duration-[900ms] ease-out ${
-                  sectionMotion.news ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                className={`news-section__right home-scroll-rise ${
+                  sectionMotion.news ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
                 }`}
                 style={{ transitionDelay: "120ms" }}
               >
@@ -1317,8 +1317,8 @@ export default function Home() {
       {/* Logo marquee — above testimonials */}
       <section id="logo-marquee" className="logo-marquee-section py-16 overflow-hidden lg:py-12" aria-label="Trusted by leading brands">
         <div
-          className={`logo-marquee-wrapper transition-all duration-[900ms] ease-out ${
-            sectionMotion.marquee ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          className={`logo-marquee-wrapper home-scroll-rise ${
+            sectionMotion.marquee ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
           <div className="logo-marquee">
@@ -1366,8 +1366,8 @@ export default function Home() {
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="grid items-end gap-14 lg:grid-cols-12 lg:gap-x-16 lg:gap-y-12">
             <div
-              className={`lg:col-span-5 transition-all duration-[900ms] ease-out ${
-                sectionMotion.testimonials ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`lg:col-span-5 home-scroll-rise ${
+                sectionMotion.testimonials ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
               }`}
             >
               <span className="section-label text-white/70">Testimonials</span>
@@ -1383,7 +1383,7 @@ export default function Home() {
 
             <div
               className={`relative lg:col-span-7 transition-all delay-150 duration-[900ms] ease-out ${
-                sectionMotion.testimonials ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                sectionMotion.testimonials ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
               }`}
             >
               <div className="mb-8 flex flex-wrap items-center gap-2 sm:gap-2.5">
@@ -1476,8 +1476,8 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
             {/* Left side - intro copy */}
             <div
-              className={`contact-section-head space-y-8 pt-16 lg:pt-24 transition-all duration-[600ms] ease-out ${
-                sectionMotion.contact ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`contact-section-head space-y-8 pt-16 lg:pt-24 home-scroll-rise ${
+                sectionMotion.contact ? "opacity-100 translate-y-0" : "opacity-0 translate-y-14"
               }`}
               style={
                 sectionMotion.contact ? { transitionDelay: `${MEP_QUOTE_FORM_INNER_DELAY_MS}ms` } : undefined
@@ -1660,8 +1660,6 @@ export default function Home() {
     </div>
 
       <MobileHomeContactFab
-        logoSrc="/__APX Web Logo MEP.svg"
-        logoAlt="APX Mechanical & Electrical"
         phoneDisplay="020 4568 5986"
         phoneHref="tel:02045685986"
         email="enquiries@apx-mep.co.uk"

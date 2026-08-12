@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { CustomPillButton } from "@/components/ui/CustomPillButton"
+import { Reveal } from "@/components/Reveal"
 import { MEP_PROJECTS } from "@/data/mepProjects"
 
 /** Grid card CTAs only — square corners; “Get in touch” uses `CustomPillButton` (TL/BR rounded like hero). */
@@ -53,18 +54,20 @@ export default function ProjectsPage() {
         <div className="mx-auto w-full max-w-[min(100%,92rem)]">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-14">
             <div className="max-w-2xl lg:col-span-5">
-              <span className="section-label mb-3 block text-white/75">Work in focus</span>
-              <h1
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left ${textClass}`}
-                style={{ fontFamily: "var(--font-menu)" }}
-              >
-                Coordinated MEP — delivered on programme
-              </h1>
-              <p className={`text-base sm:text-lg md:text-xl font-normal text-left tracking-tight ${mutedClass}`}>
-                A selection of mechanical, electrical and building services projects we have delivered for commercial, public sector, and domestic clients across London and the Home Counties.
-              </p>
+              <Reveal>
+                <span className="section-label mb-3 block text-white/75">Work in focus</span>
+                <h1
+                  className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 text-left ${textClass}`}
+                  style={{ fontFamily: "var(--font-menu)" }}
+                >
+                  Coordinated MEP — delivered on programme
+                </h1>
+                <p className={`text-base sm:text-lg md:text-xl font-normal text-left tracking-tight ${mutedClass}`}>
+                  A selection of mechanical, electrical and building services projects we have delivered for commercial, public sector, and domestic clients across London and the Home Counties.
+                </p>
+              </Reveal>
             </div>
-            <div className="relative aspect-video w-full min-w-0 overflow-hidden bg-black lg:col-span-7">
+            <Reveal delayMs={90} className="relative aspect-video w-full min-w-0 overflow-hidden bg-black lg:col-span-7">
               <video
                 className="absolute inset-0 h-full w-full object-cover"
                 autoPlay
@@ -88,7 +91,7 @@ export default function ProjectsPage() {
                 }}
                 aria-hidden
               />
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -96,10 +99,11 @@ export default function ProjectsPage() {
       <section className="py-16 lg:py-16 px-4 sm:px-6 lg:px-8" style={bgStyle}>
         <div className="mx-auto w-full max-w-[min(100%,92rem)]">
           <div className="space-y-8 md:space-y-10">
-            {projects.map((project) => {
+            {projects.map((project, index) => {
               const gallery = project.gallery.length ? project.gallery : [project.heroImage]
               return (
-                <article key={project.slug} className="grid grid-cols-1 gap-0 border-2 border-white/70 bg-black md:grid-cols-2">
+                <Reveal key={project.slug} delayMs={index * 75} className="block">
+                <article className="grid grid-cols-1 gap-0 border-2 border-white/70 bg-black md:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => openGallery(project.slug, 0)}
@@ -147,6 +151,7 @@ export default function ProjectsPage() {
                     </div>
                   </div>
                 </article>
+                </Reveal>
               )
             })}
           </div>
@@ -157,13 +162,15 @@ export default function ProjectsPage() {
 
       <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8" style={bgStyle}>
         <div className="mx-auto w-full max-w-[min(100%,72rem)] text-center">
-          <h2 className={`text-3xl font-bold font-title mb-4 ${textClass}`}>Start Your Project</h2>
-          <p className={`text-lg mb-8 ${mutedClass}`}>
-            Discuss your mechanical, electrical or building services requirements with our team. We offer free surveys and tailored MEP solutions.
-          </p>
-          <CustomPillButton href="/contact" size="lg">
-            Get in touch
-          </CustomPillButton>
+          <Reveal>
+            <h2 className={`text-3xl font-bold font-title mb-4 ${textClass}`}>Start Your Project</h2>
+            <p className={`text-lg mb-8 ${mutedClass}`}>
+              Discuss your mechanical, electrical or building services requirements with our team. We offer free surveys and tailored MEP solutions.
+            </p>
+            <CustomPillButton href="/contact" size="lg">
+              Get in touch
+            </CustomPillButton>
+          </Reveal>
         </div>
       </section>
 

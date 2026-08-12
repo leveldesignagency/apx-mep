@@ -4,6 +4,12 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MEP_PROJECTS, getMepProjectBySlug } from "@/data/mepProjects"
 import { buildMepMetadata } from "@/lib/seo-metadata"
+import {
+  MepProjectDetailClientReview,
+  MepProjectDetailGallery,
+  MepProjectDetailRelated,
+  MepProjectDetailStory,
+} from "@/components/projects/MepProjectDetailAnimatedSections"
 
 /** Matches FS project detail: grow-from-centre underline on external links */
 const MEP_EXT_LINK =
@@ -96,48 +102,13 @@ export default async function MepProjectDetailPage({ params }: Props) {
 
       <section className="relative z-20 overflow-visible bg-black">
         <div className="mx-auto w-full max-w-[min(100%,92rem)] px-4 pb-20 pt-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="h-auto min-h-[8.5rem] overflow-visible border border-white/10 bg-white/[0.03] p-3.5 md:p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Scope</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/90">{project.scope}</p>
-            </div>
-            <div className="h-auto min-h-[8.5rem] overflow-visible border border-white/10 bg-white/[0.03] p-3.5 md:p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Systems</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/90">{project.systems}</p>
-            </div>
-            <div className="h-auto min-h-[8.5rem] overflow-visible border border-white/10 bg-white/[0.03] p-3.5 md:p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Status</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/90">{project.status}</p>
-            </div>
-          </div>
-
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="h-auto min-h-[10.5rem] overflow-visible border border-white/10 bg-white/[0.02] p-4 md:p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Challenge</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/85">{project.challenge}</p>
-            </div>
-            <div className="h-auto min-h-[10.5rem] overflow-visible border border-white/10 bg-white/[0.02] p-4 md:p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Solution</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/85">{project.solution}</p>
-            </div>
-            <div className="h-auto min-h-[10.5rem] overflow-visible border border-white/10 bg-white/[0.02] p-4 md:p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.06em] text-white">Outcome</p>
-              <p className="mt-2 text-sm leading-relaxed text-white/85">{project.outcome}</p>
-            </div>
-          </div>
+          <MepProjectDetailStory project={project} />
         </div>
       </section>
 
       <section className="relative z-10 mt-6 border-t border-white/10 bg-black">
         <div className="mx-auto w-full max-w-[min(100%,92rem)] px-4 py-12 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-title font-semibold md:text-2xl">Project Images</h2>
-          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-            {galleryImages.map((img, idx) => (
-              <div key={`${img}-${idx}`} className="relative aspect-[4/3] overflow-hidden border border-white/10">
-                <Image src={img} alt={project.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-              </div>
-            ))}
-          </div>
+          <MepProjectDetailGallery title={project.title} images={galleryImages} />
         </div>
       </section>
 
@@ -147,62 +118,14 @@ export default async function MepProjectDetailPage({ params }: Props) {
           aria-labelledby="mep-project-client-review-heading"
         >
           <div className="mx-auto w-full max-w-[min(100%,92rem)] px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-            <p
-              id="mep-project-client-review-heading"
-              className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/80"
-              style={{ fontFamily: "var(--font-menu), sans-serif" }}
-            >
-              Client review
-            </p>
-            <blockquote className="mt-6 border-l border-white/25 pl-5 md:pl-7">
-              <div className="space-y-5 text-sm font-normal leading-relaxed text-white/85 md:text-base md:leading-relaxed">
-                {project.clientReview.paragraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-              <footer className="mt-10 border-t border-white/15 pt-7">
-                <p className="font-title text-xl font-semibold leading-snug text-white md:text-2xl">
-                  {project.clientReview.organizationUrl ? (
-                    <a
-                      href={project.clientReview.organizationUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={MEP_EXT_LINK}
-                    >
-                      {project.clientReview.organization}
-                      <span className={MEP_EXT_LINK_LINE} aria-hidden />
-                    </a>
-                  ) : (
-                    project.clientReview.organization
-                  )}
-                </p>
-                <p className="mt-3 text-base font-medium text-white md:text-lg">{project.clientReview.author}</p>
-                <p className="mt-1 text-sm text-white/65">{project.clientReview.role}</p>
-              </footer>
-            </blockquote>
+            <MepProjectDetailClientReview review={project.clientReview} />
           </div>
         </section>
       )}
 
       <section className="mt-12 border-t border-white/10 md:mt-16">
         <div className="mx-auto w-full max-w-[min(100%,92rem)] px-4 py-14 pb-24 sm:px-6 md:py-16 md:pb-28 lg:px-8">
-          <h2 className="pt-4 font-title text-2xl font-semibold md:pt-6 md:text-3xl">Explore other projects</h2>
-          <div className="mt-7 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {related.map((item) => (
-              <Link key={item.slug} href={`/projects/${item.slug}`} className="group block border border-white/10 p-2 hover:border-white/40">
-                <div className="relative aspect-[4/3] overflow-hidden border border-white/10">
-                  <Image
-                    src={item.heroImage}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 16vw"
-                  />
-                </div>
-                <p className="mt-2 line-clamp-2 text-xs uppercase tracking-[0.08em] text-white/70 group-hover:text-white">{item.title}</p>
-              </Link>
-            ))}
-          </div>
+          <MepProjectDetailRelated related={related} />
         </div>
       </section>
     </div>

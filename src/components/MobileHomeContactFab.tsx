@@ -1,13 +1,10 @@
 "use client"
 
-import Image from "next/image"
 import { useState, useCallback, useEffect } from "react"
 import { createPortal } from "react-dom"
-import { Phone, Mail } from "lucide-react"
+import { Phone, Mail, Headset } from "lucide-react"
 
 type Props = {
-  logoSrc: string
-  logoAlt: string
   phoneDisplay: string
   phoneHref: string
   email: string
@@ -16,10 +13,10 @@ type Props = {
 const OVERLAY_Z = 9994
 
 /**
- * Mobile-only: square black / white border FAB + bottom sheet.
+ * Mobile-only: circular black / white border FAB + bottom sheet.
  * Dismiss: tap/click outside the sheet (on the dimmed backdrop) or Escape.
  */
-export function MobileHomeContactFab({ logoSrc, logoAlt, phoneDisplay, phoneHref, email }: Props) {
+export function MobileHomeContactFab({ phoneDisplay, phoneHref, email }: Props) {
   const [open, setOpen] = useState(false)
   const [portalReady, setPortalReady] = useState(false)
 
@@ -51,7 +48,7 @@ export function MobileHomeContactFab({ logoSrc, logoAlt, phoneDisplay, phoneHref
     <>
       <button
         type="button"
-        className="apx-mobile-contact-fab md:hidden fixed right-6 z-[9990] flex h-14 w-14 shrink-0 items-center justify-center rounded-none border-2 border-white bg-black p-2 shadow-[0_4px_24px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] active:scale-[0.98] hover:shadow-[0_6px_28px_rgba(0,0,0,0.5)]"
+        className="apx-mobile-contact-fab md:hidden fixed right-6 z-[9990] flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white bg-black shadow-[0_4px_24px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] active:scale-[0.98] hover:shadow-[0_6px_28px_rgba(0,0,0,0.5)]"
         style={{ bottom: "calc(6rem + env(safe-area-inset-bottom, 0px))" }}
         aria-label="Open contact"
         aria-controls={open ? "mep-home-contact-sheet" : undefined}
@@ -59,7 +56,7 @@ export function MobileHomeContactFab({ logoSrc, logoAlt, phoneDisplay, phoneHref
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <Image src={logoSrc} alt={logoAlt} width={40} height={40} className="h-9 w-9 object-contain" />
+        <Headset className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden />
       </button>
 
       {open && portalReady

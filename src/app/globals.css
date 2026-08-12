@@ -10,6 +10,11 @@
   --font-menu: "Erbaum", sans-serif;
   /* In-page anchor targets (#section): modest offset */
   --site-header-offset: 1.25rem;
+  /* Scroll reveal — rise into place (Reveal.tsx, homepage sections, about intro) */
+  --scroll-rise-offset: 2.75rem;
+  --scroll-rise-transform-duration: 1.2s;
+  --scroll-rise-opacity-duration: 550ms;
+  --scroll-rise-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
@@ -120,19 +125,19 @@ footer {
   z-index: 10;
 }
 
-/* About intro — “Where it began”: same stagger/blur as FS homepage */
+/* About intro — “Where it began”: rise into place with light blur (stagger via --about-intro-delay) */
 .about-intro-line {
   transition:
-    opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1),
-    filter 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transform var(--scroll-rise-transform-duration) var(--scroll-rise-ease),
+    opacity var(--scroll-rise-opacity-duration) ease-out,
+    filter 0.55s ease-out;
   transition-delay: var(--about-intro-delay, 0ms);
   will-change: opacity, filter, transform;
 }
 .about-intro-line--hidden {
   opacity: 0;
-  filter: blur(12px);
-  transform: translate3d(0, 14px, 0);
+  filter: blur(6px);
+  transform: translate3d(0, var(--scroll-rise-offset, 2.75rem), 0);
 }
 .about-intro-line--visible {
   opacity: 1;
@@ -161,15 +166,15 @@ footer {
 /* Our story: image column — same entrance family as .about-intro-line, slightly later */
 .about-intro-media {
   transition:
-    opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s,
-    filter 0.95s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s,
-    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s;
+    transform var(--scroll-rise-transform-duration) var(--scroll-rise-ease) 0.2s,
+    opacity var(--scroll-rise-opacity-duration) ease-out 0.2s,
+    filter 0.55s ease-out 0.2s;
   will-change: opacity, filter, transform;
 }
 .about-intro-media--hidden {
   opacity: 0;
-  filter: blur(10px);
-  transform: translate3d(0, 20px, 0);
+  filter: blur(4px);
+  transform: translate3d(0, var(--scroll-rise-offset, 2.75rem), 0);
 }
 .about-intro-media--visible {
   opacity: 1;
@@ -1116,15 +1121,17 @@ html:not(.dark) #about .text-gray-300 {
   stroke: #ffffff !important;
 }
 
-/* Why Choose Us: fade/slide when #about scrolls into view (.home-about--in-view on section) */
+/* Why Choose Us: rise into place when #about scrolls into view (.home-about--in-view on section) */
 #about .about-reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.65s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: translate3d(0, var(--scroll-rise-offset, 2.75rem), 0);
+  transition:
+    transform var(--scroll-rise-transform-duration) var(--scroll-rise-ease),
+    opacity var(--scroll-rise-opacity-duration) ease-out;
 }
 #about.home-about--in-view .about-reveal {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 @media (prefers-reduced-motion: reduce) {
   #about .about-reveal {
@@ -4704,17 +4711,23 @@ html:not(.dark) body:has(.dm-page) {
   }
 }
 
-/* Mount / scroll fade-in — see components/Reveal.tsx */
+/* Mount / scroll reveal — rise into place; see components/Reveal.tsx */
 .about-reveal {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
-  transition-property: opacity, transform;
-  transition-duration: 0.65s;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, var(--scroll-rise-offset), 0);
+  transition:
+    transform var(--scroll-rise-transform-duration) var(--scroll-rise-ease),
+    opacity var(--scroll-rise-opacity-duration) ease-out;
 }
 .about-reveal--visible {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+}
+/* Homepage scroll sections — same motion as Reveal */
+.home-scroll-rise {
+  transition:
+    transform var(--scroll-rise-transform-duration) var(--scroll-rise-ease),
+    opacity var(--scroll-rise-opacity-duration) ease-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .about-reveal {

@@ -175,7 +175,7 @@ const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme }>`
     color: #ffffff !important;
     border: 2px solid #ffffff !important;
     border-color: #ffffff !important;
-    border-radius: 0 !important;
+    border-radius: 9999px !important;
   }
   .apx-mobile-contact-fab:hover {
     background: #111111 !important;
